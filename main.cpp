@@ -18,6 +18,7 @@ int main()
     if(i%2)
     {
         std::cout << "Lor c la best" << std::endl;
+        std::cout << "... et non c'est une blague c'est Barbara la BEST !!!" << std::endl;
     }
     else
     {
