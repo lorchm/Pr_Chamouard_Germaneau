@@ -176,7 +176,7 @@ void Graph::chargement_fichier_a()
     int nb_aretes;
     int som1;
     int som2;
-    int var_arc;
+    float var_arc;
 
     if(file)
     {
@@ -190,16 +190,13 @@ void Graph::chargement_fichier_a()
 
         file >> nb_aretes;
 
-        for(int i=0 ; i<nb_aretes ; i++)
+        for(int j=0 ; j<nb_aretes ; j++)
         {
             file >> som1 >> som2 >> var_arc;
-            add_interfaced_edge(i, som1, som2, var_arc);
-
+            add_interfaced_edge(j, som1, som2, var_arc);
         }
 
         file.close();
-
-
     }
     else
     {
