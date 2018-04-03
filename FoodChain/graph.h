@@ -138,7 +138,7 @@ class Vertex
         /// liste des indices des arcs partant du sommet : accès aux successeurs
         std::vector<int> m_out;
 
-        /// un exemple de donnée associée à l'arc, on peut en ajouter d'autres...
+        /// un exemple de donnée associée au sommet, on peut en ajouter d'autres...
         double m_value;
 
         /// le POINTEUR sur l'interface associée, nullptr -> pas d'interface
@@ -303,7 +303,7 @@ class Graph
         /// Voir implémentation dans le .cpp
         /// Cette méthode est à enlever et remplacer par un système
         /// de chargement de fichiers par exemple.
-        void make_example();
+        void chargement_fichier_a();
 
 
         /// La méthode update à appeler dans la boucle de jeu pour les graphes avec interface
