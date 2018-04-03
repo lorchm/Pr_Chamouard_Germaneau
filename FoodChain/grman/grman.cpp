@@ -14,6 +14,7 @@
 #include <jpgalleg.h>
 
 
+
 namespace grman
 {
 

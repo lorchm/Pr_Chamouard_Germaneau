@@ -136,7 +136,7 @@ void Edge::post_update()
 ****************************************************/
 
 /// Ici le constructeur se contente de préparer un cadre d'accueil des
-/// éléments qui seront ensuite ajoutés lors de la mise ne place du Graphe
+/// éléments qui seront ensuite ajoutés lors de la mise en place du Graphe
 GraphInterface::GraphInterface(int x, int y, int w, int h)
 {
     m_top_box.set_dim(1000,740);
