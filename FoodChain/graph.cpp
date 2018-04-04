@@ -306,9 +306,28 @@ void Graph::delete_espece()
 
     if(m_interface->get_buttonDelete().clicked())
     {
-        std::cout << "Supprimer une espece " << std::endl;
+        std::cout << "Supprimer une espece. qui delete: " << std::endl;
+        int choix;
+        std::cin>>choix;
+        if(choix==2)
+        {
 
-       // m_vertices.erase(2);
+            //m_vertices.erase(2);
+        }
+
+
+//            for (auto &elt : m_vertices)
+//            {
+//                if(grman::mouse_click && mouse_x < elt.second.m_interface->m_top_box.get_frame().dim.x && mouse_x > elt.second.m_interface->m_top_box.get_frame().pos.x
+//                   &&  mouse_y< elt.second.m_interface->m_top_box.get_frame().dim.y + elt.second.m_interface->m_top_box.get_frame().pos.y
+//                     && mouse_y > elt.second.m_interface->m_top_box.get_frame().pos.y )
+//                {
+//                    std::cout <<"sommet indice=" << elt.first << "posx="<<elt.second.m_interface->m_top_box.get_frame().pos.x<<" posy="<<elt.second.m_interface->m_top_box.get_frame().pos.y;
+//
+//                }
+//            }
+
+
     }
 }
 

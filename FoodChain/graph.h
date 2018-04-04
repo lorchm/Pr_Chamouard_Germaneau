@@ -122,6 +122,7 @@ class VertexInterface
         // Le constructeur met en place les éléments de l'interface
         // voir l'implémentation dans le .cpp
         VertexInterface(int idx, int x, int y, std::string pic_name="", int pic_idx=0, bool presence = true);
+
 };
 
 
@@ -153,7 +154,6 @@ class Vertex
         // Docu shared_ptr : https://msdn.microsoft.com/fr-fr/library/hh279669.aspx
         // La ligne précédente est en gros équivalent à la ligne suivante :
         // VertexInterface * m_interface = nullptr;
-
 
     public:
 
@@ -223,14 +223,11 @@ class Edge
 
     private :
 
-
-
         /// un exemple de donnée associée à l'arc, on peut en ajouter d'autres...
         int m_weight;
 
         /// le POINTEUR sur l'interface associée, nullptr -> pas d'interface
         std::shared_ptr<EdgeInterface> m_interface = nullptr;
-
 
     public:
 
