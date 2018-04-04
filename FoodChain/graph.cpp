@@ -8,8 +8,11 @@ using namespace std;
 ****************************************************/
 
 /// Le constructeur met en place les éléments de l'interface
-VertexInterface::VertexInterface(int idx, int x, int y, std::string pic_name, int pic_idx)
+VertexInterface::VertexInterface(int idx, int x, int y, std::string pic_name, int pic_idx, bool presence)
 {
+
+    m_presence = presence;
+
     // La boite englobante
     m_top_box.set_pos(x, y);
     m_top_box.set_dim(130, 100);
@@ -109,6 +112,7 @@ EdgeInterface::EdgeInterface(Vertex& from, Vertex& to)
 /// Gestion du Edge avant l'appel à l'interface
 void Edge::pre_update()
 {
+    ///Si y'a pas d'interface
     if (!m_interface)
         return;
 
@@ -129,6 +133,17 @@ void Edge::post_update()
     m_weight = m_interface->m_slider_weight.get_value();
 }
 
+///GETTERS
+
+int Edge::getFrom()
+{
+    return m_from;
+}
+
+int Edge::getTo()
+{
+    return m_to;
+}
 
 
 /***************************************************
@@ -168,7 +183,7 @@ void Graph::chargement_fichier_a()
     ifstream file("fich_graphea.txt", ios::in);
 
     int nb_sommets;
-    int var_nb_pop;
+    double var_nb_pop;
     int var_coordx;
     int var_coordy;
     std::string var_image;
@@ -205,6 +220,49 @@ void Graph::chargement_fichier_a()
 
 }
 
+void Graph::sauv_graphea()
+{
+
+   ofstream file("fich_graphea.txt", ios::out | ios::trunc);
+
+   if(file)
+   {
+        ///Ecrire le nombre de vertices
+        file << m_vertices.size() << std::endl << std::endl;
+
+        ///Ecrire la valeur et positions des sommets
+        for (auto &elt : m_vertices)
+        {
+            file << elt.second.m_value <<".0" << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name()<< std::endl;
+        }
+
+        ///Ecrire le nombre de edges
+        file << std::endl << m_edges.size() << std::endl << std::endl ;
+
+        ///Ecrire les sommets et le poids de l'arc
+        for (auto &it : m_edges)
+        {
+           file << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
+        }
+
+
+        file.close();
+
+    }
+    else
+    {
+       std::cerr << "Sauvegarde impossible" << std::endl;
+    }
+
+}
+
+
+
+
+
+
+
+
 /// La méthode update à appeler dans la boucle de jeu pour les graphes avec interface
 void Graph::update()
 {
@@ -228,7 +286,7 @@ void Graph::update()
 }
 
 /// Aide à l'ajout de sommets interfacés
-void Graph::add_interfaced_vertex(int idx, double value, int x, int y, std::string pic_name, int pic_idx )
+void Graph::add_interfaced_vertex(int idx, double value, int x, int y, std::string pic_name, int pic_idx, bool presence )
 {
     /*parcours les indices de sommet de la map pour voir si le sommet a pas déjà été crée, si c le cas y un message d'erreur*/
     if ( m_vertices.find(idx)!=m_vertices.end() )
@@ -237,7 +295,7 @@ void Graph::add_interfaced_vertex(int idx, double value, int x, int y, std::stri
         throw "Error adding vertex";
     }
     // Création d'une interface de sommet
-    VertexInterface *vi = new VertexInterface(idx, x, y, pic_name, pic_idx);
+    VertexInterface *vi = new VertexInterface(idx, x, y, pic_name, pic_idx, presence);
     // Ajout de la top box de l'interface de sommet
     m_interface->m_main_box.add_child(vi->m_top_box);
     // On peut ajouter directement des vertices dans la map avec la notation crochet :
@@ -262,5 +320,7 @@ void Graph::add_interfaced_edge(int idx, int id_vert1, int id_vert2, double weig
     EdgeInterface *ei = new EdgeInterface(m_vertices[id_vert1], m_vertices[id_vert2]);
     m_interface->m_main_box.add_child(ei->m_top_edge);
     m_edges[idx] = Edge(weight, ei);
+    m_edges[idx].m_from = id_vert1;
+    m_edges[idx].m_to = id_vert2;
 }
 
