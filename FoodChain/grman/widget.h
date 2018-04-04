@@ -339,6 +339,8 @@ class WidgetImage : public Widget
         void set_animate_tempo(int tempo) { m_animate_tempo = tempo; }
 
         void set_pic_idx(int pic_idx) { m_pic_idx=pic_idx; }
+
+        std::string get_pic_name(){ return m_pic_name;}
 };
 
 
@@ -429,6 +431,9 @@ class WidgetEdge : public Widget
 
         void attach_from(Widget& from) { m_attach[0] = &from; }
         void attach_to(Widget& to) { m_attach[1] = &to; }
+
+        Widget* getFrom() {return m_attach[0];}
+        Widget* getTo(){return m_attach[1];}
 
         void reset_no_items() { m_items.clear(); }
         void reset_arrow() { m_items = { {ArrowItemType::Arrow, 1.0} }; }

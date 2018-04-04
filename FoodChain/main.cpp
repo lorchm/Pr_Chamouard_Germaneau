@@ -43,6 +43,8 @@ int main()
 
     grman::fermer_allegro();
 
+    g.sauv_graphea();
+
     return 0;
 }
 END_OF_MAIN();

@@ -2,6 +2,7 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
+<<<<<<< HEAD
 	<File name="graph.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="5175" topLine="76" />
@@ -12,9 +13,16 @@
 			<Collapse line="63" />
 			<Collapse line="79" />
 		</Folding>
+=======
+	<File name="grman\coords.cpp" open="1" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="296" topLine="4" />
+		</Cursor>
+>>>>>>> 5f133c2abad43f9e441b6e2623e7eb380e4e9d5e
 	</File>
 	<File name="grman\coords.cpp" open="1" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
 		<Cursor>
+<<<<<<< HEAD
 			<Cursor1 position="296" topLine="0" />
 		</Cursor>
 	</File>
@@ -30,6 +38,28 @@
 	<File name="Interface.cpp" open="1" top="1" tabpos="11" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="418" topLine="0" />
+=======
+			<Cursor1 position="426" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="grman\widget.cpp" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="7791" topLine="0" />
+		</Cursor>
+		<Folding>
+			<Collapse line="19" />
+			<Collapse line="27" />
+			<Collapse line="56" />
+			<Collapse line="69" />
+			<Collapse line="90" />
+			<Collapse line="114" />
+			<Collapse line="126" />
+		</Folding>
+	</File>
+	<File name="Interface.cpp" open="1" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="-3" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="429" topLine="0" />
+>>>>>>> 5f133c2abad43f9e441b6e2623e7eb380e4e9d5e
 		</Cursor>
 	</File>
 	<File name="Interface.h" open="1" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -37,9 +67,15 @@
 			<Cursor1 position="354" topLine="0" />
 		</Cursor>
 	</File>
+<<<<<<< HEAD
 	<File name="grman\grman.cpp" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="3424" topLine="0" />
+=======
+	<File name="grman\grman.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="-3" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3319" topLine="0" />
+>>>>>>> 5f133c2abad43f9e441b6e2623e7eb380e4e9d5e
 		</Cursor>
 		<Folding>
 			<Collapse line="66" />
@@ -47,11 +83,16 @@
 	</File>
 	<File name="grman\grman.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="-3" zoom_2="0">
 		<Cursor>
+<<<<<<< HEAD
 			<Cursor1 position="2243" topLine="18" />
+=======
+			<Cursor1 position="7935" topLine="78" />
+>>>>>>> 5f133c2abad43f9e441b6e2623e7eb380e4e9d5e
 		</Cursor>
 	</File>
 	<File name="grman\grman_couleurs.h" open="1" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
+<<<<<<< HEAD
 			<Cursor1 position="1206" topLine="39" />
 		</Cursor>
 	</File>
@@ -76,6 +117,19 @@
 	<File name="grman\widget.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="-3" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="9010" topLine="226" />
+=======
+			<Cursor1 position="10177" topLine="174" />
+		</Cursor>
+	</File>
+	<File name="grman\widget.h" open="1" top="1" tabpos="4" split="0" active="1" splitpos="0" zoom_1="-3" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1162" topLine="423" />
+		</Cursor>
+	</File>
+	<File name="grman\grman.cpp" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="6063" topLine="214" />
+>>>>>>> 5f133c2abad43f9e441b6e2623e7eb380e4e9d5e
 		</Cursor>
 		<Folding>
 			<Collapse line="213" />
@@ -84,7 +138,12 @@
 	</File>
 	<File name="grman\coords.h" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="-3" zoom_2="0">
 		<Cursor>
+<<<<<<< HEAD
 			<Cursor1 position="1269" topLine="46" />
+=======
+			<Cursor1 position="902" topLine="11" />
+>>>>>>> 5f133c2abad43f9e441b6e2623e7eb380e4e9d5e
 		</Cursor>
 	</File>
+	<EditorTabsLayout layout="09dfa0f05ac3ea080000322900000002=0;graph_lib:main.cpp,1;graph_lib:graph.h,2;graph_lib:graph.cpp,*3;graph_lib:grman\widget.h,4;graph_lib:grman\widget.cpp,5;graph_lib:grman\grman.h,6;graph_lib:grman\grman.cpp,7;graph_lib:grman\coords.h,8;graph_lib:grman\coords.cpp,9;graph_lib:Interface.h,10;graph_lib:Interface.cpp@layout2|name=dummy;caption=;state=2098174;dir=3;layer=0;row=0;pos=0;prop=100000;bestw=814;besth=372;minw=814;minh=372;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=09dfa0f05ac3ea080000322900000002;caption=;state=2098172;dir=5;layer=0;row=0;pos=0;prop=100000;bestw=200;besth=200;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|dock_size(5,0,0)=202|" />
 </CodeBlocks_layout_file>

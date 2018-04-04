@@ -50,7 +50,6 @@ void acces_G2(Graph& g)
     //On voit si y a un clique sur les bouttons de la barre outils
     g.get_interface()->get_buttonG2().interact_focus();
 
-//    if( mouse_b &&  mouse_x < 80 && mouse_x > 26 && mouse_y< 160 && mouse_y > 60 )
     if(g.get_interface()->get_buttonG2().clicked())
 
     {

@@ -77,6 +77,7 @@
 #include <memory>
 
 #include "grman/grman.h"
+#include "grman/widget.h"
 
 /***************************************************
                     VERTEX
@@ -92,6 +93,8 @@ class VertexInterface
 
     private :
 
+
+    bool m_presence;
         /// Les widgets de l'interface. N'oubliez pas qu'il ne suffit pas de déclarer
         /// ici un widget pour qu'il apparaisse, il faut aussi le mettre en place et
         /// le paramétrer ( voir l'implémentation du constructeur dans le .cpp )
@@ -118,7 +121,7 @@ class VertexInterface
 
         // Le constructeur met en place les éléments de l'interface
         // voir l'implémentation dans le .cpp
-        VertexInterface(int idx, int x, int y, std::string pic_name="", int pic_idx=0);
+        VertexInterface(int idx, int x, int y, std::string pic_name="", int pic_idx=0, bool presence = true);
 };
 
 
@@ -132,6 +135,9 @@ class Vertex
     friend class EdgeInterface;
 
     private :
+       ///bool qui indique si le sommet est affiché ou pas
+
+
         /// liste des indices des arcs arrivant au sommet : accès aux prédécesseurs
         std::vector<int> m_in;
 
@@ -200,6 +206,8 @@ class EdgeInterface
 
     public :
 
+        bool m_presence;
+
         // Le constructeur met en place les éléments de l'interface
         // voir l'implémentation dans le .cpp
         EdgeInterface(Vertex& from, Vertex& to);
@@ -214,11 +222,8 @@ class Edge
     friend class EdgeInterface;
 
     private :
-        /// indice du sommet de départ de l'arc
-        int m_from;
 
-        /// indice du sommet d'arrivée de l'arc
-        int m_to;
+
 
         /// un exemple de donnée associée à l'arc, on peut en ajouter d'autres...
         double m_weight;
@@ -228,6 +233,14 @@ class Edge
 
 
     public:
+
+/// indice du sommet de départ de l'arc
+        int m_from;
+
+        /// indice du sommet d'arrivée de l'arc
+        int m_to;
+
+
 
         /// Les constructeurs sont à compléter selon vos besoin...
         /// Ici on ne donne qu'un seul constructeur qui peut utiliser une interface
@@ -239,6 +252,11 @@ class Edge
         /// Voir l'implémentation Graph::update dans le .cpp
         void pre_update();
         void post_update();
+
+        ///Setters/Getters
+        int getFrom();
+        int getTo();
+
 };
 
 
@@ -318,7 +336,7 @@ class Graph
         Graph (GraphInterface *interface=nullptr) :
             m_interface(interface)  {  }
 
-        void add_interfaced_vertex(int idx, double value, int x, int y, std::string pic_name="", int pic_idx=0 );
+        void add_interfaced_vertex(int idx, double value, int x, int y, std::string pic_name="", int pic_idx=0, bool presence=true );
         void add_interfaced_edge(int idx, int vert1, int vert2, double weight=0);
 
         /// Méthode spéciale qui construit un graphe arbitraire (démo)
@@ -326,6 +344,8 @@ class Graph
         /// Cette méthode est à enlever et remplacer par un système
         /// de chargement de fichiers par exemple.
         void chargement_fichier_a();
+
+        void sauv_graphea();
 
         /// La méthode update à appeler dans la boucle de jeu pour les graphes avec interface
         void update();

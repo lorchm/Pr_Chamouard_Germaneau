@@ -1,0 +1,14 @@
+9
+
+100 0 100 graphea2.jpg
+100 100 250 graphea1.jpg
+100 200 50 graphea3.jpg
+100 350 500 graphea6.jpg
+100 350 200 graphea5.jpg
+100 400 0 graphea4.jpg
+100 520 500 graphea7.jpg
+100 520 200 graphea8.jpg
+100 700 150 graphea9.jpg
+
+10
+
