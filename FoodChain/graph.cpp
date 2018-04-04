@@ -208,8 +208,6 @@ GraphInterface::GraphInterface(int x, int y, int w, int h)
 void Graph::chargement_fichier_a()
 {
     m_interface = std::make_shared<GraphInterface>(50, 0, 750, 600);
-    // La ligne précédente est en gros équivalente à :
-    // m_interface = new GraphInterface(50, 0, 750, 600);
 
     ifstream file("fich_graphea.txt", ios::in);
 
@@ -251,10 +249,172 @@ void Graph::chargement_fichier_a()
 
 }
 
+void Graph::chargement_fichier_b()
+{
+    m_interface = std::make_shared<GraphInterface>(50, 0, 750, 600);
+
+    ifstream file("fich_grapheb.txt", ios::in);
+
+    int nb_sommets;
+    int var_nb_pop;
+    int var_coordx;
+    int var_coordy;
+    std::string var_image;
+
+    int nb_aretes;
+    int som1;
+    int som2;
+    float var_arc;
+
+    if(file)
+    {
+        file >> nb_sommets;
+
+        for(int i=0 ; i<nb_sommets ; i++)
+        {
+            file >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
+            add_interfaced_vertex(i+1, var_nb_pop , var_coordx , var_coordy, var_image);
+        }
+
+        file >> nb_aretes;
+
+        for(int j=0 ; j<nb_aretes ; j++)
+        {
+            file >> som1 >> som2 >> var_arc;
+            add_interfaced_edge(j+1, som1, som2, var_arc);
+        }
+
+        file.close();
+    }
+    else
+    {
+        std::cerr << "Impossible d'ouvrir le fichier du graphique 2" << std::endl;
+    }
+
+}
+
+void Graph::chargement_fichier_c()
+{
+    m_interface = std::make_shared<GraphInterface>(50, 0, 750, 600);
+
+    ifstream file("fich_graphec.txt", ios::in);
+
+    int nb_sommets;
+    int var_nb_pop;
+    int var_coordx;
+    int var_coordy;
+    std::string var_image;
+
+    int nb_aretes;
+    int som1;
+    int som2;
+    float var_arc;
+
+    if(file)
+    {
+        file >> nb_sommets;
+
+        for(int i=0 ; i<nb_sommets ; i++)
+        {
+            file >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
+            add_interfaced_vertex(i+1, var_nb_pop , var_coordx , var_coordy, var_image);
+        }
+
+        file >> nb_aretes;
+
+        for(int j=0 ; j<nb_aretes ; j++)
+        {
+            file >> som1 >> som2 >> var_arc;
+            add_interfaced_edge(j+1, som1, som2, var_arc);
+        }
+
+        file.close();
+    }
+    else
+    {
+        std::cerr << "Impossible d'ouvrir le fichier du graphique 1" << std::endl;
+    }
+
+}
+
+
+
 void Graph::sauv_graphea()
 {
 
    ofstream file("fich_graphea.txt", ios::out | ios::trunc);
+
+   if(file)
+   {
+        ///Ecrire le nombre de vertices
+        file << m_vertices.size() << std::endl << std::endl;
+
+        ///Ecrire la valeur et positions des sommets
+        for (auto &elt : m_vertices)
+        {
+            file << elt.second.m_value << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name()<< std::endl;
+        }
+
+        ///Ecrire le nombre de edges
+        file << std::endl << m_edges.size() << std::endl << std::endl ;
+
+        ///Ecrire les sommets et le poids de l'arc
+        for (auto &it : m_edges)
+        {
+           file << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
+        }
+
+
+        file.close();
+
+    }
+    else
+    {
+       std::cerr << "Sauvegarde impossible" << std::endl;
+    }
+
+}
+
+void Graph::sauv_grapheb()
+{
+
+   ofstream file("fich_grapheb.txt", ios::out | ios::trunc);
+
+   if(file)
+   {
+        ///Ecrire le nombre de vertices
+        file << m_vertices.size() << std::endl << std::endl;
+
+        ///Ecrire la valeur et positions des sommets
+        for (auto &elt : m_vertices)
+        {
+            file << elt.second.m_value << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name()<< std::endl;
+        }
+
+        ///Ecrire le nombre de edges
+        file << std::endl << m_edges.size() << std::endl << std::endl ;
+
+        ///Ecrire les sommets et le poids de l'arc
+        for (auto &it : m_edges)
+        {
+           file << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
+        }
+
+
+        file.close();
+
+    }
+    else
+    {
+       std::cerr << "Sauvegarde impossible" << std::endl;
+    }
+
+}
+
+void Graph::sauv_graphec()
+{
+
+   ofstream file("fich_graphec.txt", ios::out | ios::trunc);
 
    if(file)
    {

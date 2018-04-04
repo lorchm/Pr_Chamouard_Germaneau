@@ -342,7 +342,12 @@ class Graph
         /// Cette méthode est à enlever et remplacer par un système
         /// de chargement de fichiers par exemple.
         void chargement_fichier_a();
+        void chargement_fichier_b();
+        void chargement_fichier_c();
+
         void sauv_graphea();
+        void sauv_grapheb();
+        void sauv_graphec();
 
         ///Ajouter et supprimer espèce
         void delete_espece();
