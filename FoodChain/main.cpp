@@ -34,8 +34,8 @@ int main()
         acces_G2(g);
         acces_G3(g);
 
-        add_espece(g);
-        delete_espece(g);
+        g.add_espece();
+        g.delete_espece();
         exit(g);
 
 //        g.get_vertices()[g.get_edges[2].m_from].get_interface()=nullptr;
