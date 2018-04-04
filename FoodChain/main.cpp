@@ -38,7 +38,7 @@ int main()
         g.delete_espece();
         exit(g);
 
-//        g.get_vertices()[g.get_edges[2].m_from].get_interface()=nullptr;
+
     }
 
     grman::fermer_allegro();
