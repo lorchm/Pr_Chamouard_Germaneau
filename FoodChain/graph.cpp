@@ -311,8 +311,15 @@ void Graph::delete_espece()
         std::cin>>choix;
         if(choix==2)
         {
-
-            //m_vertices.erase(2);
+//            for (auto &elt : m_edges)
+//            {
+//                if(elt.second.m_from == 2) m_edges.erase(2);
+//
+//                if(elt.second.m_to == 2) m_edges.erase(2);
+//            }
+//            m_vertices.erase(2);
+//
+//            std::cout << "fin suppr";
         }
 
 
