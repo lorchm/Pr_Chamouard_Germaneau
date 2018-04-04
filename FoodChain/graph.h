@@ -145,7 +145,7 @@ class Vertex
         std::vector<int> m_out;
 
         /// un exemple de donnée associée au sommet, on peut en ajouter d'autres...
-        double m_value;
+        int m_value;
 
         /// le POINTEUR sur l'interface associée, nullptr -> pas d'interface
         std::shared_ptr<VertexInterface> m_interface = nullptr;
@@ -159,7 +159,7 @@ class Vertex
 
         /// Les constructeurs sont à compléter selon vos besoin...
         /// Ici on ne donne qu'un seul constructeur qui peut utiliser une interface
-        Vertex (double value=0, VertexInterface *interface=nullptr) :
+        Vertex (int value=0, VertexInterface *interface=nullptr) :
             m_value(value), m_interface(interface)  {  }
 
         /// Vertex étant géré par Graph ce sera la méthode update de graph qui appellera
@@ -226,7 +226,7 @@ class Edge
 
 
         /// un exemple de donnée associée à l'arc, on peut en ajouter d'autres...
-        double m_weight;
+        int m_weight;
 
         /// le POINTEUR sur l'interface associée, nullptr -> pas d'interface
         std::shared_ptr<EdgeInterface> m_interface = nullptr;
@@ -244,7 +244,7 @@ class Edge
 
         /// Les constructeurs sont à compléter selon vos besoin...
         /// Ici on ne donne qu'un seul constructeur qui peut utiliser une interface
-        Edge (double weight=0, EdgeInterface *interface=nullptr) :
+        Edge (int weight=0, EdgeInterface *interface=nullptr) :
             m_weight(weight), m_interface(interface)  {  }
 
         /// Edge étant géré par Graph ce sera la méthode update de graph qui appellera
@@ -336,15 +336,14 @@ class Graph
         Graph (GraphInterface *interface=nullptr) :
             m_interface(interface)  {  }
 
-        void add_interfaced_vertex(int idx, double value, int x, int y, std::string pic_name="", int pic_idx=0, bool presence=true );
-        void add_interfaced_edge(int idx, int vert1, int vert2, double weight=0);
+        void add_interfaced_vertex(int idx, int value, int x, int y, std::string pic_name="", int pic_idx=0, bool presence=true );
+        void add_interfaced_edge(int idx, int vert1, int vert2, int weight=0);
 
         /// Méthode spéciale qui construit un graphe arbitraire (démo)
         /// Voir implémentation dans le .cpp
         /// Cette méthode est à enlever et remplacer par un système
         /// de chargement de fichiers par exemple.
         void chargement_fichier_a();
-
         void sauv_graphea();
 
         /// La méthode update à appeler dans la boucle de jeu pour les graphes avec interface

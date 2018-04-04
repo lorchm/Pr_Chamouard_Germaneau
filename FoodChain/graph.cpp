@@ -214,7 +214,7 @@ void Graph::chargement_fichier_a()
     ifstream file("fich_graphea.txt", ios::in);
 
     int nb_sommets;
-    double var_nb_pop;
+    int var_nb_pop;
     int var_coordx;
     int var_coordy;
     std::string var_image;
@@ -264,7 +264,7 @@ void Graph::sauv_graphea()
         ///Ecrire la valeur et positions des sommets
         for (auto &elt : m_vertices)
         {
-            file << elt.second.m_value <<".0" << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name()<< std::endl;
+            file << elt.second.m_value << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name()<< std::endl;
         }
 
         ///Ecrire le nombre de edges
@@ -311,7 +311,7 @@ void Graph::update()
 }
 
 /// Aide à l'ajout de sommets interfacés
-void Graph::add_interfaced_vertex(int idx, double value, int x, int y, std::string pic_name, int pic_idx, bool presence )
+void Graph::add_interfaced_vertex(int idx, int value, int x, int y, std::string pic_name, int pic_idx, bool presence )
 {
     /*parcours les indices de sommet de la map pour voir si le sommet a pas déjà été crée, si c le cas y un message d'erreur*/
     if ( m_vertices.find(idx)!=m_vertices.end() )
@@ -328,7 +328,7 @@ void Graph::add_interfaced_vertex(int idx, double value, int x, int y, std::stri
 }
 
 /// Aide à l'ajout d'arcs interfacés
-void Graph::add_interfaced_edge(int idx, int id_vert1, int id_vert2, double weight)
+void Graph::add_interfaced_edge(int idx, int id_vert1, int id_vert2, int weight)
 {
     if ( m_edges.find(idx)!=m_edges.end() )
     {
