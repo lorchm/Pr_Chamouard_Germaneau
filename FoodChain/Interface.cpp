@@ -12,27 +12,7 @@ void affichage_outil()
 
 }
 
-void delete_espece(Graph& g)
-{
-    //On voit si y a un clique sur les bouttons de la barre outils
-    g.get_interface()->get_buttonAdd().interact_focus();
 
-    if(g.get_interface()->get_buttonAdd().clicked())
-    {
-        std::cout << "Ajouter une espece " << std::endl;
-    }
-}
-
-void add_espece(Graph& g)
-{
-    //On voit si y a un clique sur les bouttons de la barre outils
-    g.get_interface()->get_buttonDelete().interact_focus();
-
-    if(g.get_interface()->get_buttonDelete().clicked())
-    {
-        std::cout << "Supprimer une espece " << std::endl;
-    }
-}
 
 void acces_G1(Graph& g)
 {

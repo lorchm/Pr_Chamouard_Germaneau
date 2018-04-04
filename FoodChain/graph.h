@@ -240,8 +240,6 @@ class Edge
         /// indice du sommet d'arrivée de l'arc
         int m_to;
 
-
-
         /// Les constructeurs sont à compléter selon vos besoin...
         /// Ici on ne donne qu'un seul constructeur qui peut utiliser une interface
         Edge (double weight=0, EdgeInterface *interface=nullptr) :
@@ -346,6 +344,10 @@ class Graph
         void chargement_fichier_a();
 
         void sauv_graphea();
+
+        ///Ajouter et supprimer espèce
+        void delete_espece();
+        void add_espece();
 
         /// La méthode update à appeler dans la boucle de jeu pour les graphes avec interface
         void update();

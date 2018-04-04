@@ -11,8 +11,7 @@
 
 
 void affichage_outil();
-void delete_espece(Graph& g);
-void add_espece(Graph& g);
+
 
 void acces_G1(Graph& g);
 void acces_G2(Graph& g);

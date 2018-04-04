@@ -287,6 +287,30 @@ void Graph::sauv_graphea()
 
 }
 
+///Ajouter et supprimer une espèce
+void Graph::add_espece()
+{
+    //On voit si y a un clique sur les bouttons de la barre outils
+    m_interface->get_buttonAdd().interact_focus();
+
+    if(m_interface->get_buttonAdd().clicked())
+    {
+        std::cout << "Ajouter une espece " << std::endl;
+    }
+}
+
+void Graph::delete_espece()
+{
+    //On voit si y a un clique sur les bouttons de la barre outils
+    m_interface->get_buttonDelete().interact_focus();
+
+    if(m_interface->get_buttonDelete().clicked())
+    {
+        std::cout << "Supprimer une espece " << std::endl;
+
+       // m_vertices.erase(2);
+    }
+}
 
 /// La méthode update à appeler dans la boucle de jeu pour les graphes avec interface
 void Graph::update()
