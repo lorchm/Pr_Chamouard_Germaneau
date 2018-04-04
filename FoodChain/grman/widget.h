@@ -261,6 +261,7 @@ class WidgetButton : public Widget
 
     public :
 
+        //si y a clique m_value =  true
         virtual void interact_focus();
         virtual bool captures_focus() { return true; }
 

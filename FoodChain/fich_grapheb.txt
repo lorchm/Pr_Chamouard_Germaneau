@@ -1,0 +1,32 @@
+12
+
+100 0 100 grapheb2.jpg
+100 100 250 grapheb1.jpg
+100 200 50 grapheb3.jpg
+100 350 500 grapheb6.jpg
+100 350 200 grapheb5.jpg
+100 400 0 grapheb4.jpg
+100 520 500 grapheb7.jpg
+100 520 200 grapheb8.jpg
+100 700 150 grapheb9.jpg
+100 200 200 grapheb10.jpg
+100 300 300 grapheb11.jpg
+100 400 400 grapheb12.jpg
+
+16
+
+5 4
+6 4
+2 5
+2 6
+3 2
+7 3
+1 6
+7 2
+9 8
+10 9
+11 9
+7 10
+12 7
+12 10
+12 11

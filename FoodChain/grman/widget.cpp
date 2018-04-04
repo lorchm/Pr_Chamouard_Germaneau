@@ -214,10 +214,14 @@ void WidgetCheckBox::interact_focus()
 
 void WidgetButton::interact_focus()
 {
-    if ( mouse_click )
+    //il faut aussi que le click soit dans la case du boutton pour ça on utilise la dimension de la frame du boutton
+    // il y a un +26 car la tool bar ne commence pas aux coordonnées (0,0) du screen
+    if ( mouse_click &&  mouse_x < this->get_frame().dim.x  && mouse_x > this->get_frame().pos.x + 26
+        && mouse_y< this->get_frame().dim.y +this->get_frame().pos.y && mouse_y > this->get_frame().pos.y )
+    {
         m_value = true;
+    }
 }
-
 
 
 /***************************************************
@@ -407,3 +411,4 @@ void WidgetEdge::draw()
 
 
 }
+

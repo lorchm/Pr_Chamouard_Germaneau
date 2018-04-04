@@ -161,6 +161,10 @@ class Vertex
         /// Voir l'implémentation Graph::update dans le .cpp
         void pre_update();
         void post_update();
+
+        //getters
+        std::shared_ptr<VertexInterface> get_interface(){return m_interface;}
+
 };
 
 
@@ -266,12 +270,30 @@ class GraphInterface
 
         // A compléter éventuellement par des widgets de décoration ou
         // d'édition (boutons ajouter/enlever ...)
+        ///Boutton pour accéder aux 3 réseaux
+        grman::WidgetButton m_buttonG1;
+        grman::WidgetButton m_buttonG2;
+        grman::WidgetButton m_buttonG3;
+        ///Boutton pour ajouter/enlever une espèce
+        grman::WidgetButton m_buttonAdd;
+        grman::WidgetButton m_buttonDelete;
+        ///Boutton pour quitter les programme
+        grman::WidgetButton m_buttonExit;
 
     public :
 
         // Le constructeur met en place les éléments de l'interface
         // voir l'implémentation dans le .cpp
         GraphInterface(int x, int y, int w, int h);
+
+        //getter pour les bouttons button
+        grman::WidgetButton &get_buttonG1(){return m_buttonG1;}
+        grman::WidgetButton &get_buttonG2(){return m_buttonG2;}
+        grman::WidgetButton &get_buttonG3(){return m_buttonG3;}
+
+        grman::WidgetButton &get_buttonAdd(){return m_buttonAdd;}
+        grman::WidgetButton &get_buttonDelete(){return m_buttonDelete;}
+        grman::WidgetButton &get_buttonExit(){return m_buttonExit;}
 };
 
 
@@ -305,9 +327,14 @@ class Graph
         /// de chargement de fichiers par exemple.
         void chargement_fichier_a();
 
-
         /// La méthode update à appeler dans la boucle de jeu pour les graphes avec interface
         void update();
+
+        //getter pour m_interface
+        std::shared_ptr<GraphInterface> &get_interface(){return m_interface;}
+        std::map<int, Vertex> get_vertices(){return m_vertices;}
+        std::map<int, Edge> get_edges(){return m_edges;}
+
 };
 
 

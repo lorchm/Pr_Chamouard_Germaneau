@@ -24,13 +24,21 @@ int main()
         g.update();
 
         ///Affichage barre outil
+        affichage_outil();
 
         /// Mise à jour générale (clavier/souris/buffer etc...)
         grman::mettre_a_jour();
 
-                affichage_outil(screen);
+        ///Appel les fonctions pour gérer les actions sur les bouttons
+        acces_G1(g);
+        acces_G2(g);
+        acces_G3(g);
 
+        add_espece(g);
+        delete_espece(g);
+        exit(g);
 
+//        g.get_vertices()[g.get_edges[2].m_from].get_interface()=nullptr;
     }
 
     grman::fermer_allegro();

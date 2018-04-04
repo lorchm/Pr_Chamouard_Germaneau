@@ -151,6 +151,37 @@ GraphInterface::GraphInterface(int x, int y, int w, int h)
     m_main_box.set_dim(908,720);
     m_main_box.set_gravity_xy(grman::GravityX::Right, grman::GravityY::Up);
     m_main_box.set_bg_color(BLANCJAUNE);
+
+    //Boutton 1 de la tool box, pour le graphe 1
+    m_tool_box.add_child(m_buttonG1);
+    m_buttonG1.set_frame(2,0,80,80);
+    m_buttonG1.set_bg_color(ROSE);
+    m_buttonG1.set_gravity_xy(grman::GravityX::Left, grman::GravityY::Up);
+
+    //Boutton 2 de la tool box, pour le graphe 2
+    m_tool_box.add_child(m_buttonG2);
+    m_buttonG2.set_frame(2,80,80,80);
+    m_buttonG2.set_bg_color(VERTCLAIR);
+
+    //Boutton 3 de la tool box, pour le graphe 3
+    m_tool_box.add_child(m_buttonG3);
+    m_buttonG3.set_frame(2,160,80,80);
+    m_buttonG3.set_bg_color(ORANGECLAIR);
+
+    //Boutton ajout espèce de la tool box
+    m_tool_box.add_child(m_buttonAdd);
+    m_buttonAdd.set_frame(2,486,80,80);
+    m_buttonAdd.set_bg_color(FUCHSIACLAIR);
+
+    //Boutton enlever espece de la tool box
+    m_tool_box.add_child(m_buttonDelete);
+    m_buttonDelete.set_frame(2,566,80,80);
+    m_buttonDelete.set_bg_color(VIOLETCLAIR);
+
+    //Boutton exit de la tool box
+    m_tool_box.add_child(m_buttonExit);
+    m_buttonExit.set_frame(2,646,80,80);
+    m_buttonExit.set_bg_color(BLANCROSE);
 }
 
 
@@ -204,6 +235,7 @@ void Graph::chargement_fichier_a()
     }
 
 }
+
 
 /// La méthode update à appeler dans la boucle de jeu pour les graphes avec interface
 void Graph::update()
