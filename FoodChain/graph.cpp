@@ -249,7 +249,6 @@ void Graph::chargement_fichier_a()
         for(int k=0; k<nb_sommets_supp ; k++)
         {
             file >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
-            add_interfaced_bin_vertex(k, var_nb_pop, var_coordx, var_coordy, var_image);
         }
 
         file >> nb_aretes;
@@ -265,7 +264,6 @@ void Graph::chargement_fichier_a()
         for(int l=0 ; l<nb_aretes_supp ; l++)
         {
             file >> som1 >> som2 >> var_arc;
-            add_interfaced_bin_edge(l, som1, som2, var_arc);
         }
 
         file.close();
@@ -311,7 +309,6 @@ void Graph::chargement_fichier_b()
         for(int k=0; k<nb_sommets_supp ; k++)
         {
             file >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
-            add_interfaced_bin_vertex(k+1, var_nb_pop, var_coordx, var_coordy, var_image);
         }
 
         file >> nb_aretes;
@@ -327,7 +324,6 @@ void Graph::chargement_fichier_b()
         for(int l=0 ; l<nb_aretes_supp ; l++)
         {
             file >> som1 >> som2 >> var_arc;
-            add_interfaced_bin_edge(l, som1, som2, var_arc);
         }
 
         file.close();
@@ -373,7 +369,6 @@ void Graph::chargement_fichier_c()
         for(int k=0; k<nb_sommets_supp ; k++)
         {
             file >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
-            add_interfaced_bin_vertex(k+1, var_nb_pop, var_coordx, var_coordy, var_image);
         }
 
         file >> nb_aretes;
@@ -389,7 +384,6 @@ void Graph::chargement_fichier_c()
         for(int l=0 ; l<nb_aretes_supp ; l++)
         {
             file >> som1 >> som2 >> var_arc;
-            add_interfaced_bin_edge(l, som1, som2, var_arc);
         }
 
         file.close();
@@ -681,30 +675,22 @@ void Graph::delete_espece()
         // m_vertices[indice] correspond à la valeur associé à indice, soit le Sommet
         Vertex &remove_vertex = m_vertices[indice];
 
-        //cherche le sommet a partir de son indice
-        for (auto &elt : m_vertices)
+        //on supprimer les aretes de ce sommet
+        //les artes sortantes et entrantes
+        for( unsigned int i= 0; i < remove_vertex.m_out.size(); i++)
         {
-            //sommet trouvé
-            if ( elt.first == indice)
-            {
-                //on supprimer les aretes de ce sommet
-                //les artes sortantes et entrantes
-                for( unsigned int i= 0; i < elt.second.m_out.size(); i++)
-                {
-                    //suppression des aretes sortantes
-                    remove_edge( elt.second.m_out[i] );
-                    std::cout << "indice arete sortante = " << elt.second.m_out[i] << std::endl;
-                }
+            //suppression des aretes sortantes
+            remove_edge( remove_vertex.m_out[i] );
+            std::cout << "indice arete sortante = " << remove_vertex.m_out[i] << std::endl;
+        }
 
-                //meme chose mais pur les aretes entrantes
-                for( unsigned int i= 0; i < elt.second.m_in.size(); i++)
-                {
-                    //suppression des aretes entrantes
-                    remove_edge( elt.second.m_in[i] );
-                    std::cout << "indice arete entrante = " << elt.second.m_in[i] << std::endl;
+        //meme chose mais pur les aretes entrantes
+        for( unsigned int i= 0; i < remove_vertex.m_in.size(); i++)
+        {
+            //suppression des aretes entrantes
+            remove_edge( remove_vertex.m_in[i] );
+            std::cout << "indice arete entrante = " << remove_vertex.m_in[i] << std::endl;
 
-                }
-            }
         }
 
         //Il faut retirer l'interface de ce sommet de la main box
@@ -714,8 +700,7 @@ void Graph::delete_espece()
         }
 
         //Puis ajouter le sommet à la map poubelle retirer le sommet de la map normale
-        add_interfaced_bin_vertex(indice, remove_vertex.m_value, remove_vertex.m_interface->m_top_box.get_frame().pos.x,
-                                remove_vertex.m_interface->m_top_box.get_frame().pos.y, remove_vertex.m_interface->m_img.get_pic_name() , 0);
+
         m_vertices.erase( indice );
     }
 }
@@ -757,7 +742,6 @@ void Graph::remove_edge(int eidx)
 /// mais malheureusement ceci n'enlevait pas automatiquement l'interface top_edge en tant que child de main_box !
 
     /** on ajoute l'arête dans une autre map contenant les aretes suppr**/
-    add_interfaced_bin_edge(eidx, remed.m_from, remed.m_to, remed.m_weight);
     m_edges.erase( eidx );
 
 /// Tester la cohérence : nombre d'arc entrants et sortants des sommets 1 et 2
@@ -831,48 +815,7 @@ void Graph::add_interfaced_edge(int idx, int id_vert1, int id_vert2, int weight)
     m_vertices[id_vert2].m_in.push_back(id_vert1);
 }
 
-/// Aide à l'ajout de sommets non présents sur le graphe
-void Graph::add_interfaced_bin_vertex(int idx, int value, int x, int y, std::string pic_name, int pic_idx)
-{
-    /*parcours les indices de sommet de la map pour voir si le sommet a pas déjà été crée, si c le cas y un message d'erreur*/
-    if ( m_bin_vertices.find(idx)!=m_bin_vertices.end() )
-    {
-        std::cerr << "Error adding vertex at idx=" << idx << " already used..." << std::endl;
-        throw "Error adding vertex";
-    }
-    // Création d'une interface de sommet
-    VertexInterface *vi = new VertexInterface(idx, x, y, pic_name, pic_idx);
-    // Ajout de la top box de l'interface de sommet
-    m_interface->m_main_box.add_child(vi->m_top_box);
-    // On peut ajouter directement des vertices dans la map avec la notation crochet :
-    m_bin_vertices[idx] = Vertex(value, vi);
-}
 
-/// Aide à l'ajout d'arcs non présent sur le graphe
-void Graph::add_interfaced_bin_edge(int idx, int id_vert1, int id_vert2, int weight)
-{
-    if ( m_bin_edges.find(idx)!=m_bin_edges.end() )
-    {
-        std::cerr << "Error adding edge at idx=" << idx << " already used..." << std::endl;
-        throw "Error adding edge";
-    }
-
-    if ( m_bin_vertices.find(id_vert1)==m_bin_vertices.end() || m_bin_vertices.find(id_vert2)==m_vertices.end()
-        || m_vertices.find(id_vert1)==m_vertices.end() || m_vertices.find(id_vert2)==m_vertices.end() )
-    {
-        std::cerr << "Error adding edge idx=" << idx << " between vertices " << id_vert1 << " and " << id_vert2 << " not in m_vertices" << std::endl;
-        throw "Error adding edge";
-    }
-
-    EdgeInterface *ei = new EdgeInterface(m_bin_vertices[id_vert1], m_bin_vertices[id_vert2]);
-    m_interface->m_main_box.add_child(ei->m_top_edge);
-    m_bin_edges[idx] = Edge(weight, ei);
-    m_bin_edges[idx].m_from = id_vert1;
-    m_bin_edges[idx].m_to = id_vert2;
-
-    m_bin_vertices[id_vert1].m_out.push_back(id_vert2);
-    m_bin_vertices[id_vert2].m_in.push_back(id_vert1);
-}
 
 /*****************************************************
 Affichage tour de boucle
