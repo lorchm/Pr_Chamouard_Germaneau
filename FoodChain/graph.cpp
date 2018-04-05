@@ -8,11 +8,8 @@ using namespace std;
 ****************************************************/
 
 /// Le constructeur met en place les éléments de l'interface
-VertexInterface::VertexInterface(int idx, int x, int y, std::string pic_name, int pic_idx, bool presence)
+VertexInterface::VertexInterface(int idx, int x, int y, std::string pic_name, int pic_idx)
 {
-
-    m_presence = presence;
-
     // La boite englobante
     m_top_box.set_pos(x, y);
     m_top_box.set_dim(130, 100);
@@ -45,6 +42,7 @@ VertexInterface::VertexInterface(int idx, int x, int y, std::string pic_name, in
 
     m_box_label_idx.add_child( m_label_idx );
     m_label_idx.set_message( std::to_string(idx) );
+
 }
 
 
@@ -208,11 +206,6 @@ GraphInterface::GraphInterface(int x, int y, int w, int h)
     m_lect.set_frame(2,366,80,80);
     m_save.set_bg_color(BLANC);
 
-
-
-
-
-
 }
 
 
@@ -248,6 +241,7 @@ void Graph::chargement_fichier_a()
         {
             file >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
             add_interfaced_vertex(i, var_nb_pop, var_coordx, var_coordy, var_image);
+
         }
 
         file >> nb_sommets_supp;
@@ -317,7 +311,9 @@ void Graph::chargement_fichier_b()
         for(int k=0; k<nb_sommets_supp ; k++)
         {
             file >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
+
             add_interfaced_bin_vertex(k+1, var_nb_pop, var_coordx, var_coordy, var_image);
+
         }
 
         file >> nb_aretes;
@@ -380,6 +376,7 @@ void Graph::chargement_fichier_c()
         {
             file >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
             add_interfaced_bin_vertex(k, var_nb_pop, var_coordx, var_coordy, var_image);
+
         }
 
         file >> nb_aretes;
@@ -468,7 +465,8 @@ void Graph::sauv_grapheb()
 
     if(file)
     {
-            ///Ecrire le nombre de vertices
+
+        ///Ecrire le nombre de vertices
         file << m_vertices.size() << std::endl << std::endl;
 
         ///Ecrire la valeur et positions des sommets
@@ -522,7 +520,7 @@ void Graph::sauv_graphec()
 
     if(file)
     {
-       ///Ecrire le nombre de vertices
+        ///Ecrire le nombre de vertices
         file << m_vertices.size() << std::endl << std::endl;
 
         ///Ecrire la valeur et positions des sommets
@@ -579,6 +577,97 @@ void Graph::add_espece()
         std::cout << "Ajouter une espece " << std::endl;
     }
 }
+//
+//void Graph::delete_espece(int indice)
+//{
+//    //On voit si y a un clique sur les bouttons de la barre outils
+//    m_interface->get_buttonDelete().interact_focus();
+//
+//    if(m_interface->get_buttonDelete().clicked())
+//    {
+//        Vertex &temp_vertex = m_vertices[4];
+//        std::cout << "Supprimer une espece. qui delete: " << std::endl;
+//        int choix;
+//        std::cin>>choix;
+//        if(choix==indice)
+//        {
+//            //parcours la map des sommets à la recherhce du sommet à delete
+//            for (auto &elt : m_vertices)
+//            {
+//                //on a trouve la clé correspondant à l'indice du sommet
+//                if(elt.first == indice)
+//                {
+//                    //sommet temporaire qui prend la valeur du sommet à suppr (pas une copie)
+//                     temp_vertex = elt.second;
+//                     std::cout << " sommet trouvé, indice:" << elt.first << std::endl;
+//                }
+//
+//            }
+//
+//            std::cout << "les aretes entrantes du sommet" << indice << std::endl;
+//            for(unsigned int i = 0; i < temp_vertex.m_in.size(); i++)
+//            {
+//                std::cout << "les aretes entrantes, indice=" << temp_vertex.m_in[i] << std::endl;
+//            }
+//
+//            for(unsigned int i = 0; i < temp_vertex.m_out.size(); i++)
+//            {
+//                std::cout << "les aretes sortantes, indice=" << temp_vertex.m_out[i] << std::endl;
+//            }
+//
+//
+//             //on recherhce les aretes entrantes du sommet
+//             for (auto &elt : m_edges)
+//             {
+//                 //sert à parcourir le vecteur m_in
+//                 for(unsigned int i = 0; i < temp_vertex.m_in.size(); i++)
+//                 {
+//                     //si l'indice (de la map) est égale à l'indice d'une case des aretes entrantes (m_in)
+//                    if(elt.first == temp_vertex.m_in[i])
+//                    {
+//                        //on crée une arête temp qui est l'une des aretes entrantes du sommet
+//                        Edge &temp_edge = elt.second;
+//                        std::cout << "arete indice " << elt.first << std::endl;
+//                        std::cout << "from=" << temp_edge.getFrom() -1 << "to=" << temp_edge.getTo() -1 << std::endl;
+//                    }
+//
+//                 }
+//             }
+////
+////             std::cout << m_vertices[2].m_in.size() << " " << m_vertices[2].m_out.size() << std::endl;
+////    std::cout << m_vertices[remed.m_to].m_in.size() << " " << m_vertices[remed.m_to].m_out.size() << std::endl;
+////    std::cout << m_edges.size() << std::endl;
+//
+//
+//
+//
+////            for (auto &elt : m_edges)
+////            {
+////                if(elt.second.m_from == 2) m_edges.erase(2);
+////
+////                if(elt.second.m_to == 2) m_edges.erase(2);
+////            }
+////            m_vertices.erase(2);
+////
+////            std::cout << "fin suppr";
+//        }
+//
+//
+////            for (auto &elt : m_vertices)
+////            {
+////                if(grman::mouse_click && mouse_x < elt.second.m_interface->m_top_box.get_frame().dim.x && mouse_x > elt.second.m_interface->m_top_box.get_frame().pos.x
+////                   &&  mouse_y< elt.second.m_interface->m_top_box.get_frame().dim.y + elt.second.m_interface->m_top_box.get_frame().pos.y
+////                     && mouse_y > elt.second.m_interface->m_top_box.get_frame().pos.y )
+////                {
+////                    std::cout <<"sommet indice=" << elt.first << "posx="<<elt.second.m_interface->m_top_box.get_frame().pos.x<<" posy="<<elt.second.m_interface->m_top_box.get_frame().pos.y;
+////
+////                }
+////            }
+//
+//
+//    }
+//}
+
 
 void Graph::delete_espece()
 {
@@ -587,36 +676,97 @@ void Graph::delete_espece()
 
     if(m_interface->get_buttonDelete().clicked())
     {
-        std::cout << "Supprimer une espece. qui delete: " << std::endl;
-        int choix;
-        std::cin>>choix;
-        if(choix==2)
+        std::cout << "Indiquez l'indice de l'espece a supprimer : " << std::endl;
+        int indice;
+        std::cin>>indice;
+
+        // m_vertices[indice] correspond à la valeur associé à indice, soit le Sommet
+        Vertex &remove_vertex = m_vertices[indice];
+
+        //cherche le sommet a partir de son indice
+        for (auto &elt : m_vertices)
         {
-//            for (auto &elt : m_edges)
-//            {
-//                if(elt.second.m_from == 2) m_edges.erase(2);
-//
-//                if(elt.second.m_to == 2) m_edges.erase(2);
-//            }
-//            m_vertices.erase(2);
-//
-//            std::cout << "fin suppr";
+            //sommet trouvé
+            if ( elt.first == indice)
+            {
+                //on supprimer les aretes de ce sommet
+                //les artes sortantes et entrantes
+                for( unsigned int i= 0; i < elt.second.m_out.size(); i++)
+                {
+                    //suppression des aretes sortantes
+                    remove_edge( elt.second.m_out[i] );
+                    std::cout << "indice arete sortante = " << elt.second.m_out[i] << std::endl;
+                }
+
+                //meme chose mais pur les aretes entrantes
+                for( unsigned int i= 0; i < elt.second.m_in.size(); i++)
+                {
+                    //suppression des aretes entrantes
+                    remove_edge( elt.second.m_in[i] );
+                    std::cout << "indice arete entrante = " << elt.second.m_in[i] << std::endl;
+
+                }
+            }
         }
 
+        //Il faut retirer l'interface de ce sommet de la main box
+        if (m_interface && remove_vertex.m_interface)
+        {
+            m_interface->m_main_box.remove_child( remove_vertex.m_interface->m_top_box );
+        }
 
-//            for (auto &elt : m_vertices)
-//            {
-//                if(grman::mouse_click && mouse_x < elt.second.m_interface->m_top_box.get_frame().dim.x && mouse_x > elt.second.m_interface->m_top_box.get_frame().pos.x
-//                   &&  mouse_y< elt.second.m_interface->m_top_box.get_frame().dim.y + elt.second.m_interface->m_top_box.get_frame().pos.y
-//                     && mouse_y > elt.second.m_interface->m_top_box.get_frame().pos.y )
-//                {
-//                    std::cout <<"sommet indice=" << elt.first << "posx="<<elt.second.m_interface->m_top_box.get_frame().pos.x<<" posy="<<elt.second.m_interface->m_top_box.get_frame().pos.y;
-//
-//                }
-//            }
-
-
+        //Puis ajouter le sommet à la map poubelle retirer le sommet de la map normale
+        add_interfaced_bin_vertex(indice, remove_vertex.m_value, remove_vertex.m_interface->m_top_box.get_frame().pos.x,
+                                remove_vertex.m_interface->m_top_box.get_frame().pos.y, remove_vertex.m_interface->m_img.get_pic_name() , 0);
+        m_vertices.erase( indice );
     }
+}
+
+void Graph::remove_edge(int eidx)
+{
+/// référence vers le Edge à enlever
+    Edge &remed=m_edges.at(eidx);
+
+    std::cout << "Suppr arete " << eidx << " " << remed.m_from << "->" << remed.m_to << " " << remed.m_weight << std::endl;
+
+/// Tester la cohérence : nombre d'arc entrants et sortants des sommets 1 et 2
+    std::cout << m_vertices[remed.m_from].m_in.size() << " " << m_vertices[remed.m_from].m_out.size() << std::endl;
+    std::cout << m_vertices[remed.m_to].m_in.size() << " " << m_vertices[remed.m_to].m_out.size() << std::endl;
+    std::cout << m_edges.size() << std::endl;
+
+/// test : on a bien des éléments interfacés
+    if (m_interface && remed.m_interface)
+    {
+/// Ne pas oublier qu'on a fait ça à l'ajout de l'arc :
+        /* EdgeInterface *ei = new EdgeInterface(m_vertices[id_vert1], m_vertices[id_vert2]); */
+        /* m_interface->m_main_box.add_child(ei->m_top_edge); */
+        /* m_edges[idx] = Edge(weight, ei); */
+/// Le new EdgeInterface ne nécessite pas de delete car on a un shared_ptr
+/// Le Edge ne nécessite pas non plus de delete car on n'a pas fait de new (sémantique par valeur)
+/// mais il faut bien enlever le conteneur d'interface m_top_edge de l'arc de la main_box du graphe
+        m_interface->m_main_box.remove_child( remed.m_interface->m_top_edge );
+    }
+
+/// Il reste encore à virer l'arc supprimé de la liste des entrants et sortants des 2 sommets to et from !
+/// References sur les listes de edges des sommets from et to
+    std::vector<int> &vefrom = m_vertices[remed.m_from].m_out;
+    std::vector<int> &veto = m_vertices[remed.m_to].m_in;
+    vefrom.erase( std::remove( vefrom.begin(), vefrom.end(), eidx ), vefrom.end() );
+    veto.erase( std::remove( veto.begin(), veto.end(), eidx ), veto.end() );
+
+/// Le Edge ne nécessite pas non plus de delete car on n'a pas fait de new (sémantique par valeur)
+/// Il suffit donc de supprimer l'entrée de la map pour supprimer à la fois l'Edge et le EdgeInterface
+/// mais malheureusement ceci n'enlevait pas automatiquement l'interface top_edge en tant que child de main_box !
+
+    /** on ajoute l'arête dans une autre map contenant les aretes suppr**/
+    add_interfaced_bin_edge(eidx, remed.m_from, remed.m_to, remed.m_weight);
+    m_edges.erase( eidx );
+
+/// Tester la cohérence : nombre d'arc entrants et sortants des sommets 1 et 2
+    std::cout << m_vertices[remed.m_from].m_in.size() << " " << m_vertices[remed.m_from].m_out.size() << std::endl;
+    std::cout << m_vertices[remed.m_to].m_in.size() << " " << m_vertices[remed.m_to].m_out.size() << std::endl;
+    std::cout << m_edges.size() << std::endl;
+
 }
 
 /// La méthode update à appeler dans la boucle de jeu pour les graphes avec interface
@@ -681,8 +831,6 @@ void Graph::add_interfaced_edge(int idx, int id_vert1, int id_vert2, int weight)
 
     m_vertices[id_vert1].m_out.push_back(id_vert2);
     m_vertices[id_vert2].m_in.push_back(id_vert1);
-
-
 }
 
 /*****************************************************
@@ -727,9 +875,6 @@ void Graph::acces_G1(int* n)
         std::cout << "Sauvegarde du fichier 1" << std::endl;
         sauv_graphea();
     }
-
-
-
 
     /// Il faut appeler les méthodes d'update des objets qui comportent des widgets
     update();
@@ -884,6 +1029,7 @@ void Graph::sortie()
     }
 }
 
+
 /// Aide à l'ajout de sommets non présents sur le graphe
 void Graph::add_interfaced_bin_vertex(int idx, int value, int x, int y, std::string pic_name, int pic_idx)
 {
@@ -925,7 +1071,4 @@ void Graph::add_interfaced_bin_edge(int idx, int id_vert1, int id_vert2, int wei
     m_bin_vertices[id_vert1].m_out.push_back(id_vert2);
     m_bin_vertices[id_vert2].m_in.push_back(id_vert1);
 }
-
-
-
 

@@ -17,8 +17,6 @@ int main()
 
     g.chargement_fichier_c();
 
-    ///Boucle de jeu
-
     while ( !key[KEY_ESC] )
     {
 
@@ -39,11 +37,11 @@ int main()
             g.acces_G3(p_n);
         }
 
+//        g.remove_edge(2);
+
     }
 
     grman::fermer_allegro();
-
-
 
     return 0;
 }
