@@ -293,6 +293,11 @@ class GraphInterface
         ///Boutton pour quitter les programme
         grman::WidgetButton m_buttonExit;
 
+        ///Boutton save/lecture
+        grman::WidgetButton m_lect;
+        grman::WidgetButton m_save;
+
+
     public :
 
         // Le constructeur met en place les éléments de l'interface
@@ -322,6 +327,12 @@ class Graph
 
         /// le POINTEUR sur l'interface associée, nullptr -> pas d'interface
         std::shared_ptr<GraphInterface> m_interface = nullptr;
+
+        ///Liste arêtes supprimées
+        std::map<int,Edge> m_bin_edges;
+
+        ///Liste sommets supprimés
+        std::map<int,Vertex> m_bin_vertices;
 
 
     public:
@@ -357,6 +368,15 @@ class Graph
         std::shared_ptr<GraphInterface> &get_interface(){return m_interface;}
         std::map<int, Vertex> get_vertices(){return m_vertices;}
         std::map<int, Edge> get_edges(){return m_edges;}
+
+        void affichage_outil();
+
+
+        void acces_G1(int* n);
+        void acces_G2(int* n);
+        void acces_G3(int* n);
+
+        void sortie();
 
 };
 
