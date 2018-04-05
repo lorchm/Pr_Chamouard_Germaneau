@@ -601,47 +601,48 @@ void Graph::delete_espece()
         std::cout << "voici l'indice choisit "<< indice << std::endl;
         // m_vertices[indice] correspond à la valeur associé à indice, soit le Sommet
 
-        for(auto &elem : m_vertices)
+        Vertex &remove_vertex = m_vertices[indice];
+
+        ///on supprimer les aretes de ce sommet
+        //les aretes sortantes et entrantes
+        std::cout <<"parcours des aretes sortantes, il y en a" <<remove_vertex.m_out.size()<< std::endl;
+
+        for( unsigned int i= 0; i < remove_vertex.m_out.size(); i++)
         {
-            if (elem.first == indice)
-            {
-                Vertex &remove_vertex = elem.second;
-
-                ///on supprimer les aretes de ce sommet
-                //les aretes sortantes et entrantes
-                for( unsigned int i= 0; i < remove_vertex.m_out.size(); i++)
-                {
-                    //suppression des aretes sortantes
-                    remove_edge( remove_vertex.m_out[i] );
-                    std::cout << "indice arete sortante = " << remove_vertex.m_out[i] << std::endl;
-                }
-
-                //meme chose mais pour les aretes entrantes
-                for( unsigned int i= 0; i < remove_vertex.m_in.size(); i++)
-                {
-                    //suppression des aretes entrantes
-                    remove_edge( remove_vertex.m_in[i] );
-                    std::cout << "indice arete entrante = " << remove_vertex.m_in[i] << std::endl;
-
-                }
-
-                //Il faut retirer l'interface de ce sommet de la main box
-                if (m_interface && remove_vertex.m_interface)
-                {
-                    m_interface->m_main_box.remove_child( remove_vertex.m_interface->m_top_box );
-                }
-
-                //Puis ajouter le sommet à la map poubelle retirer le sommet de la map normale
-                Vertex_bin v_bin(indice, remove_vertex.m_value, remove_vertex.m_interface->m_top_box.get_frame().pos.x,
-                                 remove_vertex.m_interface->m_top_box.get_frame().pos.y, remove_vertex.m_interface->m_img.get_pic_name(), 0);
-                m_bin_vertices.push_back(v_bin);
-                m_vertices.erase( indice );
-
-            }
+            std::cout << "sortante num" << i << std::endl;
+            //suppression des aretes sortantes
+            remove_edge( remove_vertex.m_out[i] );
+            std::cout << "indice arete sortante = " << remove_vertex.m_out[i] << std::endl;
         }
+
+        std::cout <<"parcours des aretes entrantes " << std::endl;
+        std::cout << "nb sort" << remove_vertex.m_in.size() << std::endl;
+        //meme chose mais pour les aretes entrantes
+        for( unsigned int i= 0; i < remove_vertex.m_in.size(); i++)
+        {
+            std::cout << "av remove edge" << std::endl;
+            //suppression des aretes entrantes
+            remove_edge( remove_vertex.m_in[i] );
+            std::cout << "indice arete entrante = " << remove_vertex.m_in[i] << std::endl;
+        }
+
+        //Il faut retirer l'interface de ce sommet de la main box
+        if (m_interface && remove_vertex.m_interface)
+        {
+            m_interface->m_main_box.remove_child( remove_vertex.m_interface->m_top_box );
+        }
+
+        //Puis ajouter le sommet à la map poubelle retirer le sommet de la map normale
+        Vertex_bin v_bin(indice, remove_vertex.m_value, remove_vertex.m_interface->m_top_box.get_frame().pos.x,
+                         remove_vertex.m_interface->m_top_box.get_frame().pos.y, remove_vertex.m_interface->m_img.get_pic_name(), 0);
+        m_bin_vertices.push_back(v_bin);
+        m_vertices.erase( indice );
 
     }
 }
+
+
+
 
 void Graph::remove_edge(int eidx)
 {
