@@ -443,7 +443,7 @@ void Graph::sauv_graphea()
         ///Ecrire les sommets et le poids de l'arc
         for (auto &it : m_edges)
         {
-            file << it.first <<it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
+            file << it.first << " " <<it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
         }
 
         ///Ecrire le nombre de edges dans la bin
