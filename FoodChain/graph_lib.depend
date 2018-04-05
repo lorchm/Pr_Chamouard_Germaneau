@@ -60,6 +60,7 @@
 
 1522854127 D
 
+<<<<<<< HEAD
 1522919781 c:\users\barba\documents\pr_chamouard_germaneau\foodchain\graph.h
 	<vector>
 	<map>
@@ -67,6 +68,9 @@
 	<memory>
 	"grman/grman.h"
 	"grman/widget.h"
+=======
+1522859819 c:\users\barba\documents\pr_chamouard_germaneau\foodchain\graph.h
+>>>>>>> 377ae42a7bf5b684bedc5607fbac9cc590825f61
 
 1522854127 c4d27a58d011abfe1526dab406e7f59393315
 	<vector>
@@ -128,11 +132,15 @@
 1522851691 source:c:\users\barba\documents\pr_chamouard_germaneau\foodchain\grman\widget.cpp
 	"widget.h"
 
+<<<<<<< HEAD
 1522919781 source:c:\users\barba\documents\pr_chamouard_germaneau\foodchain\main.cpp
 	"grman/grman.h"
 	<iostream>
 	"graph.h"
 	"Interface.h"
+=======
+1522859801 source:c:\users\barba\documents\pr_chamouard_germaneau\foodchain\main.cpp
+>>>>>>> 377ae42a7bf5b684bedc5607fbac9cc590825f61
 
 1522854127 c:\users\barba\documents\pr_chamouard_germaneau\foodchain\interface.h
 
@@ -248,10 +256,10 @@
 1522851692 source:c:\users\laure\documents\pr_chamouard_germaneau\foodchain\grman\widget.cpp
 	"widget.h"
 
-1522855293 source:c:\users\laure\documents\pr_chamouard_germaneau\foodchain\interface.cpp
+1522867536 source:c:\users\laure\documents\pr_chamouard_germaneau\foodchain\interface.cpp
 	"Interface.h"
 
-1522855293 c:\users\laure\documents\pr_chamouard_germaneau\foodchain\interface.h
+1522867536 c:\users\laure\documents\pr_chamouard_germaneau\foodchain\interface.h
 	<iostream>
 	<vector>
 	<map>
@@ -260,7 +268,7 @@
 	"grman/widget.h"
 	"Graph.h"
 
-1522855744 c:\users\laure\documents\pr_chamouard_germaneau\foodchain\graph.h
+1522918593 c:\users\laure\documents\pr_chamouard_germaneau\foodchain\graph.h
 	<vector>
 	<map>
 	<string>
@@ -268,13 +276,13 @@
 	"grman/grman.h"
 	"grman/widget.h"
 
-1522858685 source:c:\users\laure\documents\pr_chamouard_germaneau\foodchain\main.cpp
+1522916157 source:c:\users\laure\documents\pr_chamouard_germaneau\foodchain\main.cpp
 	"grman/grman.h"
 	<iostream>
 	"graph.h"
 	"Interface.h"
 
-1522858667 source:c:\users\laure\documents\pr_chamouard_germaneau\foodchain\graph.cpp
+1522919752 source:c:\users\laure\documents\pr_chamouard_germaneau\foodchain\graph.cpp
 	"graph.h"
 	<fstream>
 

@@ -287,6 +287,10 @@ private :
     ///Boutton pour quitter les programme
     grman::WidgetButton m_buttonExit;
 
+    ///Boutton save/lecture
+    grman::WidgetButton m_lect;
+    grman::WidgetButton m_save;
+
 public :
 
     // Le constructeur met en place les éléments de l'interface
@@ -349,6 +353,12 @@ public:
     Graph (GraphInterface *interface=nullptr) :
         m_interface(interface)  {  }
 
+        ///Liste arêtes supprimées
+        std::map<int,Edge> m_bin_edges;
+
+        ///Liste sommets supprimés
+        std::map<int,Vertex> m_bin_vertices;
+
     void add_interfaced_vertex(int idx, int value, int x, int y, std::string pic_name="", int pic_idx=0, bool presence=true );
     void add_interfaced_edge(int idx, int vert1, int vert2, int weight=0);
 
@@ -389,6 +399,15 @@ public:
     {
         return m_edges;
     }
+
+        void affichage_outil();
+
+
+        void acces_G1(int* n);
+        void acces_G2(int* n);
+        void acces_G3(int* n);
+
+        void sortie();
 
 };
 
