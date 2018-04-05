@@ -14,7 +14,7 @@ int main()
 
     /// Un exemple de graphe
     Graph g;
-    g.chargement_fichier_c();
+    g.chargement_fichier_a();
 
     /// Vous gardez la main sur la "boucle de jeu"
     /// ( contrairement à des frameworks plus avancés )
@@ -39,11 +39,13 @@ int main()
         exit(g);
 
 
+//        g.remove_edge(2);
+
     }
 
     grman::fermer_allegro();
 
-    g.sauv_graphec();
+    g.sauv_graphea();
 
     return 0;
 }

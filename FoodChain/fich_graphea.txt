@@ -1,34 +1,21 @@
-9
+8
 
-<<<<<<< HEAD
-45 11 94 graphea2.jpg
-100 41 284 graphea1.jpg
+100 0 100 graphea2.jpg
+100 54 312 graphea1.jpg
 100 200 50 graphea3.jpg
-100 262 575 graphea6.jpg
-100 317 361 graphea5.jpg
-100 400 0 graphea4.jpg
-100 659 515 graphea7.jpg
-=======
-100 7 35 graphea2.jpg
-100 3 354 graphea1.jpg
-100 200 50 graphea3.jpg
-100 185 582 graphea6.jpg
-100 284 370 graphea5.jpg
+100 229 548 graphea6.jpg
 100 400 0 graphea4.jpg
 100 520 500 graphea7.jpg
->>>>>>> bedc4d27a58d011abfe1526dab406e7f59393315
 100 520 200 graphea8.jpg
 100 700 150 graphea9.jpg
 
-10
+8
 
 0 2 1
-2 5 1
 5 8 1
 5 7 1
 1 2 1
 1 4 1
 1 3 1
-4 7 1
 3 6 1
 6 8 1
