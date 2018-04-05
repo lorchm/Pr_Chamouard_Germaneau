@@ -293,7 +293,7 @@ void Graph::chargement_fichier_b()
     int var_coordy;
     std::string var_image;
 
-   int indice;
+    int indice;
     int nb_aretes;
     int nb_aretes_supp;
     int som1;
@@ -443,7 +443,7 @@ void Graph::sauv_graphea()
         ///Ecrire les sommets et le poids de l'arc
         for (auto &it : m_edges)
         {
-            file << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
+            file << it.first <<it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
         }
 
         ///Ecrire le nombre de edges dans la bin
@@ -452,7 +452,7 @@ void Graph::sauv_graphea()
         ///Ecrire les sommets et le poids de l'arc
         for (unsigned int i = 0 ; i<m_bin_edges.size() ; i++)
         {
-            file << i  << " " << m_bin_edges[i].m_vert1 << " " << m_bin_edges[i].m_vert2  << " " << m_bin_edges[i].m_weight << std::endl;
+            file << m_bin_edges[i].m_indice  << " " << m_bin_edges[i].m_vert1 << " " << m_bin_edges[i].m_vert2  << " " << m_bin_edges[i].m_weight << std::endl;
         }
 
 
@@ -497,7 +497,7 @@ void Graph::sauv_grapheb()
         ///Ecrire les sommets et le poids de l'arc
         for (auto &it : m_edges)
         {
-            file << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
+            file << it.first << " " <<  it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
         }
 
         ///Ecrire le nombre de edges dans la bin
@@ -506,7 +506,7 @@ void Graph::sauv_grapheb()
         ///Ecrire les sommets et le poids de l'arc poubelle
         for (unsigned int i = 0 ; i<m_bin_edges.size() ; i++ )
         {
-            file << i << " " << m_bin_edges[i].m_vert1 << " " << m_bin_edges[i].m_vert2 << " " << m_bin_edges[i].m_weight << std::endl;
+            file << m_bin_edges[i].m_indice << " " << m_bin_edges[i].m_vert1 << " " << m_bin_edges[i].m_vert2 << " " << m_bin_edges[i].m_weight << std::endl;
         }
 
 
@@ -551,7 +551,7 @@ void Graph::sauv_graphec()
         ///Ecrire les sommets et le poids de l'arc
         for (auto &it : m_edges)
         {
-            file << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
+            file << it.first << " " << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
         }
 
         ///Ecrire le nombre de edges dans la bin
@@ -561,7 +561,7 @@ void Graph::sauv_graphec()
         ///Ecrire les sommets et le poids de l'arc
         for (unsigned int i = 0 ; i < m_bin_edges.size() ; i++)
         {
-            file << i << " " << m_bin_edges[i].m_vert1 << " " << m_bin_edges[i].m_vert2 << " " << m_bin_edges[i].m_weight << std::endl;
+            file << m_bin_edges[i].m_indice << " " << m_bin_edges[i].m_vert1 << " " << m_bin_edges[i].m_vert2 << " " << m_bin_edges[i].m_weight << std::endl;
         }
 
         file.close();
@@ -600,37 +600,46 @@ void Graph::delete_espece()
 
         std::cout << "voici l'indice choisit "<< indice << std::endl;
         // m_vertices[indice] correspond à la valeur associé à indice, soit le Sommet
-        Vertex &remove_vertex = m_vertices[indice];
 
-        ///on supprimer les aretes de ce sommet
-        //les aretes sortantes et entrantes
-        for( unsigned int i= 0; i < remove_vertex.m_out.size(); i++)
+        for(auto &elem : m_vertices)
         {
-            //suppression des aretes sortantes
-            remove_edge( remove_vertex.m_out[i] );
-            std::cout << "indice arete sortante = " << remove_vertex.m_out[i] << std::endl;
+            if (elem.first == indice)
+            {
+                Vertex &remove_vertex = elem.second;
+
+                ///on supprimer les aretes de ce sommet
+                //les aretes sortantes et entrantes
+                for( unsigned int i= 0; i < remove_vertex.m_out.size(); i++)
+                {
+                    //suppression des aretes sortantes
+                    remove_edge( remove_vertex.m_out[i] );
+                    std::cout << "indice arete sortante = " << remove_vertex.m_out[i] << std::endl;
+                }
+
+                //meme chose mais pour les aretes entrantes
+                for( unsigned int i= 0; i < remove_vertex.m_in.size(); i++)
+                {
+                    //suppression des aretes entrantes
+                    remove_edge( remove_vertex.m_in[i] );
+                    std::cout << "indice arete entrante = " << remove_vertex.m_in[i] << std::endl;
+
+                }
+
+                //Il faut retirer l'interface de ce sommet de la main box
+                if (m_interface && remove_vertex.m_interface)
+                {
+                    m_interface->m_main_box.remove_child( remove_vertex.m_interface->m_top_box );
+                }
+
+                //Puis ajouter le sommet à la map poubelle retirer le sommet de la map normale
+                Vertex_bin v_bin(indice, remove_vertex.m_value, remove_vertex.m_interface->m_top_box.get_frame().pos.x,
+                                 remove_vertex.m_interface->m_top_box.get_frame().pos.y, remove_vertex.m_interface->m_img.get_pic_name(), 0);
+                m_bin_vertices.push_back(v_bin);
+                m_vertices.erase( indice );
+
+            }
         }
 
-        //meme chose mais pour les aretes entrantes
-        for( unsigned int i= 0; i < remove_vertex.m_in.size(); i++)
-        {
-            //suppression des aretes entrantes
-            remove_edge( remove_vertex.m_in[i] );
-            std::cout << "indice arete entrante = " << remove_vertex.m_in[i] << std::endl;
-
-        }
-
-        //Il faut retirer l'interface de ce sommet de la main box
-        if (m_interface && remove_vertex.m_interface)
-        {
-            m_interface->m_main_box.remove_child( remove_vertex.m_interface->m_top_box );
-        }
-
-        //Puis ajouter le sommet à la map poubelle retirer le sommet de la map normale
-        Vertex_bin v_bin(indice, remove_vertex.m_value, remove_vertex.m_interface->m_top_box.get_frame().pos.x,
-                       remove_vertex.m_interface->m_top_box.get_frame().pos.y, remove_vertex.m_interface->m_img.get_pic_name(), 0);
-        m_bin_vertices.push_back(v_bin);
-        m_vertices.erase( indice );
     }
 }
 
@@ -743,8 +752,8 @@ void Graph::add_interfaced_edge(int idx, int id_vert1, int id_vert2, int weight)
     m_edges[idx].m_from = id_vert1;
     m_edges[idx].m_to = id_vert2;
 
-    m_vertices[id_vert1].m_out.push_back(id_vert2);
-    m_vertices[id_vert2].m_in.push_back(id_vert1);
+    m_vertices[id_vert1].m_out.push_back(idx);
+    m_vertices[id_vert2].m_in.push_back(idx);
 }
 
 
@@ -824,54 +833,54 @@ void Graph::acces_G1(int* n)
 void Graph::acces_G2(int* n)
 {
 
-        std::cout << "Bienvenue sur le graphe 2 :) " << std::endl;
+    std::cout << "Bienvenue sur le graphe 2 :) " << std::endl;
 
-        ///LECTURE
-        get_interface()->get_lect().interact_focus();
+    ///LECTURE
+    get_interface()->get_lect().interact_focus();
 
-        if(get_interface()->get_lect().clicked())
-        {
-            std::cout << "Lecture du fichier 2" << std::endl;
-            m_edges.clear();
-            m_vertices.clear();
-            chargement_fichier_b();
-        }
+    if(get_interface()->get_lect().clicked())
+    {
+        std::cout << "Lecture du fichier 2" << std::endl;
+        m_edges.clear();
+        m_vertices.clear();
+        chargement_fichier_b();
+    }
 
-        ///SAUVEGARDE
-        get_interface()->get_save().interact_focus();
+    ///SAUVEGARDE
+    get_interface()->get_save().interact_focus();
 
-        if(get_interface()->get_save().clicked())
-        {
-            std::cout << "Sauvegarde du fichier 2" << std::endl;
-            sauv_grapheb();
-        }
+    if(get_interface()->get_save().clicked())
+    {
+        std::cout << "Sauvegarde du fichier 2" << std::endl;
+        sauv_grapheb();
+    }
 
-        /// Il faut appeler les méthodes d'update des objets qui comportent des widgets
-        update();
+    /// Il faut appeler les méthodes d'update des objets qui comportent des widgets
+    update();
 
-        ///Affichage barre outil
-        affichage_outil();
+    ///Affichage barre outil
+    affichage_outil();
 
-        /// Mise à jour générale (clavier/souris/buffer etc...)
-        grman::mettre_a_jour();
+    /// Mise à jour générale (clavier/souris/buffer etc...)
+    grman::mettre_a_jour();
 
-        add_espece();
-        delete_espece();
-        sortie();
+    add_espece();
+    delete_espece();
+    sortie();
 
-        get_interface()->get_buttonG1().interact_focus();
+    get_interface()->get_buttonG1().interact_focus();
 
-        if(get_interface()->get_buttonG1().clicked())
-        {
-            *n=1;
-        }
+    if(get_interface()->get_buttonG1().clicked())
+    {
+        *n=1;
+    }
 
-        get_interface()->get_buttonG3().interact_focus();
+    get_interface()->get_buttonG3().interact_focus();
 
-        if(get_interface()->get_buttonG3().clicked())
-        {
-            *n=3;
-        }
+    if(get_interface()->get_buttonG3().clicked())
+    {
+        *n=3;
+    }
 
 }
 
