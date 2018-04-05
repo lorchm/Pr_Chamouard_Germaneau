@@ -10,7 +10,6 @@ using namespace std;
 /// Le constructeur met en place les éléments de l'interface
 VertexInterface::VertexInterface(int idx, int x, int y, std::string pic_name, int pic_idx)
 {
-
     // La boite englobante
     m_top_box.set_pos(x, y);
     m_top_box.set_dim(130, 100);
@@ -305,7 +304,6 @@ void Graph::chargement_fichier_b()
         {
             file >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
             add_interfaced_vertex(i+1, var_nb_pop, var_coordx, var_coordy, var_image);
-
         }
 
         file >> nb_sommets_supp;
@@ -368,7 +366,6 @@ void Graph::chargement_fichier_c()
         {
             file >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
             add_interfaced_vertex(i+1, var_nb_pop, var_coordx, var_coordy, var_image);
-
         }
 
         file >> nb_sommets_supp;
@@ -422,7 +419,7 @@ void Graph::sauv_graphea()
         }
 
         ///Nombre vertices dans la bin
-        file << m_bin_vertices.size() << std::endl << std::endl;
+        file << std::endl << m_bin_vertices.size() << std::endl << std::endl;
 
         ///Ecrire la valeur et positions des sommets
         for (auto &elt : m_bin_vertices)
@@ -465,6 +462,7 @@ void Graph::sauv_grapheb()
 
     if(file)
     {
+
         ///Ecrire le nombre de vertices
         file << m_vertices.size() << std::endl << std::endl;
 
@@ -554,7 +552,6 @@ void Graph::sauv_graphec()
         {
             file << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
         }
-
 
         file.close();
 
@@ -875,8 +872,6 @@ void Graph::add_interfaced_bin_edge(int idx, int id_vert1, int id_vert2, int wei
     m_bin_vertices[id_vert2].m_in.push_back(id_vert1);
 }
 
-
-
 /*****************************************************
 Affichage tour de boucle
 ******************************************************/
@@ -898,11 +893,27 @@ void Graph::affichage_outil()
 
 void Graph::acces_G1(int* n)
 {
-
-
     std::cout << "Bienvenue sur le graphe 1 :) " << std::endl;
 
-    get_interface();
+    ///LECTURE
+    get_interface()->get_lect().interact_focus();
+
+    if(get_interface()->get_lect().clicked())
+    {
+        std::cout << "Lecture du fichier 1" << std::endl;
+        m_edges.clear();
+        m_vertices.clear();
+        chargement_fichier_a();
+    }
+
+    ///SAUVEGARDE
+    get_interface()->get_save().interact_focus();
+
+    if(get_interface()->get_save().clicked())
+    {
+        std::cout << "Sauvegarde du fichier 1" << std::endl;
+        sauv_graphea();
+    }
 
     /// Il faut appeler les méthodes d'update des objets qui comportent des widgets
     update();
@@ -921,7 +932,6 @@ void Graph::acces_G1(int* n)
 
     if(get_interface()->get_buttonG3().clicked())
     {
-        sauv_graphea();
         *n=3;
     }
 
@@ -929,12 +939,8 @@ void Graph::acces_G1(int* n)
 
     if(get_interface()->get_buttonG2().clicked())
     {
-        sauv_graphea();
         *n=2;
     }
-
-    m_edges.clear();
-    m_vertices.clear();
 
 }
 
@@ -942,7 +948,26 @@ void Graph::acces_G2(int* n)
 {
 
         std::cout << "Bienvenue sur le graphe 2 :) " << std::endl;
-        chargement_fichier_b();
+
+        ///LECTURE
+        get_interface()->get_lect().interact_focus();
+
+        if(get_interface()->get_lect().clicked())
+        {
+            std::cout << "Lecture du fichier 2" << std::endl;
+            m_edges.clear();
+            m_vertices.clear();
+            chargement_fichier_b();
+        }
+
+        ///SAUVEGARDE
+        get_interface()->get_save().interact_focus();
+
+        if(get_interface()->get_save().clicked())
+        {
+            std::cout << "Sauvegarde du fichier 2" << std::endl;
+            sauv_grapheb();
+        }
 
         /// Il faut appeler les méthodes d'update des objets qui comportent des widgets
         update();
@@ -961,7 +986,6 @@ void Graph::acces_G2(int* n)
 
         if(get_interface()->get_buttonG1().clicked())
         {
-            sauv_grapheb();
             *n=1;
         }
 
@@ -969,12 +993,8 @@ void Graph::acces_G2(int* n)
 
         if(get_interface()->get_buttonG3().clicked())
         {
-            sauv_grapheb();
             *n=3;
         }
-
-        m_edges.clear();
-        m_vertices.clear();
 
 }
 
@@ -983,7 +1003,25 @@ void Graph::acces_G3(int* n)
 
     std::cout << "Bienvenue sur le graphe 3 :) " << std::endl;
 
-    chargement_fichier_c();
+    ///LECTURE
+    get_interface()->get_lect().interact_focus();
+
+    if(get_interface()->get_lect().clicked())
+    {
+        std::cout << "Lecture du fichier 3" << std::endl;
+        m_edges.clear();
+        m_vertices.clear();
+        chargement_fichier_c();
+    }
+
+    ///SAUVEGARDE
+    get_interface()->get_save().interact_focus();
+
+    if(get_interface()->get_save().clicked())
+    {
+        std::cout << "Sauvegarde du fichier 3" << std::endl;
+        sauv_graphec();
+    }
 
     /// Il faut appeler les méthodes d'update des objets qui comportent des widgets
     update();
@@ -1002,7 +1040,6 @@ void Graph::acces_G3(int* n)
 
     if(get_interface()->get_buttonG1().clicked())
     {
-        sauv_graphec();
         *n=1;
     }
 
@@ -1010,16 +1047,12 @@ void Graph::acces_G3(int* n)
 
     if(get_interface()->get_buttonG2().clicked())
     {
-        sauv_graphec();
         *n=2;
     }
 
     ///FAIRE SOUS PROGRAMME SAVE
     ///DANS LE SS PROGRAMME SORTIE METTRE PARAMETRES QUI DIT SUR LEQUEL ON A CLIQUE, SAUVEGARDER
     ///FAIRE UN TRUC SI Y'A CLIC SUR G1 OU G2 ALORS ON SAUVEGARDE G3 ET APRES ON PASSE AU POINTEUR N LA VALEUR CORRESPONDANTE
-
-    m_edges.clear();
-    m_vertices.clear();
 
 }
 
@@ -1031,8 +1064,50 @@ void Graph::sortie()
     if(get_interface()->get_buttonExit().clicked())
     {
         std::cout << "A bientot" << std::endl;
-        sauv_graphec();
         exit(0);
     }
+}
+
+
+/// Aide à l'ajout de sommets non présents sur le graphe
+void Graph::add_interfaced_bin_vertex(int idx, int value, int x, int y, std::string pic_name, int pic_idx)
+{
+    /*parcours les indices de sommet de la map pour voir si le sommet a pas déjà été crée, si c le cas y un message d'erreur*/
+    if ( m_bin_vertices.find(idx)!=m_bin_vertices.end() )
+    {
+        std::cerr << "Error adding vertex at idx=" << idx << " already used..." << std::endl;
+        throw "Error adding vertex";
+    }
+    // Création d'une interface de sommet
+    VertexInterface *vi = new VertexInterface(idx, x, y, pic_name, pic_idx);
+    // Ajout de la top box de l'interface de sommet
+    m_interface->m_main_box.add_child(vi->m_top_box);
+    // On peut ajouter directement des vertices dans la map avec la notation crochet :
+    m_bin_vertices[idx] = Vertex(value, vi);
+}
+
+/// Aide à l'ajout d'arcs non présent sur le graphe
+void Graph::add_interfaced_bin_edge(int idx, int id_vert1, int id_vert2, int weight)
+{
+    if ( m_bin_edges.find(idx)!=m_bin_edges.end() )
+    {
+        std::cerr << "Error adding edge at idx=" << idx << " already used..." << std::endl;
+        throw "Error adding edge";
+    }
+
+    if ( m_bin_vertices.find(id_vert1)==m_bin_vertices.end() || m_bin_vertices.find(id_vert2)==m_vertices.end() )
+    {
+        std::cerr << "Error adding edge idx=" << idx << " between vertices " << id_vert1 << " and " << id_vert2 << " not in m_vertices" << std::endl;
+        throw "Error adding edge";
+    }
+
+    EdgeInterface *ei = new EdgeInterface(m_bin_vertices[id_vert1], m_bin_vertices[id_vert2]);
+    m_interface->m_main_box.add_child(ei->m_top_edge);
+    m_bin_edges[idx] = Edge(weight, ei);
+    m_bin_edges[idx].m_from = id_vert1;
+    m_bin_edges[idx].m_to = id_vert2;
+
+    m_bin_vertices[id_vert1].m_out.push_back(id_vert2);
+    m_bin_vertices[id_vert2].m_in.push_back(id_vert1);
 }
 

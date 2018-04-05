@@ -323,6 +323,16 @@ public :
     {
         return m_buttonExit;
     }
+    grman::WidgetButton &get_lect()
+    {
+        return m_lect;
+    }
+    grman::WidgetButton &get_save()
+    {
+        return m_save;
+    }
+
+
 };
 
 
@@ -336,8 +346,11 @@ private :
     /// La liste des sommets
     std::map<int, Vertex> m_vertices;
 
+
+
     /// le POINTEUR sur l'interface associée, nullptr -> pas d'interface
     std::shared_ptr<GraphInterface> m_interface = nullptr;
+
 
     ///Liste arêtes supprimées
     std::map<int,Edge> m_bin_edges;
@@ -345,57 +358,48 @@ private :
     ///Liste sommets supprimés
     std::map<int,Vertex> m_bin_vertices;
 
+    public:
 
-public:
+        /// Les constructeurs sont à compléter selon vos besoin...
+        /// Ici on ne donne qu'un seul constructeur qui peut utiliser une interface
+        Graph (GraphInterface *interface=nullptr) :
+            m_interface(interface)  {  }
 
-    /// Les constructeurs sont à compléter selon vos besoin...
-    /// Ici on ne donne qu'un seul constructeur qui peut utiliser une interface
-    Graph (GraphInterface *interface=nullptr) :
-        m_interface(interface)  {  }
+        void add_interfaced_vertex(int idx, int value, int x, int y, std::string pic_name="", int pic_idx=0 );
+        void add_interfaced_edge(int idx, int vert1, int vert2, int weight=0);
 
-    void add_interfaced_vertex(int idx, int value, int x, int y, std::string pic_name="", int pic_idx=0);
-    void add_interfaced_edge(int idx, int vert1, int vert2, int weight=0);
+        void add_interfaced_bin_vertex(int idx, int value, int x, int y, std::string pic_name="", int pic_idx=0);
+        void add_interfaced_bin_edge(int idx, int vert1, int vert2, int weight=0);
 
-    void add_interfaced_bin_vertex(int idx, int value, int x, int y, std::string pic_name="", int pic_idx=0);
-    void add_interfaced_bin_edge(int idx, int vert1, int vert2, int weight=0);
 
-    /// Méthode spéciale qui construit un graphe arbitraire (démo)
-    /// Voir implémentation dans le .cpp
-    /// Cette méthode est à enlever et remplacer par un système
-    /// de chargement de fichiers par exemple.
-    void chargement_fichier_a();
-    void chargement_fichier_b();
-    void chargement_fichier_c();
+        /// Méthode spéciale qui construit un graphe arbitraire (démo)
+        /// Voir implémentation dans le .cpp
+        /// Cette méthode est à enlever et remplacer par un système
+        /// de chargement de fichiers par exemple.
+        void chargement_fichier_a();
+        void chargement_fichier_b();
+        void chargement_fichier_c();
 
-    void sauv_graphea();
-    void sauv_grapheb();
-    void sauv_graphec();
+        void sauv_graphea();
+        void sauv_grapheb();
+        void sauv_graphec();
 
-    ///Ajouter et supprimer espèce
-    void delete_espece();
-    void add_espece();
+        ///Ajouter et supprimer espèce
+        void delete_espece();
+        void add_espece();
 
-    void remove_edge(int eidx);
+        /// La méthode update à appeler dans la boucle de jeu pour les graphes avec interface
+        void update();
 
-    /// La méthode update à appeler dans la boucle de jeu pour les graphes avec interface
-    void update();
+        //getter pour m_interface
+        std::shared_ptr<GraphInterface> &get_interface(){return m_interface;}
+        std::map<int, Vertex> get_vertices(){return m_vertices;}
+        std::map<int, Edge> get_edges(){return m_edges;}
 
-    //getter pour m_interface
-    std::shared_ptr<GraphInterface> &get_interface()
-    {
-        return m_interface;
-    }
-    std::map<int, Vertex> get_vertices()
-    {
-        return m_vertices;
-    }
-    std::map<int, Edge> get_edges()
-    {
-        return m_edges;
-    }
+        void remove_edge(int eidx);
+
 
         void affichage_outil();
-
 
         void acces_G1(int* n);
         void acces_G2(int* n);

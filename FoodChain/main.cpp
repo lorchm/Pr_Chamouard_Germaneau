@@ -15,6 +15,8 @@ int main()
 
     Graph g;
 
+    g.chargement_fichier_c();
+
     while ( !key[KEY_ESC] )
     {
 
