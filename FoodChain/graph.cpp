@@ -227,6 +227,7 @@ void Graph::chargement_fichier_a()
     int var_coordy;
     std::string var_image;
 
+    int indice;
     int nb_aretes;
     int nb_aretes_supp;
     int som1;
@@ -249,21 +250,25 @@ void Graph::chargement_fichier_a()
         for(int k=0; k<nb_sommets_supp ; k++)
         {
             file >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
+            Vertex_bin temp = Vertex_bin(k,var_nb_pop, var_coordx, var_coordy, var_image,0);
+            m_bin_vertices.push_back(temp);
         }
 
         file >> nb_aretes;
 
         for(int j=0 ; j<nb_aretes ; j++)
         {
-            file >> som1 >> som2 >> var_arc;
-            add_interfaced_edge(j, som1, som2, var_arc);
+            file >> indice >> som1 >> som2 >> var_arc;
+            add_interfaced_edge(indice, som1, som2, var_arc);
         }
 
         file >> nb_aretes_supp;
 
         for(int l=0 ; l<nb_aretes_supp ; l++)
         {
-            file >> som1 >> som2 >> var_arc;
+            file >>indice >> som1 >> som2 >> var_arc;
+            Edge_bin e_temp = Edge_bin(indice, som1, som2, var_arc);
+            m_bin_edges.push_back(e_temp);
         }
 
         file.close();
@@ -288,6 +293,7 @@ void Graph::chargement_fichier_b()
     int var_coordy;
     std::string var_image;
 
+   int indice;
     int nb_aretes;
     int nb_aretes_supp;
     int som1;
@@ -302,6 +308,7 @@ void Graph::chargement_fichier_b()
         {
             file >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
             add_interfaced_vertex(i+1, var_nb_pop, var_coordx, var_coordy, var_image);
+
         }
 
         file >> nb_sommets_supp;
@@ -309,21 +316,25 @@ void Graph::chargement_fichier_b()
         for(int k=0; k<nb_sommets_supp ; k++)
         {
             file >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
+            Vertex_bin temp = Vertex_bin(k,var_nb_pop, var_coordx, var_coordy, var_image,0);
+            m_bin_vertices.push_back(temp);
         }
 
         file >> nb_aretes;
 
         for(int j=0 ; j<nb_aretes ; j++)
         {
-            file >> som1 >> som2 >> var_arc;
-            add_interfaced_edge(j, som1, som2, var_arc);
+            file >> indice >> som1 >> som2 >> var_arc;
+            add_interfaced_edge(indice, som1, som2, var_arc);
         }
 
         file >> nb_aretes_supp;
 
         for(int l=0 ; l<nb_aretes_supp ; l++)
         {
-            file >> som1 >> som2 >> var_arc;
+            file >> indice >> som1 >> som2 >> var_arc;
+            Edge_bin e_temp = Edge_bin(indice, som1, som2, var_arc);
+            m_bin_edges.push_back(e_temp);
         }
 
         file.close();
@@ -348,6 +359,7 @@ void Graph::chargement_fichier_c()
     int var_coordy;
     std::string var_image;
 
+    int indice;
     int nb_aretes;
     int nb_aretes_supp;
     int som1;
@@ -362,6 +374,7 @@ void Graph::chargement_fichier_c()
         {
             file >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
             add_interfaced_vertex(i+1, var_nb_pop, var_coordx, var_coordy, var_image);
+
         }
 
         file >> nb_sommets_supp;
@@ -369,21 +382,25 @@ void Graph::chargement_fichier_c()
         for(int k=0; k<nb_sommets_supp ; k++)
         {
             file >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
+            Vertex_bin temp = Vertex_bin(k,var_nb_pop, var_coordx, var_coordy, var_image,0);
+            m_bin_vertices.push_back(temp);
         }
 
         file >> nb_aretes;
 
         for(int j=0 ; j<nb_aretes ; j++)
         {
-            file >> som1 >> som2 >> var_arc;
-            add_interfaced_edge(j, som1, som2, var_arc);
+            file >> indice >> som1 >> som2 >> var_arc;
+            add_interfaced_edge(indice, som1, som2, var_arc);
         }
 
         file >> nb_aretes_supp;
 
         for(int l=0 ; l<nb_aretes_supp ; l++)
         {
-            file >> som1 >> som2 >> var_arc;
+            file >> indice >> som1 >> som2 >> var_arc;
+            Edge_bin e_temp = Edge_bin(indice, som1, som2, var_arc);
+            m_bin_edges.push_back(e_temp);
         }
 
         file.close();
@@ -416,9 +433,9 @@ void Graph::sauv_graphea()
         file << std::endl << m_bin_vertices.size() << std::endl << std::endl;
 
         ///Ecrire la valeur et positions des sommets
-        for (auto &elt : m_bin_vertices)
+        for (unsigned int i = 0; i< m_bin_vertices.size() ; i++)
         {
-            file << elt.second.m_value << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name()<< std::endl;
+            file << m_bin_vertices[i].m_value << " " << m_bin_vertices[i].m_x << " " << m_bin_vertices[i].m_y << " " << m_bin_vertices[i].m_pic_name << std::endl;
         }
 
         ///Ecrire le nombre de edges
@@ -434,9 +451,9 @@ void Graph::sauv_graphea()
         file << std::endl << m_bin_edges.size() << std::endl << std::endl ;
 
         ///Ecrire les sommets et le poids de l'arc
-        for (auto &it : m_bin_edges)
+        for (unsigned int i = 0 ; i<m_bin_edges.size() ; i++)
         {
-            file << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
+            file << i  << " " << m_bin_edges[i].m_vert1 << " " << m_bin_edges[i].m_vert2  << " " << m_bin_edges[i].m_weight << std::endl;
         }
 
 
@@ -470,9 +487,9 @@ void Graph::sauv_grapheb()
         file << m_bin_vertices.size() << std::endl << std::endl;
 
         ///Ecrire la valeur et positions des sommets
-        for (auto &elt : m_bin_vertices)
+        for (unsigned int i = 0 ; i<m_bin_vertices.size() ; i++)
         {
-            file << elt.second.m_value << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name()<< std::endl;
+            file << m_bin_vertices[i].m_value << " " << m_bin_vertices[i].m_x << " " << m_bin_vertices[i].m_y << " " << m_bin_vertices[i].m_pic_name << std::endl;
         }
 
         ///Ecrire le nombre de edges
@@ -487,10 +504,10 @@ void Graph::sauv_grapheb()
         ///Ecrire le nombre de edges dans la bin
         file << std::endl << m_bin_edges.size() << std::endl << std::endl ;
 
-        ///Ecrire les sommets et le poids de l'arc
-        for (auto &it : m_bin_edges)
+        ///Ecrire les sommets et le poids de l'arc poubelle
+        for (unsigned int i = 0 ; i<m_bin_edges.size() ; i++ )
         {
-            file << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
+            file << i << " " << m_bin_edges[i].m_vert1 << " " << m_bin_edges[i].m_vert2 << " " << m_bin_edges[i].m_weight << std::endl;
         }
 
 
@@ -524,9 +541,9 @@ void Graph::sauv_graphec()
         file << m_bin_vertices.size() << std::endl << std::endl;
 
         ///Ecrire la valeur et positions des sommets
-        for (auto &elt : m_bin_vertices)
+        for (unsigned int i = 0 ; i<m_bin_vertices.size() ; i++)
         {
-            file << elt.second.m_value << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name()<< std::endl;
+            file << m_bin_vertices[i].m_value << " " << m_bin_vertices[i].m_x << " " << m_bin_vertices[i].m_y << " " << m_bin_vertices[i].m_pic_name << std::endl;
         }
 
         ///Ecrire le nombre de edges
@@ -542,9 +559,9 @@ void Graph::sauv_graphec()
         file << std::endl << m_bin_edges.size() << std::endl << std::endl ;
 
         ///Ecrire les sommets et le poids de l'arc
-        for (auto &it : m_bin_edges)
+        for (unsigned int i = 0 ; i < m_bin_edges.size() ; i++)
         {
-            file << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
+            file << i << " " << m_bin_edges[i].m_vert1 << " " << m_bin_edges[i].m_vert2 << " " << m_bin_edges[i].m_weight << std::endl;
         }
 
         file.close();
@@ -568,9 +585,6 @@ void Graph::add_espece()
         std::cout << "Ajouter une espece " << std::endl;
     }
 }
-
-void Graph::delete_espece()
-
 
 void Graph::delete_espece()
 {

@@ -10,12 +10,12 @@ int main()
     grman::init();
     grman::set_pictures_path("pics");
     //Pointeur pour le menu
-    int n = 1;
+    int n = 3;
     int* p_n = &n;
 
     Graph g;
 
-    g.chargement_fichier_a();
+    g.chargement_fichier_c();
 
     while ( !key[KEY_ESC] )
     {
