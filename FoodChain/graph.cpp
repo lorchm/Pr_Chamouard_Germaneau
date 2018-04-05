@@ -677,6 +677,7 @@ void Graph::delete_espece()
         int indice;
         std::cin>>indice;
 
+        std::cout << "voici l'indice choisit "<< indice << std::endl;
         // m_vertices[indice] correspond à la valeur associé à indice, soit le Sommet
         Vertex &remove_vertex = m_vertices[indice];
 
@@ -856,7 +857,8 @@ void Graph::add_interfaced_bin_edge(int idx, int id_vert1, int id_vert2, int wei
         throw "Error adding edge";
     }
 
-    if ( m_bin_vertices.find(id_vert1)==m_bin_vertices.end() || m_bin_vertices.find(id_vert2)==m_vertices.end() )
+    if ( m_bin_vertices.find(id_vert1)==m_bin_vertices.end() || m_bin_vertices.find(id_vert2)==m_vertices.end()
+        || m_vertices.find(id_vert1)==m_vertices.end() || m_vertices.find(id_vert2)==m_vertices.end() )
     {
         std::cerr << "Error adding edge idx=" << idx << " between vertices " << id_vert1 << " and " << id_vert2 << " not in m_vertices" << std::endl;
         throw "Error adding edge";
