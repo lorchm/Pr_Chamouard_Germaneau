@@ -119,7 +119,7 @@ public :
 
     // Le constructeur met en place les éléments de l'interface
     // voir l'implémentation dans le .cpp
-    VertexInterface(int idx, int x, int y, std::string pic_name="", int pic_idx=0, bool presence = true);
+    VertexInterface(int idx, int x, int y, std::string pic_name="", int pic_idx=0);
 };
 
 
@@ -353,16 +353,10 @@ public:
     Graph (GraphInterface *interface=nullptr) :
         m_interface(interface)  {  }
 
-        ///Liste arêtes supprimées
-        std::map<int,Edge> m_bin_edges;
-
-        ///Liste sommets supprimés
-        std::map<int,Vertex> m_bin_vertices;
-
-    void add_interfaced_vertex(int idx, int value, int x, int y, std::string pic_name="", int pic_idx=0, bool presence=true );
+    void add_interfaced_vertex(int idx, int value, int x, int y, std::string pic_name="", int pic_idx=0);
     void add_interfaced_edge(int idx, int vert1, int vert2, int weight=0);
 
-    void add_interfaced_bin_vertex(int idx, int value, int x, int y, std::string pic_name="", int pic_idx=0, bool presence=true );
+    void add_interfaced_bin_vertex(int idx, int value, int x, int y, std::string pic_name="", int pic_idx=0);
     void add_interfaced_bin_edge(int idx, int vert1, int vert2, int weight=0);
 
     /// Méthode spéciale qui construit un graphe arbitraire (démo)

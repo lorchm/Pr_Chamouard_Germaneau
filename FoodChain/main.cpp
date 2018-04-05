@@ -18,8 +18,6 @@ int main()
     while ( !key[KEY_ESC] )
     {
 
-
-
         if(n==1)
         {
             g.acces_G1(p_n);

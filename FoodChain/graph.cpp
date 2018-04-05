@@ -11,8 +11,6 @@ using namespace std;
 VertexInterface::VertexInterface(int idx, int x, int y, std::string pic_name, int pic_idx)
 {
 
-    m_presence = presence;
-
     // La boite englobante
     m_top_box.set_pos(x, y);
     m_top_box.set_dim(130, 100);
@@ -252,7 +250,7 @@ void Graph::chargement_fichier_a()
         for(int k=0; k<nb_sommets_supp ; k++)
         {
             file >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
-            add_interfaced_bin_vertex(i, var_nb_pop, var_coordx, var_coordy, var_image);
+            add_interfaced_bin_vertex(k, var_nb_pop, var_coordx, var_coordy, var_image);
         }
 
         file >> nb_aretes;
@@ -265,10 +263,10 @@ void Graph::chargement_fichier_a()
 
         file >> nb_aretes_supp;
 
-        for(int l=0 : l<nb_aretes_supp ; l++)
+        for(int l=0 ; l<nb_aretes_supp ; l++)
         {
             file >> som1 >> som2 >> var_arc;
-            add_interfaced_bin_edge(j, som1, som2, var_arc);
+            add_interfaced_bin_edge(l, som1, som2, var_arc);
         }
 
         file.close();
@@ -315,7 +313,7 @@ void Graph::chargement_fichier_b()
         for(int k=0; k<nb_sommets_supp ; k++)
         {
             file >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
-            add_interfaced_bin_vertex(i+1, var_nb_pop, var_coordx, var_coordy, var_image);
+            add_interfaced_bin_vertex(k+1, var_nb_pop, var_coordx, var_coordy, var_image);
         }
 
         file >> nb_aretes;
@@ -328,10 +326,10 @@ void Graph::chargement_fichier_b()
 
         file >> nb_aretes_supp;
 
-        for(int l=0 : l<nb_aretes_supp ; l++)
+        for(int l=0 ; l<nb_aretes_supp ; l++)
         {
             file >> som1 >> som2 >> var_arc;
-            add_interfaced_bin_edge(j, som1, som2, var_arc);
+            add_interfaced_bin_edge(l, som1, som2, var_arc);
         }
 
         file.close();
@@ -378,7 +376,7 @@ void Graph::chargement_fichier_c()
         for(int k=0; k<nb_sommets_supp ; k++)
         {
             file >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
-            add_interfaced_bin_vertex(i+1, var_nb_pop, var_coordx, var_coordy, var_image);
+            add_interfaced_bin_vertex(k+1, var_nb_pop, var_coordx, var_coordy, var_image);
         }
 
         file >> nb_aretes;
@@ -391,10 +389,10 @@ void Graph::chargement_fichier_c()
 
         file >> nb_aretes_supp;
 
-        for(int l=0 : l<nb_aretes_supp ; l++)
+        for(int l=0 ; l<nb_aretes_supp ; l++)
         {
             file >> som1 >> som2 >> var_arc;
-            add_interfaced_bin_edge(j, som1, som2, var_arc);
+            add_interfaced_bin_edge(l, som1, som2, var_arc);
         }
 
         file.close();
@@ -794,7 +792,7 @@ void Graph::update()
 }
 
 /// Aide à l'ajout de sommets interfacés
-void Graph::add_interfaced_vertex(int idx, int value, int x, int y, std::string pic_name, int pic_idx, bool presence )
+void Graph::add_interfaced_vertex(int idx, int value, int x, int y, std::string pic_name, int pic_idx)
 {
     /*parcours les indices de sommet de la map pour voir si le sommet a pas déjà été crée, si c le cas y un message d'erreur*/
     if ( m_vertices.find(idx)!=m_vertices.end() )
@@ -803,7 +801,7 @@ void Graph::add_interfaced_vertex(int idx, int value, int x, int y, std::string 
         throw "Error adding vertex";
     }
     // Création d'une interface de sommet
-    VertexInterface *vi = new VertexInterface(idx, x, y, pic_name, pic_idx, presence);
+    VertexInterface *vi = new VertexInterface(idx, x, y, pic_name, pic_idx);
     // Ajout de la top box de l'interface de sommet
     m_interface->m_main_box.add_child(vi->m_top_box);
     // On peut ajouter directement des vertices dans la map avec la notation crochet :
@@ -836,7 +834,7 @@ void Graph::add_interfaced_edge(int idx, int id_vert1, int id_vert2, int weight)
 }
 
 /// Aide à l'ajout de sommets non présents sur le graphe
-void Graph::add_interfaced_bin_vertex(int idx, int value, int x, int y, std::string pic_name, int pic_idx, bool presence )
+void Graph::add_interfaced_bin_vertex(int idx, int value, int x, int y, std::string pic_name, int pic_idx)
 {
     /*parcours les indices de sommet de la map pour voir si le sommet a pas déjà été crée, si c le cas y un message d'erreur*/
     if ( m_bin_vertices.find(idx)!=m_bin_vertices.end() )
@@ -845,7 +843,7 @@ void Graph::add_interfaced_bin_vertex(int idx, int value, int x, int y, std::str
         throw "Error adding vertex";
     }
     // Création d'une interface de sommet
-    VertexInterface *vi = new VertexInterface(idx, x, y, pic_name, pic_idx, presence);
+    VertexInterface *vi = new VertexInterface(idx, x, y, pic_name, pic_idx);
     // Ajout de la top box de l'interface de sommet
     m_interface->m_main_box.add_child(vi->m_top_box);
     // On peut ajouter directement des vertices dans la map avec la notation crochet :
@@ -878,7 +876,6 @@ void Graph::add_interfaced_bin_edge(int idx, int id_vert1, int id_vert2, int wei
 }
 
 
-}
 
 /*****************************************************
 Affichage tour de boucle
@@ -905,7 +902,7 @@ void Graph::acces_G1(int* n)
 
     std::cout << "Bienvenue sur le graphe 1 :) " << std::endl;
 
-    get_interface()
+    get_interface();
 
     /// Il faut appeler les méthodes d'update des objets qui comportent des widgets
     update();
