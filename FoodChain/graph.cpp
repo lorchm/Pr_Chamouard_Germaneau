@@ -220,6 +220,7 @@ void Graph::chargement_fichier_a()
 
     ifstream file("fich_graphea.txt", ios::in);
 
+    int idx;
     int nb_sommets;
     int nb_sommets_supp;
     int var_nb_pop;
@@ -240,8 +241,8 @@ void Graph::chargement_fichier_a()
 
         for(int i=0 ; i<nb_sommets ; i++)
         {
-            file >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
-            add_interfaced_vertex(i, var_nb_pop, var_coordx, var_coordy, var_image);
+            file >> idx >>var_nb_pop >> var_coordx >> var_coordy >> var_image;
+            add_interfaced_vertex(idx, var_nb_pop, var_coordx, var_coordy, var_image);
 
         }
 
@@ -249,8 +250,8 @@ void Graph::chargement_fichier_a()
 
         for(int k=0; k<nb_sommets_supp ; k++)
         {
-            file >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
-            Vertex_bin temp = Vertex_bin(k,var_nb_pop, var_coordx, var_coordy, var_image,0);
+            file >> idx >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
+            Vertex_bin temp = Vertex_bin(idx,var_nb_pop, var_coordx, var_coordy, var_image,0);
             m_bin_vertices.push_back(temp);
         }
 
@@ -286,6 +287,7 @@ void Graph::chargement_fichier_b()
 
     ifstream file("fich_grapheb.txt", ios::in);
 
+    int idx;
     int nb_sommets;
     int nb_sommets_supp;
     int var_nb_pop;
@@ -306,8 +308,8 @@ void Graph::chargement_fichier_b()
 
         for(int i=0 ; i<nb_sommets ; i++)
         {
-            file >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
-            add_interfaced_vertex(i+1, var_nb_pop, var_coordx, var_coordy, var_image);
+            file >> idx >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
+            add_interfaced_vertex(idx, var_nb_pop, var_coordx, var_coordy, var_image);
 
         }
 
@@ -315,8 +317,8 @@ void Graph::chargement_fichier_b()
 
         for(int k=0; k<nb_sommets_supp ; k++)
         {
-            file >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
-            Vertex_bin temp = Vertex_bin(k,var_nb_pop, var_coordx, var_coordy, var_image,0);
+            file >> idx >>var_nb_pop >> var_coordx >> var_coordy >> var_image;
+            Vertex_bin temp = Vertex_bin(idx,var_nb_pop, var_coordx, var_coordy, var_image,0);
             m_bin_vertices.push_back(temp);
         }
 
@@ -352,6 +354,7 @@ void Graph::chargement_fichier_c()
 
     ifstream file("fich_graphec.txt", ios::in);
 
+    int idx;
     int nb_sommets;
     int nb_sommets_supp;
     int var_nb_pop;
@@ -372,8 +375,8 @@ void Graph::chargement_fichier_c()
 
         for(int i=0 ; i<nb_sommets ; i++)
         {
-            file >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
-            add_interfaced_vertex(i+1, var_nb_pop, var_coordx, var_coordy, var_image);
+            file >> idx >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
+            add_interfaced_vertex(idx, var_nb_pop, var_coordx, var_coordy, var_image);
 
         }
 
@@ -381,8 +384,8 @@ void Graph::chargement_fichier_c()
 
         for(int k=0; k<nb_sommets_supp ; k++)
         {
-            file >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
-            Vertex_bin temp = Vertex_bin(k,var_nb_pop, var_coordx, var_coordy, var_image,0);
+            file >> idx >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
+            Vertex_bin temp = Vertex_bin(idx,var_nb_pop, var_coordx, var_coordy, var_image,0);
             m_bin_vertices.push_back(temp);
         }
 
@@ -425,7 +428,7 @@ void Graph::sauv_graphea()
         ///Ecrire la valeur et positions des sommets
         for (auto &elt : m_vertices)
         {
-            file << elt.second.m_value << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name()<< std::endl;
+            file << elt.first << " " << elt.second.m_value << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name()<< std::endl;
         }
 
         ///Nombre vertices dans la bin
@@ -434,7 +437,7 @@ void Graph::sauv_graphea()
         ///Ecrire la valeur et positions des sommets
         for (unsigned int i = 0; i< m_bin_vertices.size() ; i++)
         {
-            file << m_bin_vertices[i].m_value << " " << m_bin_vertices[i].m_x << " " << m_bin_vertices[i].m_y << " " << m_bin_vertices[i].m_pic_name << std::endl;
+            file << m_bin_vertices[i].m_indice << " " <<  m_bin_vertices[i].m_value << " " << m_bin_vertices[i].m_x << " " << m_bin_vertices[i].m_y << " " << m_bin_vertices[i].m_pic_name << std::endl;
         }
 
         ///Ecrire le nombre de edges
@@ -479,7 +482,7 @@ void Graph::sauv_grapheb()
         ///Ecrire la valeur et positions des sommets
         for (auto &elt : m_vertices)
         {
-            file << elt.second.m_value << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name()<< std::endl;
+            file << elt.first << " " << elt.second.m_value << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name()<< std::endl;
         }
 
         ///Nombre vertices dans la bin
@@ -488,7 +491,7 @@ void Graph::sauv_grapheb()
         ///Ecrire la valeur et positions des sommets
         for (unsigned int i = 0 ; i<m_bin_vertices.size() ; i++)
         {
-            file << m_bin_vertices[i].m_value << " " << m_bin_vertices[i].m_x << " " << m_bin_vertices[i].m_y << " " << m_bin_vertices[i].m_pic_name << std::endl;
+            file << m_bin_vertices[i].m_indice << " " << m_bin_vertices[i].m_value << " " << m_bin_vertices[i].m_x << " " << m_bin_vertices[i].m_y << " " << m_bin_vertices[i].m_pic_name << std::endl;
         }
 
         ///Ecrire le nombre de edges
@@ -533,7 +536,7 @@ void Graph::sauv_graphec()
         ///Ecrire la valeur et positions des sommets
         for (auto &elt : m_vertices)
         {
-            file << elt.second.m_value << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name()<< std::endl;
+            file << elt.first << " " <<elt.second.m_value << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name()<< std::endl;
         }
 
         ///Nombre vertices dans la bin
@@ -542,7 +545,7 @@ void Graph::sauv_graphec()
         ///Ecrire la valeur et positions des sommets
         for (unsigned int i = 0 ; i<m_bin_vertices.size() ; i++)
         {
-            file << m_bin_vertices[i].m_value << " " << m_bin_vertices[i].m_x << " " << m_bin_vertices[i].m_y << " " << m_bin_vertices[i].m_pic_name << std::endl;
+            file << m_bin_vertices[i].m_indice << " " << m_bin_vertices[i].m_value << " " << m_bin_vertices[i].m_x << " " << m_bin_vertices[i].m_y << " " << m_bin_vertices[i].m_pic_name << std::endl;
         }
 
         ///Ecrire le nombre de edges
@@ -605,25 +608,36 @@ void Graph::delete_espece()
 
         ///on supprimer les aretes de ce sommet
         //les aretes sortantes et entrantes
-        std::cout <<"parcours des aretes sortantes, il y en a" <<remove_vertex.m_out.size()<< std::endl;
+        std::cout <<"1) Parcours des aretes sortantes, il y en a " <<remove_vertex.m_out.size()<< std::endl;
 
-        for( unsigned int i= 0; i < remove_vertex.m_out.size(); i++)
+        //taille des vecteurs contenant aretes sprtantes/entratnte
+        int a = remove_vertex.m_out.size();
+        int b = remove_vertex.m_in.size();
+
+        if ( !remove_vertex.m_out.empty() )
         {
-            std::cout << "sortante num" << i << std::endl;
-            //suppression des aretes sortantes
-            remove_edge( remove_vertex.m_out[i] );
-            std::cout << "indice arete sortante = " << remove_vertex.m_out[i] << std::endl;
+             for( unsigned int i= 0; i < a ; i++)
+            {
+                std::cout << "1.1) parcours des sortantes, nombre:" << i << std::endl;
+                //suppression des aretes sortantes
+                remove_edge( remove_vertex.m_out[i] );
+                std::cout << "indice arete sortante = " << remove_vertex.m_out[i] << std::endl;
+            }
         }
 
-        std::cout <<"parcours des aretes entrantes " << std::endl;
-        std::cout << "nb sort" << remove_vertex.m_in.size() << std::endl;
+        std::cout <<"2) parcours des aretes entrantes " << std::endl;
+        std::cout << "nb entrantes =" << remove_vertex.m_in.size() << std::endl;
         //meme chose mais pour les aretes entrantes
-        for( unsigned int i= 0; i < remove_vertex.m_in.size(); i++)
+        if ( !remove_vertex.m_in.empty() )
         {
-            std::cout << "av remove edge" << std::endl;
-            //suppression des aretes entrantes
-            remove_edge( remove_vertex.m_in[i] );
-            std::cout << "indice arete entrante = " << remove_vertex.m_in[i] << std::endl;
+            for( unsigned int i= 0; i < b ; i++)
+            {
+                std::cout << "2.1) parcours des entrantes, nombre:" << i << std::endl;
+
+                //suppression des aretes entrantes
+                remove_edge( remove_vertex.m_in[i] );
+                std::cout << "indice arete entrante = " << remove_vertex.m_in[i] << std::endl;
+            }
         }
 
         //Il faut retirer l'interface de ce sommet de la main box
@@ -687,9 +701,9 @@ void Graph::remove_edge(int eidx)
     m_edges.erase( eidx );
 
 /// Tester la cohérence : nombre d'arc entrants et sortants des sommets 1 et 2
-    std::cout << m_vertices[remed.m_from].m_in.size() << " " << m_vertices[remed.m_from].m_out.size() << std::endl;
-    std::cout << m_vertices[remed.m_to].m_in.size() << " " << m_vertices[remed.m_to].m_out.size() << std::endl;
-    std::cout << m_edges.size() << std::endl;
+    std::cout << "nb entrante du sommet depart ="<< m_vertices[remed.m_from].m_in.size() << " nb sortante de sommet depart=" << m_vertices[remed.m_from].m_out.size() << std::endl;
+    std::cout << "nb entrante du sommet arrive ="<<m_vertices[remed.m_to].m_in.size() << " nb sortante de sommet arrive=" << m_vertices[remed.m_to].m_out.size() << std::endl;
+    std::cout <<"nb arete apres avoir suppr=" << m_edges.size() << std::endl;
 
 }
 
