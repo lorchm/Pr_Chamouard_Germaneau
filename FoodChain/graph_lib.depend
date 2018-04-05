@@ -305,21 +305,22 @@
 	"grman/widget.h"
 	"Graph.h"
 
-1522929309 c:\users\laure\documents\pr_chamouard_germaneau\foodchain\graph.h
+1522941862 c:\users\laure\documents\pr_chamouard_germaneau\foodchain\graph.h
 	<vector>
 	<map>
 	<string>
 	<memory>
 	"grman/grman.h"
 	"grman/widget.h"
+	"bin.h"
 
-1522929309 source:c:\users\laure\documents\pr_chamouard_germaneau\foodchain\main.cpp
+1522949669 source:c:\users\laure\documents\pr_chamouard_germaneau\foodchain\main.cpp
 	"grman/grman.h"
 	<iostream>
 	"graph.h"
 	"Interface.h"
 
-1522936843 source:c:\users\laure\documents\pr_chamouard_germaneau\foodchain\graph.cpp
+1522949771 source:c:\users\laure\documents\pr_chamouard_germaneau\foodchain\graph.cpp
 	"graph.h"
 	<fstream>
 
@@ -327,5 +328,11 @@
 	"bin.h"
 
 1522941471 c:\users\barba\documents\pr_chamouard_germaneau\foodchain\bin.h
+	<string>
+
+1522941862 source:c:\users\laure\documents\pr_chamouard_germaneau\foodchain\bin.cpp
+	"bin.h"
+
+1522941862 c:\users\laure\documents\pr_chamouard_germaneau\foodchain\bin.h
 	<string>
 
