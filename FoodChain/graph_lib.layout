@@ -2,19 +2,9 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="Interface.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="207" topLine="0" />
-		</Cursor>
-	</File>
 	<File name="grman\widget.h" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="0" topLine="252" />
-		</Cursor>
-	</File>
-	<File name="graph.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="-4" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="19690" topLine="385" />
 		</Cursor>
 	</File>
 	<File name="grman\widget.cpp" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="-3" zoom_2="0">
@@ -22,20 +12,38 @@
 			<Cursor1 position="0" topLine="339" />
 		</Cursor>
 	</File>
+	<File name="main.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="-4" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="287" topLine="12" />
+		</Cursor>
+	</File>
+	<File name="graph.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="-3" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="13845" topLine="330" />
+		</Cursor>
+	</File>
+	<File name="graph.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="-4" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="8208" topLine="242" />
+		</Cursor>
+		<Folding>
+			<Collapse line="518" />
+			<Collapse line="573" />
+			<Collapse line="584" />
+			<Collapse line="624" />
+			<Collapse line="663" />
+			<Collapse line="692" />
+		</Folding>
+	</File>
+	<File name="Interface.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="207" topLine="0" />
+		</Cursor>
+	</File>
 	<File name="Interface.cpp" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="26" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="main.cpp" open="1" top="1" tabpos="3" split="0" active="1" splitpos="0" zoom_1="-4" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="287" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="graph.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="14255" topLine="347" />
-		</Cursor>
-	</File>
-	<EditorTabsLayout layout="0b402e685ac5cbda0000181800000002=0;graph_lib:graph.cpp,1;graph_lib:graph.h,*2;graph_lib:main.cpp,3;graph_lib:Interface.cpp,4;graph_lib:Interface.h,5;graph_lib:grman\widget.cpp,6;graph_lib:grman\widget.h@layout2|name=dummy;caption=;state=2098174;dir=3;layer=0;row=0;pos=0;prop=100000;bestw=814;besth=372;minw=814;minh=372;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=0b402e685ac5cbda0000181800000002;caption=;state=2098172;dir=5;layer=0;row=0;pos=0;prop=100000;bestw=200;besth=200;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|dock_size(5,0,0)=202|" />
+	<EditorTabsLayout layout="0bacfbf05ac5d3550000160100000002=*0;graph_lib:graph.cpp,1;graph_lib:graph.h,2;graph_lib:main.cpp,3;graph_lib:Interface.cpp,4;graph_lib:Interface.h,5;graph_lib:grman\widget.cpp,6;graph_lib:grman\widget.h@layout2|name=dummy;caption=;state=2098174;dir=3;layer=0;row=0;pos=0;prop=100000;bestw=814;besth=372;minw=814;minh=372;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=0bacfbf05ac5d3550000160100000002;caption=;state=2098172;dir=5;layer=0;row=0;pos=0;prop=100000;bestw=200;besth=200;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|dock_size(5,0,0)=202|" />
 </CodeBlocks_layout_file>

@@ -14,7 +14,8 @@ int main()
     int* p_n = &n;
 
     Graph g;
-    Graph g2;
+
+    g.chargement_fichier_c();
 
     ///Boucle de jeu
 

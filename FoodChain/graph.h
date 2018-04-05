@@ -312,6 +312,9 @@ class GraphInterface
         grman::WidgetButton &get_buttonAdd(){return m_buttonAdd;}
         grman::WidgetButton &get_buttonDelete(){return m_buttonDelete;}
         grman::WidgetButton &get_buttonExit(){return m_buttonExit;}
+
+        grman::WidgetButton &get_lect(){return m_lect;}
+        grman::WidgetButton &get_save(){return m_save;}
 };
 
 
@@ -342,8 +345,12 @@ class Graph
         Graph (GraphInterface *interface=nullptr) :
             m_interface(interface)  {  }
 
-        void add_interfaced_vertex(int idx, int value, int x, int y, std::string pic_name="", int pic_idx=0, bool presence=true );
+        void add_interfaced_vertex(int idx, int value, int x, int y, std::string pic_name="", int pic_idx=0 );
         void add_interfaced_edge(int idx, int vert1, int vert2, int weight=0);
+
+        void add_interfaced_bin_vertex(int idx, int value, int x, int y, std::string pic_name="", int pic_idx=0);
+        void add_interfaced_bin_edge(int idx, int vert1, int vert2, int weight=0);
+
 
         /// Méthode spéciale qui construit un graphe arbitraire (démo)
         /// Voir implémentation dans le .cpp
