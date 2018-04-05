@@ -247,6 +247,7 @@ public:
     ///Setters/Getters
     int getFrom();
     int getTo();
+    int getWeight(){return m_weight;}
 
 };
 

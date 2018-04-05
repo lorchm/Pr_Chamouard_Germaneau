@@ -395,7 +395,6 @@ void Graph::chargement_fichier_c()
 
 }
 
-
 void Graph::sauv_graphea()
 {
 
@@ -416,10 +415,10 @@ void Graph::sauv_graphea()
         file << std::endl << m_bin_vertices.size() << std::endl << std::endl;
 
         ///Ecrire la valeur et positions des sommets
-        for (auto &elt : m_bin_vertices)
-        {
-            file << elt.second.m_value << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name()<< std::endl;
-        }
+//        for (auto &elt : m_bin_vertices)
+//        {
+//            file << elt.second.m_value << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name()<< std::endl;
+//        }
 
         ///Ecrire le nombre de edges
         file << std::endl << m_edges.size() << std::endl << std::endl ;
@@ -434,10 +433,10 @@ void Graph::sauv_graphea()
         file << std::endl << m_bin_edges.size() << std::endl << std::endl ;
 
         ///Ecrire les sommets et le poids de l'arc
-        for (auto &it : m_bin_edges)
-        {
-            file << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
-        }
+//        for (auto &it : m_bin_edges)
+//        {
+//            file << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
+//        }
 
 
         file.close();
@@ -470,10 +469,10 @@ void Graph::sauv_grapheb()
         file << m_bin_vertices.size() << std::endl << std::endl;
 
         ///Ecrire la valeur et positions des sommets
-        for (auto &elt : m_bin_vertices)
-        {
-            file << elt.second.m_value << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name()<< std::endl;
-        }
+//        for (auto &elt : m_bin_vertices)
+//        {
+//            file << elt.second.m_value << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name()<< std::endl;
+//        }
 
         ///Ecrire le nombre de edges
         file << std::endl << m_edges.size() << std::endl << std::endl ;
@@ -488,10 +487,10 @@ void Graph::sauv_grapheb()
         file << std::endl << m_bin_edges.size() << std::endl << std::endl ;
 
         ///Ecrire les sommets et le poids de l'arc
-        for (auto &it : m_bin_edges)
-        {
-            file << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
-        }
+//        for (auto &it : m_bin_edges)
+//        {
+//            file << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
+//        }
 
 
         file.close();
@@ -524,10 +523,10 @@ void Graph::sauv_graphec()
         file << m_bin_vertices.size() << std::endl << std::endl;
 
         ///Ecrire la valeur et positions des sommets
-        for (auto &elt : m_bin_vertices)
-        {
-            file << elt.second.m_value << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name()<< std::endl;
-        }
+//        for (auto &elt : m_bin_vertices)
+//        {
+//            file << elt.second.m_value << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name()<< std::endl;
+//        }
 
         ///Ecrire le nombre de edges
         file << std::endl << m_edges.size() << std::endl << std::endl ;
@@ -541,11 +540,11 @@ void Graph::sauv_graphec()
         ///Ecrire le nombre de edges dans la bin
         file << std::endl << m_bin_edges.size() << std::endl << std::endl ;
 
-        ///Ecrire les sommets et le poids de l'arc
-        for (auto &it : m_bin_edges)
-        {
-            file << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
-        }
+//        ///Ecrire les sommets et le poids de l'arc
+//        for (auto &it : m_bin_edges)
+//        {
+//            file << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
+//        }
 
         file.close();
 
@@ -568,96 +567,6 @@ void Graph::add_espece()
         std::cout << "Ajouter une espece " << std::endl;
     }
 }
-//
-//void Graph::delete_espece(int indice)
-//{
-//    //On voit si y a un clique sur les bouttons de la barre outils
-//    m_interface->get_buttonDelete().interact_focus();
-//
-//    if(m_interface->get_buttonDelete().clicked())
-//    {
-//        Vertex &temp_vertex = m_vertices[4];
-//        std::cout << "Supprimer une espece. qui delete: " << std::endl;
-//        int choix;
-//        std::cin>>choix;
-//        if(choix==indice)
-//        {
-//            //parcours la map des sommets à la recherhce du sommet à delete
-//            for (auto &elt : m_vertices)
-//            {
-//                //on a trouve la clé correspondant à l'indice du sommet
-//                if(elt.first == indice)
-//                {
-//                    //sommet temporaire qui prend la valeur du sommet à suppr (pas une copie)
-//                     temp_vertex = elt.second;
-//                     std::cout << " sommet trouvé, indice:" << elt.first << std::endl;
-//                }
-//
-//            }
-//
-//            std::cout << "les aretes entrantes du sommet" << indice << std::endl;
-//            for(unsigned int i = 0; i < temp_vertex.m_in.size(); i++)
-//            {
-//                std::cout << "les aretes entrantes, indice=" << temp_vertex.m_in[i] << std::endl;
-//            }
-//
-//            for(unsigned int i = 0; i < temp_vertex.m_out.size(); i++)
-//            {
-//                std::cout << "les aretes sortantes, indice=" << temp_vertex.m_out[i] << std::endl;
-//            }
-//
-//
-//             //on recherhce les aretes entrantes du sommet
-//             for (auto &elt : m_edges)
-//             {
-//                 //sert à parcourir le vecteur m_in
-//                 for(unsigned int i = 0; i < temp_vertex.m_in.size(); i++)
-//                 {
-//                     //si l'indice (de la map) est égale à l'indice d'une case des aretes entrantes (m_in)
-//                    if(elt.first == temp_vertex.m_in[i])
-//                    {
-//                        //on crée une arête temp qui est l'une des aretes entrantes du sommet
-//                        Edge &temp_edge = elt.second;
-//                        std::cout << "arete indice " << elt.first << std::endl;
-//                        std::cout << "from=" << temp_edge.getFrom() -1 << "to=" << temp_edge.getTo() -1 << std::endl;
-//                    }
-//
-//                 }
-//             }
-////
-////             std::cout << m_vertices[2].m_in.size() << " " << m_vertices[2].m_out.size() << std::endl;
-////    std::cout << m_vertices[remed.m_to].m_in.size() << " " << m_vertices[remed.m_to].m_out.size() << std::endl;
-////    std::cout << m_edges.size() << std::endl;
-//
-//
-//
-//
-////            for (auto &elt : m_edges)
-////            {
-////                if(elt.second.m_from == 2) m_edges.erase(2);
-////
-////                if(elt.second.m_to == 2) m_edges.erase(2);
-////            }
-////            m_vertices.erase(2);
-////
-////            std::cout << "fin suppr";
-//        }
-//
-//
-////            for (auto &elt : m_vertices)
-////            {
-////                if(grman::mouse_click && mouse_x < elt.second.m_interface->m_top_box.get_frame().dim.x && mouse_x > elt.second.m_interface->m_top_box.get_frame().pos.x
-////                   &&  mouse_y< elt.second.m_interface->m_top_box.get_frame().dim.y + elt.second.m_interface->m_top_box.get_frame().pos.y
-////                     && mouse_y > elt.second.m_interface->m_top_box.get_frame().pos.y )
-////                {
-////                    std::cout <<"sommet indice=" << elt.first << "posx="<<elt.second.m_interface->m_top_box.get_frame().pos.x<<" posy="<<elt.second.m_interface->m_top_box.get_frame().pos.y;
-////
-////                }
-////            }
-//
-//
-//    }
-//}
 
 
 void Graph::delete_espece()
@@ -675,8 +584,8 @@ void Graph::delete_espece()
         // m_vertices[indice] correspond à la valeur associé à indice, soit le Sommet
         Vertex &remove_vertex = m_vertices[indice];
 
-        //on supprimer les aretes de ce sommet
-        //les artes sortantes et entrantes
+        ///on supprimer les aretes de ce sommet
+        //les aretes sortantes et entrantes
         for( unsigned int i= 0; i < remove_vertex.m_out.size(); i++)
         {
             //suppression des aretes sortantes
@@ -684,7 +593,7 @@ void Graph::delete_espece()
             std::cout << "indice arete sortante = " << remove_vertex.m_out[i] << std::endl;
         }
 
-        //meme chose mais pur les aretes entrantes
+        //meme chose mais pour les aretes entrantes
         for( unsigned int i= 0; i < remove_vertex.m_in.size(); i++)
         {
             //suppression des aretes entrantes
@@ -700,7 +609,9 @@ void Graph::delete_espece()
         }
 
         //Puis ajouter le sommet à la map poubelle retirer le sommet de la map normale
-
+        Vertex_bin v_bin(indice, remove_vertex.m_value, remove_vertex.m_interface->m_top_box.get_frame().pos.x,
+                       remove_vertex.m_interface->m_top_box.get_frame().pos.y, remove_vertex.m_interface->m_img.get_pic_name(), 0);
+        m_bin_vertices.push_back(v_bin);
         m_vertices.erase( indice );
     }
 }
@@ -742,6 +653,8 @@ void Graph::remove_edge(int eidx)
 /// mais malheureusement ceci n'enlevait pas automatiquement l'interface top_edge en tant que child de main_box !
 
     /** on ajoute l'arête dans une autre map contenant les aretes suppr**/
+    Edge_bin e_bin(eidx, remed.getFrom(), remed.getTo(), remed.getWeight());
+    m_bin_edges.push_back(e_bin);
     m_edges.erase( eidx );
 
 /// Tester la cohérence : nombre d'arc entrants et sortants des sommets 1 et 2
