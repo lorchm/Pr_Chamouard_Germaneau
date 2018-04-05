@@ -728,8 +728,8 @@ void Graph::remove_edge(int eidx)
     std::cout << "Suppr arete " << eidx << " " << remed.m_from << "->" << remed.m_to << " " << remed.m_weight << std::endl;
 
 /// Tester la cohérence : nombre d'arc entrants et sortants des sommets 1 et 2
-    std::cout << m_vertices[remed.m_from].m_in.size() << " " << m_vertices[remed.m_from].m_out.size() << std::endl;
-    std::cout << m_vertices[remed.m_to].m_in.size() << " " << m_vertices[remed.m_to].m_out.size() << std::endl;
+    std::cout <<"nb arc entrant sommet" << remed.m_from << " = " << m_vertices[remed.m_from].m_in.size() << " nb arc sortant =" << m_vertices[remed.m_from].m_out.size() << std::endl;
+    std::cout <<"nb arc entrant sommet" << remed.m_to << " = " << m_vertices[remed.m_to].m_in.size() << "nb arc sortant =" << m_vertices[remed.m_to].m_out.size() << std::endl;
     std::cout << m_edges.size() << std::endl;
 
 /// test : on a bien des éléments interfacés
