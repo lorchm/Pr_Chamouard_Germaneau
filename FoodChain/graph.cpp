@@ -232,6 +232,7 @@ void Graph::chargement_fichier_a()
     int som1;
     int som2;
     float var_arc;
+    int indice;
 
     if(file)
     {
@@ -256,16 +257,16 @@ void Graph::chargement_fichier_a()
 
         for(int j=0 ; j<nb_aretes ; j++)
         {
-            file >> som1 >> som2 >> var_arc;
-            add_interfaced_edge(j, som1, som2, var_arc);
+            file >> indice >> som1 >> som2 >> var_arc;
+            add_interfaced_edge(indice, som1, som2, var_arc);
         }
 
         file >> nb_aretes_supp;
 
         for(int l=0 ; l<nb_aretes_supp ; l++)
         {
-            file >> som1 >> som2 >> var_arc;
-            add_interfaced_bin_edge(l, som1, som2, var_arc);
+            file >> indice >> som1 >> som2 >> var_arc;
+            add_interfaced_bin_edge(indice, som1, som2, var_arc);
         }
 
         file.close();
@@ -295,6 +296,7 @@ void Graph::chargement_fichier_b()
     int som1;
     int som2;
     float var_arc;
+    int indice;
 
     if(file)
     {
@@ -318,16 +320,16 @@ void Graph::chargement_fichier_b()
 
         for(int j=0 ; j<nb_aretes ; j++)
         {
-            file >> som1 >> som2 >> var_arc;
-            add_interfaced_edge(j, som1, som2, var_arc);
+            file >> indice >> som1 >> som2 >> var_arc;
+            add_interfaced_edge(indice, som1, som2, var_arc);
         }
 
         file >> nb_aretes_supp;
 
         for(int l=0 ; l<nb_aretes_supp ; l++)
         {
-            file >> som1 >> som2 >> var_arc;
-            add_interfaced_bin_edge(l, som1, som2, var_arc);
+            file >> indice >> som1 >> som2 >> var_arc;
+            add_interfaced_bin_edge(indice, som1, som2, var_arc);
         }
 
         file.close();
@@ -357,6 +359,7 @@ void Graph::chargement_fichier_c()
     int som1;
     int som2;
     float var_arc;
+    int indice;
 
     if(file)
     {
@@ -380,16 +383,16 @@ void Graph::chargement_fichier_c()
 
         for(int j=0 ; j<nb_aretes ; j++)
         {
-            file >> som1 >> som2 >> var_arc;
-            add_interfaced_edge(j, som1, som2, var_arc);
+            file >> indice >> som1 >> som2 >> var_arc;
+            add_interfaced_edge(indice, som1, som2, var_arc);
         }
 
         file >> nb_aretes_supp;
 
         for(int l=0 ; l<nb_aretes_supp ; l++)
         {
-            file >> som1 >> som2 >> var_arc;
-            add_interfaced_bin_edge(l, som1, som2, var_arc);
+            file >> indice >> som1 >> som2 >> var_arc;
+            add_interfaced_bin_edge(indice, som1, som2, var_arc);
         }
 
         file.close();
@@ -433,7 +436,7 @@ void Graph::sauv_graphea()
         ///Ecrire les sommets et le poids de l'arc
         for (auto &it : m_edges)
         {
-            file << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
+            file << it.first << " " << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
         }
 
         ///Ecrire le nombre de edges dans la bin
@@ -442,7 +445,7 @@ void Graph::sauv_graphea()
         ///Ecrire les sommets et le poids de l'arc
         for (auto &it : m_bin_edges)
         {
-            file << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
+            file <<it.first << " " <<  it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
         }
 
 
@@ -487,7 +490,7 @@ void Graph::sauv_grapheb()
         ///Ecrire les sommets et le poids de l'arc
         for (auto &it : m_edges)
         {
-            file << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
+            file << it.first << " " << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
         }
 
         ///Ecrire le nombre de edges dans la bin
@@ -496,7 +499,7 @@ void Graph::sauv_grapheb()
         ///Ecrire les sommets et le poids de l'arc
         for (auto &it : m_bin_edges)
         {
-            file << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
+            file << it.first << " " << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
         }
 
 
@@ -541,7 +544,7 @@ void Graph::sauv_graphec()
         ///Ecrire les sommets et le poids de l'arc
         for (auto &it : m_edges)
         {
-            file << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
+            file << it.first << " " << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
         }
 
         ///Ecrire le nombre de edges dans la bin
@@ -550,7 +553,7 @@ void Graph::sauv_graphec()
         ///Ecrire les sommets et le poids de l'arc
         for (auto &it : m_bin_edges)
         {
-            file << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
+            file << it.first << " "  << it.second.m_from << " " << it.second.m_to << " " << it.second.m_weight << std::endl;
         }
 
         file.close();
@@ -574,97 +577,6 @@ void Graph::add_espece()
         std::cout << "Ajouter une espece " << std::endl;
     }
 }
-//
-//void Graph::delete_espece(int indice)
-//{
-//    //On voit si y a un clique sur les bouttons de la barre outils
-//    m_interface->get_buttonDelete().interact_focus();
-//
-//    if(m_interface->get_buttonDelete().clicked())
-//    {
-//        Vertex &temp_vertex = m_vertices[4];
-//        std::cout << "Supprimer une espece. qui delete: " << std::endl;
-//        int choix;
-//        std::cin>>choix;
-//        if(choix==indice)
-//        {
-//            //parcours la map des sommets à la recherhce du sommet à delete
-//            for (auto &elt : m_vertices)
-//            {
-//                //on a trouve la clé correspondant à l'indice du sommet
-//                if(elt.first == indice)
-//                {
-//                    //sommet temporaire qui prend la valeur du sommet à suppr (pas une copie)
-//                     temp_vertex = elt.second;
-//                     std::cout << " sommet trouvé, indice:" << elt.first << std::endl;
-//                }
-//
-//            }
-//
-//            std::cout << "les aretes entrantes du sommet" << indice << std::endl;
-//            for(unsigned int i = 0; i < temp_vertex.m_in.size(); i++)
-//            {
-//                std::cout << "les aretes entrantes, indice=" << temp_vertex.m_in[i] << std::endl;
-//            }
-//
-//            for(unsigned int i = 0; i < temp_vertex.m_out.size(); i++)
-//            {
-//                std::cout << "les aretes sortantes, indice=" << temp_vertex.m_out[i] << std::endl;
-//            }
-//
-//
-//             //on recherhce les aretes entrantes du sommet
-//             for (auto &elt : m_edges)
-//             {
-//                 //sert à parcourir le vecteur m_in
-//                 for(unsigned int i = 0; i < temp_vertex.m_in.size(); i++)
-//                 {
-//                     //si l'indice (de la map) est égale à l'indice d'une case des aretes entrantes (m_in)
-//                    if(elt.first == temp_vertex.m_in[i])
-//                    {
-//                        //on crée une arête temp qui est l'une des aretes entrantes du sommet
-//                        Edge &temp_edge = elt.second;
-//                        std::cout << "arete indice " << elt.first << std::endl;
-//                        std::cout << "from=" << temp_edge.getFrom() -1 << "to=" << temp_edge.getTo() -1 << std::endl;
-//                    }
-//
-//                 }
-//             }
-////
-////             std::cout << m_vertices[2].m_in.size() << " " << m_vertices[2].m_out.size() << std::endl;
-////    std::cout << m_vertices[remed.m_to].m_in.size() << " " << m_vertices[remed.m_to].m_out.size() << std::endl;
-////    std::cout << m_edges.size() << std::endl;
-//
-//
-//
-//
-////            for (auto &elt : m_edges)
-////            {
-////                if(elt.second.m_from == 2) m_edges.erase(2);
-////
-////                if(elt.second.m_to == 2) m_edges.erase(2);
-////            }
-////            m_vertices.erase(2);
-////
-////            std::cout << "fin suppr";
-//        }
-//
-//
-////            for (auto &elt : m_vertices)
-////            {
-////                if(grman::mouse_click && mouse_x < elt.second.m_interface->m_top_box.get_frame().dim.x && mouse_x > elt.second.m_interface->m_top_box.get_frame().pos.x
-////                   &&  mouse_y< elt.second.m_interface->m_top_box.get_frame().dim.y + elt.second.m_interface->m_top_box.get_frame().pos.y
-////                     && mouse_y > elt.second.m_interface->m_top_box.get_frame().pos.y )
-////                {
-////                    std::cout <<"sommet indice=" << elt.first << "posx="<<elt.second.m_interface->m_top_box.get_frame().pos.x<<" posy="<<elt.second.m_interface->m_top_box.get_frame().pos.y;
-////
-////                }
-////            }
-//
-//
-//    }
-//}
-
 
 void Graph::delete_espece()
 {
@@ -1049,11 +961,6 @@ void Graph::acces_G3(int* n)
     {
         *n=2;
     }
-
-    ///FAIRE SOUS PROGRAMME SAVE
-    ///DANS LE SS PROGRAMME SORTIE METTRE PARAMETRES QUI DIT SUR LEQUEL ON A CLIQUE, SAUVEGARDER
-    ///FAIRE UN TRUC SI Y'A CLIC SUR G1 OU G2 ALORS ON SAUVEGARDE G3 ET APRES ON PASSE AU POINTEUR N LA VALEUR CORRESPONDANTE
-
 }
 
 void Graph::sortie()
