@@ -44,6 +44,12 @@
 		<Unit filename="Interface.h">
 			<Option target="Debug" />
 		</Unit>
+		<Unit filename="bin.cpp">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="bin.h">
+			<Option target="Debug" />
+		</Unit>
 		<Unit filename="graph.cpp" />
 		<Unit filename="graph.h" />
 		<Unit filename="grman/coords.cpp" />

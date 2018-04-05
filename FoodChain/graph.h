@@ -79,6 +79,8 @@
 #include "grman/grman.h"
 #include "grman/widget.h"
 
+#include "bin.h"
+
 /***************************************************
                     VERTEX
 ****************************************************/
@@ -346,17 +348,12 @@ private :
     /// La liste des sommets
     std::map<int, Vertex> m_vertices;
 
-
-
     /// le POINTEUR sur l'interface associée, nullptr -> pas d'interface
     std::shared_ptr<GraphInterface> m_interface = nullptr;
 
-
-    ///Liste arêtes supprimées
-    std::map<int,Edge> m_bin_edges;
-
-    ///Liste sommets supprimés
-    std::map<int,Vertex> m_bin_vertices;
+    ///les poubelles
+    std::vector<Edge_bin> m_bin_edges;
+    std::vector<Vertex_bin> m_bin_vertices;
 
     public:
 
@@ -368,8 +365,8 @@ private :
         void add_interfaced_vertex(int idx, int value, int x, int y, std::string pic_name="", int pic_idx=0 );
         void add_interfaced_edge(int idx, int vert1, int vert2, int weight=0);
 
-        void add_interfaced_bin_vertex(int idx, int value, int x, int y, std::string pic_name="", int pic_idx=0);
-        void add_interfaced_bin_edge(int idx, int vert1, int vert2, int weight=0);
+//        void add_interfaced_bin_vertex(int idx, int value, int x, int y, std::string pic_name="", int pic_idx=0);
+//        void add_interfaced_bin_edge(int idx, int vert1, int vert2, int weight=0);
 
 
         /// Méthode spéciale qui construit un graphe arbitraire (démo)
