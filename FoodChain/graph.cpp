@@ -604,20 +604,25 @@ void Graph::delete_espece()
 
         ///on supprimer les aretes de ce sommet
         //les aretes sortantes et entrantes
+        std::cout <<"parcours des aretes sortantes, il y en a" <<remove_vertex.m_out.size()<< std::endl;
+
         for( unsigned int i= 0; i < remove_vertex.m_out.size(); i++)
         {
+            std::cout << "sortante num" << i << std::endl;
             //suppression des aretes sortantes
             remove_edge( remove_vertex.m_out[i] );
             std::cout << "indice arete sortante = " << remove_vertex.m_out[i] << std::endl;
         }
 
+        std::cout <<"parcours des aretes entrantes " << std::endl;
+        std::cout << "nb sort" << remove_vertex.m_in.size() << std::endl;
         //meme chose mais pour les aretes entrantes
         for( unsigned int i= 0; i < remove_vertex.m_in.size(); i++)
         {
+            std::cout << "av remove edge" << std::endl;
             //suppression des aretes entrantes
             remove_edge( remove_vertex.m_in[i] );
             std::cout << "indice arete entrante = " << remove_vertex.m_in[i] << std::endl;
-
         }
 
         //Il faut retirer l'interface de ce sommet de la main box
@@ -743,8 +748,8 @@ void Graph::add_interfaced_edge(int idx, int id_vert1, int id_vert2, int weight)
     m_edges[idx].m_from = id_vert1;
     m_edges[idx].m_to = id_vert2;
 
-    m_vertices[id_vert1].m_out.push_back(id_vert2);
-    m_vertices[id_vert2].m_in.push_back(id_vert1);
+    m_vertices[id_vert1].m_out.push_back(idx);
+    m_vertices[id_vert2].m_in.push_back(idx);
 }
 
 
