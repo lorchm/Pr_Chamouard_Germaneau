@@ -1,14 +1,14 @@
 9
 
 0 100 0 100 graphea2.jpg
-1 100 100 250 graphea1.jpg
-2 100 200 50 graphea3.jpg
-3 100 350 500 graphea6.jpg
-4 100 350 200 graphea5.jpg
-5 100 400 0 graphea4.jpg
-6 100 520 500 graphea7.jpg
-7 100 520 200 graphea8.jpg
-8 100 700 150 graphea9.jpg
+1 100 48 320 graphea1.jpg
+2 100 215 29 graphea3.jpg
+3 100 226 570 graphea6.jpg
+4 100 310 316 graphea5.jpg
+5 100 458 3 graphea4.jpg
+6 100 565 573 graphea7.jpg
+7 100 533 258 graphea8.jpg
+8 100 733 234 graphea9.jpg
 
 0
 
