@@ -385,6 +385,10 @@ private :
         void add_espece2();
         void add_espece3();
 
+        ///Recherche de composantes fortement connexe
+        void CFC();
+        void recherche_connexite();
+
 
         /// La méthode update à appeler dans la boucle de jeu pour les graphes avec interface
         void update();
