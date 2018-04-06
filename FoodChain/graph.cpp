@@ -927,8 +927,6 @@ void Graph::add_espece3()
     }
 }
 
-
-
 void Graph::delete_espece()
 {
     //On voit si y a un clique sur les bouttons de la barre outils
@@ -991,6 +989,15 @@ void Graph::delete_espece()
     }
 }
 
+void Graph::CFC()
+{
+
+}
+
+void Graph::recherche_connexite()
+{
+
+}
 
 /*Source principale Monsieur Fercoq*/
 void Graph::remove_edge(int eidx)
