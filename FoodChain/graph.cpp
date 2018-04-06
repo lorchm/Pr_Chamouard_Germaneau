@@ -577,17 +577,277 @@ void Graph::sauv_graphec()
 
 }
 
-///Ajouter et supprimer une espèce
-void Graph::add_espece()
+///Ajouter et supprimer une espèce dans le graphe 1
+void Graph::add_espece1()
+{
+    int add;
+
+    //On voit si y a un clique sur les bouttons de la barre outils
+    m_interface->get_buttonAdd().interact_focus();
+
+    if(m_interface->get_buttonAdd().clicked())
+    {
+        if(m_bin_vertices.size() != NULL)
+        {
+            std::cout << " Quelle espèce voulez vous ajouter ? " << std::endl;
+            std::cout << "0. Feuilles" << std::endl;
+            std::cout << "1. Herbe " << std::endl;
+            std::cout << "2. Chenille " << std::endl;
+            std::cout << "3. Sauterelle " << std::endl;
+            std::cout << "4. Lapin " << std::endl;
+            std::cout << "5. Serpent " << std::endl;
+            std::cout << "6. Geai bleu " << std::endl;
+            std::cout << "7. Aigle " << std::endl;
+            std::cout << "8. Chouette " << std::endl;
+            std::cin >> add;
+
+            while(add < 0 || add > 8 )
+            {
+                std::cout << "Vous ne pouvez pas ajouter cette espèce" << std::endl;
+                std::cout << " Quelle espèce voulez vous ajouter ? " << std::endl;
+                std::cout << "0. Feuilles" << std::endl;
+                std::cout << "1. Herbe " << std::endl;
+                std::cout << "2. Chenille " << std::endl;
+                std::cout << "3. Sauterelle " << std::endl;
+                std::cout << "4. Lapin " << std::endl;
+                std::cout << "5. Serpent " << std::endl;
+                std::cout << "6. Geai bleu " << std::endl;
+                std::cout << "7. Aigle " << std::endl;
+                std::cout << "8. Chouette " << std::endl;
+                std::cin >> add;
+            }
+
+            for(int i = 0 ; i< m_bin_vertices.size() ; i++)
+            {
+                if(m_bin_vertices[i].m_indice == add)
+                {
+                    add_interfaced_vertex(add, m_bin_vertices[i].m_value, m_bin_vertices[i].m_x, m_bin_vertices[i].m_y, m_bin_vertices[i].m_pic_name, m_bin_vertices[i].m_pic_idx);
+                }
+                else
+                {
+                    std::cout << "C'est deja sur le graphe petit coquin" << std::endl;
+                }
+            }
+
+            //retrouver les aretes qui vont avec le sommet
+            for (unsigned int i = 0; i< m_bin_edges.size(); i++)
+            {
+                if( m_bin_edges[i].m_vert1 == indice)
+                {
+                    Edge_bin &e_temp = m_bin_edges[i];
+                    ///AJOUTER ARETE LIE AU SOMMET A INTERFACE
+                    add_interfaced_edge(e_temp.m_indice, e_temp.m_vert1, e_temp.m_vert2, e_temp.m_weight);
+                    ///SUPPRIME L'ARETE DU VECTEUR POUBELLE
+                    m_bin_edges.erase( m_bin_edges.begin() + i);
+                }
+
+                //2eme cas possible
+                if( m_bin_edges[i].m_vert2 == indice )
+                {
+                    Edge_bin &e_temp = m_bin_edges[i];
+                    ///AJOUTER ARETE LIE AU SOMMET A INTERFACE
+                    add_interfaced_edge(e_temp.m_indice, e_temp.m_vert1, e_temp.m_vert2, e_temp.m_weight);
+                    ///SUPPRIME L'ARETE DU VECTEUR POUBELLE
+                    m_bin_edges.erase( m_bin_edges.begin() + i);
+                }
+            }
+
+            //retirer de map poubelles
+            //FAIRE ERASE MAIS PEUT AVOIR PB COMME AVEC DELETE
+            ///SUPPRIME LE SOMMET DU VECTEUR POUBELLE
+            m_bin_vertices.erase( m_bin_vertices.begin() + i);
+
+
+        }
+
+
+    }
+}
+
+///Ajouter et supprimer une espèce dans le graphe 2
+void Graph::add_espece2()
 {
     //On voit si y a un clique sur les bouttons de la barre outils
     m_interface->get_buttonAdd().interact_focus();
 
     if(m_interface->get_buttonAdd().clicked())
     {
-        std::cout << "Ajouter une espece " << std::endl;
+
+        if (m_bin_vertices.size() != NULL)
+        {
+            std::cout << " Quelle espèce voulez vous ajouter ? " << std::endl;
+            std::cout << "0. Baleine bleue" << std::endl;
+            std::cout << "1. Poisson " << std::endl;
+            std::cout << "2. Mouette " << std::endl;
+            std::cout << "3. Phytoplanctons " << std::endl;
+            std::cout << "4. Zooplanctons " << std::endl;
+            std::cout << "5. Crevette " << std::endl;
+            std::cout << "6. Leopard de mer " << std::endl;
+            std::cout << "7. Crabe " << std::endl;
+            std::cout << "8. Poulpe " << std::endl;
+            std::cout << "9. Pingouins " << std::endl;
+            std::cout << "10. Elephant de mer " << std::endl;
+            std::cout << "11. Orque" << std::endl;
+            std::cin >> add;
+
+            while(add < 0 || add > 11 )
+            {
+                std::cout << "Vous ne pouvez pas ajouter cette espèce" << std::endl;
+                std::cout << " Quelle espèce voulez vous ajouter ? " << std::endl;
+                std::cout << "0. Baleine bleue" << std::endl;
+                std::cout << "1. Poisson " << std::endl;
+                std::cout << "2. Mouette " << std::endl;
+                std::cout << "3. Phytoplanctons " << std::endl;
+                std::cout << "4. Zooplanctons " << std::endl;
+                std::cout << "5. Crevette " << std::endl;
+                std::cout << "6. Leopard de mer " << std::endl;
+                std::cout << "7. Crabe " << std::endl;
+                std::cout << "8. Poulpe " << std::endl;
+                std::cout << "9. Pingouins " << std::endl;
+                std::cout << "10. Elephant de mer " << std::endl;
+                std::cout << "11. Orque" << std::endl;
+                std::cin >> add;
+            }
+
+            for(int i = 0 ; i< m_bin_vertices.size() ; i++)
+            {
+                if(m_bin_vertices[i].m_indice == add)
+                {
+                    add_interfaced_vertex(add, m_bin_vertices[i].m_value, m_bin_vertices[i].m_x, m_bin_vertices[i].m_y, m_bin_vertices[i].m_pic_name, m_bin_vertices[i].m_pic_idx);
+                }
+                else
+                {
+                    std::cout << "C'est deja sur le graphe petit coquin" << std::endl;
+                }
+            }
+
+            //retrouver les aretes qui vont avec le sommet
+            for (unsigned int i = 0; i< m_bin_edges.size(); i++)
+            {
+                if( m_bin_edges[i].m_vert1 == indice)
+                {
+                    Edge_bin &e_temp = m_bin_edges[i];
+                    ///AJOUTER ARETE LIE AU SOMMET A INTERFACE
+                    add_interfaced_edge(e_temp.m_indice, e_temp.m_vert1, e_temp.m_vert2, e_temp.m_weight);
+                    ///SUPPRIME L'ARETE DU VECTEUR POUBELLE
+                    m_bin_edges.erase( m_bin_edges.begin() + i);
+                }
+
+                //2eme cas possible
+                if( m_bin_edges[i].m_vert2 == indice )
+                {
+                    Edge_bin &e_temp = m_bin_edges[i];
+                    ///AJOUTER ARETE LIE AU SOMMET A INTERFACE
+                    add_interfaced_edge(e_temp.m_indice, e_temp.m_vert1, e_temp.m_vert2, e_temp.m_weight);
+                    ///SUPPRIME L'ARETE DU VECTEUR POUBELLE
+                    m_bin_edges.erase( m_bin_edges.begin() + i);
+                }
+            }
+
+            //retirer de map poubelles
+            //FAIRE ERASE MAIS PEUT AVOIR PB COMME AVEC DELETE
+            ///SUPPRIME LE SOMMET DU VECTEUR POUBELLE
+            m_bin_vertices.erase( m_bin_vertices.begin() + i);
+        }
+
+
     }
 }
+
+///Ajouter et supprimer une espèce dans le graphe 3
+void Graph::add_espece3()
+{
+    //On voit si y a un clique sur les bouttons de la barre outils
+    m_interface->get_buttonAdd().interact_focus();
+
+    if(m_interface->get_buttonAdd().clicked())
+    {
+
+        if(m_bin_vertices.size() != NULL)
+        {
+            std::cout << " Quelle espèce voulez vous ajouter ? " << std::endl;
+            std::cout << "0. Chien sauvage" << std::endl;
+            std::cout << "1. Hyène " << std::endl;
+            std::cout << "2. Lion " << std::endl;
+            std::cout << "3. Pantère " << std::endl;
+            std::cout << "4. Chacal " << std::endl;
+            std::cout << "5. Serval " << std::endl;
+            std::cout << "6. Vautour de Ruppell" << std::endl;
+            std::cout << "7. Aigle ravisseur " << std::endl;
+            std::cout << "8. Oryctérope " << std::endl;
+            std::cout << "9.  Mangouste" << std::endl;
+            std::cout << "10. Gnou " << std::endl;
+            std::cout << "11. Gazelle de Thompson" << std::endl;
+            std::cout << "12. Antilope" << std::endl;
+            std::cout << "13. Souris" << std::endl;
+            std::cin >> add;
+
+            if( add <0 || add>13)
+            {
+                std::cout << "Vous ne pouvez pas ajouter cette espèce" << std::endl;
+                std::cout << "0. Chien sauvage" << std::endl;
+                std::cout << "1. Hyène " << std::endl;
+                std::cout << "2. Lion " << std::endl;
+                std::cout << "3. Pantère " << std::endl;
+                std::cout << "4. Chacal " << std::endl;
+                std::cout << "5. Serval " << std::endl;
+                std::cout << "6. Vautour de Ruppell" << std::endl;
+                std::cout << "7. Aigle ravisseur " << std::endl;
+                std::cout << "8. Oryctérope " << std::endl;
+                std::cout << "9.  Mangouste" << std::endl;
+                std::cout << "10. Gnou " << std::endl;
+                std::cout << "11. Gazelle de Thompson" << std::endl;
+                std::cout << "12. Antilope" << std::endl;
+                std::cout << "13. Souris" << std::endl;
+                std::cin >> add;
+            }
+
+            for(int i = 0 ; i< m_bin_vertices.size() ; i++)
+            {
+                if(m_bin_vertices[i].m_indice == add)
+                {
+                    add_interfaced_vertex(add, m_bin_vertices[i].m_value, m_bin_vertices[i].m_x, m_bin_vertices[i].m_y, m_bin_vertices[i].m_pic_name, m_bin_vertices[i].m_pic_idx);
+                }
+                else
+                {
+                    std::cout << "C'est deja sur le graphe petit coquin" << std::endl;
+                }
+            }
+
+            //retrouver les aretes qui vont avec le sommet
+            for (unsigned int i = 0; i< m_bin_edges.size(); i++)
+            {
+                if( m_bin_edges[i].m_vert1 == indice)
+                {
+                    Edge_bin &e_temp = m_bin_edges[i];
+                    ///AJOUTER ARETE LIE AU SOMMET A INTERFACE
+                    add_interfaced_edge(e_temp.m_indice, e_temp.m_vert1, e_temp.m_vert2, e_temp.m_weight);
+                    ///SUPPRIME L'ARETE DU VECTEUR POUBELLE
+                    m_bin_edges.erase( m_bin_edges.begin() + i);
+                }
+
+                //2eme cas possible
+                if( m_bin_edges[i].m_vert2 == indice )
+                {
+                    Edge_bin &e_temp = m_bin_edges[i];
+                    ///AJOUTER ARETE LIE AU SOMMET A INTERFACE
+                    add_interfaced_edge(e_temp.m_indice, e_temp.m_vert1, e_temp.m_vert2, e_temp.m_weight);
+                    ///SUPPRIME L'ARETE DU VECTEUR POUBELLE
+                    m_bin_edges.erase( m_bin_edges.begin() + i);
+                }
+            }
+
+            //retirer de map poubelles
+            //FAIRE ERASE MAIS PEUT AVOIR PB COMME AVEC DELETE
+            ///SUPPRIME LE SOMMET DU VECTEUR POUBELLE
+            m_bin_vertices.erase( m_bin_vertices.begin() + i);
+        }
+
+
+    }
+}
+
+
 
 
 void Graph::delete_espece()
@@ -616,7 +876,7 @@ void Graph::delete_espece()
 
         if ( !remove_vertex.m_out.empty() )
         {
-             for( unsigned int i= 0; i < a ; i++)
+            for( unsigned int i= 0; i < a ; i++)
             {
                 std::cout << "1.1) parcours des sortantes, nombre:" << i << std::endl;
                 //suppression des aretes sortantes
@@ -825,7 +1085,7 @@ void Graph::acces_G1(int* n)
     /// Mise à jour générale (clavier/souris/buffer etc...)
     grman::mettre_a_jour();
 
-    add_espece();
+    add_espece1();
     delete_espece();
     sortie();
 
@@ -879,7 +1139,7 @@ void Graph::acces_G2(int* n)
     /// Mise à jour générale (clavier/souris/buffer etc...)
     grman::mettre_a_jour();
 
-    add_espece();
+    add_espece2();
     delete_espece();
     sortie();
 
@@ -933,7 +1193,7 @@ void Graph::acces_G3(int* n)
     /// Mise à jour générale (clavier/souris/buffer etc...)
     grman::mettre_a_jour();
 
-    add_espece();
+    add_espece3();
     delete_espece();
     sortie();
 

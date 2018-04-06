@@ -383,7 +383,9 @@ private :
         void sauv_graphec();
 
         ///Ajouter et supprimer espèce
-        void delete_espece();
+        void delete_espece1();
+        void delete_espece2();
+        void delete_espece3();
         void add_espece();
 
         /// La méthode update à appeler dans la boucle de jeu pour les graphes avec interface
