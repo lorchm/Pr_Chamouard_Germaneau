@@ -577,18 +577,6 @@ void Graph::sauv_graphec()
 
 }
 
-///Ajouter et supprimer une espèce
-void Graph::add_espece()
-{
-    //On voit si y a un clique sur les bouttons de la barre outils
-    m_interface->get_buttonAdd().interact_focus();
-
-    if(m_interface->get_buttonAdd().clicked())
-    {
-        std::cout << "Ajouter une espece " << std::endl;
-    }
-}
-
 
 void Graph::delete_espece()
 {
@@ -614,29 +602,24 @@ void Graph::delete_espece()
         int a = remove_vertex.m_out.size();
         int b = remove_vertex.m_in.size();
 
+
         if ( !remove_vertex.m_out.empty() )
         {
              for( unsigned int i= 0; i < a ; i++)
             {
-                std::cout << "1.1) parcours des sortantes, nombre:" << i << std::endl;
-                //suppression des aretes sortantes
-                remove_edge( remove_vertex.m_out[i] );
-                std::cout << "indice arete sortante = " << remove_vertex.m_out[i] << std::endl;
+                //suppression des aretes sortantes, on passe tjrs [0] car qd on erase les case du vesteur se déplace
+                //donc le prochain indice a traité se situera tjrs à l'indice 0
+                remove_edge( remove_vertex.m_out[0] );
             }
         }
 
-        std::cout <<"2) parcours des aretes entrantes " << std::endl;
-        std::cout << "nb entrantes =" << remove_vertex.m_in.size() << std::endl;
         //meme chose mais pour les aretes entrantes
         if ( !remove_vertex.m_in.empty() )
         {
             for( unsigned int i= 0; i < b ; i++)
             {
-                std::cout << "2.1) parcours des entrantes, nombre:" << i << std::endl;
-
-                //suppression des aretes entrantes
-                remove_edge( remove_vertex.m_in[i] );
-                std::cout << "indice arete entrante = " << remove_vertex.m_in[i] << std::endl;
+                //suppression des aretes entrantes, même principe que précédemment
+                remove_edge( remove_vertex.m_in[0] );
             }
         }
 
@@ -650,6 +633,8 @@ void Graph::delete_espece()
         Vertex_bin v_bin(indice, remove_vertex.m_value, remove_vertex.m_interface->m_top_box.get_frame().pos.x,
                          remove_vertex.m_interface->m_top_box.get_frame().pos.y, remove_vertex.m_interface->m_img.get_pic_name(), 0);
         m_bin_vertices.push_back(v_bin);
+
+        ///On supprime le sommet
         m_vertices.erase( indice );
 
     }
@@ -657,53 +642,45 @@ void Graph::delete_espece()
 
 
 
-
+/*Source principale Monsieur Fercoq*/
 void Graph::remove_edge(int eidx)
 {
-/// référence vers le Edge à enlever
+    // référence vers le Edge à enlever
     Edge &remed=m_edges.at(eidx);
 
+    //Affichage de l'arete qui va etre supprimer
     std::cout << "Suppr arete " << eidx << " " << remed.m_from << "->" << remed.m_to << " " << remed.m_weight << std::endl;
 
-/// Tester la cohérence : nombre d'arc entrants et sortants des sommets 1 et 2
-    std::cout <<"nb arc entrant sommet" << remed.m_from << " = " << m_vertices[remed.m_from].m_in.size() << " nb arc sortant =" << m_vertices[remed.m_from].m_out.size() << std::endl;
-    std::cout <<"nb arc entrant sommet" << remed.m_to << " = " << m_vertices[remed.m_to].m_in.size() << "nb arc sortant =" << m_vertices[remed.m_to].m_out.size() << std::endl;
-    std::cout << m_edges.size() << std::endl;
-
-/// test : on a bien des éléments interfacés
+    //Il faut retiré l'arete de la main box
+    //On vérifie que le grape et l'arete on une interface pour ensuite retiré l'arete
     if (m_interface && remed.m_interface)
     {
-/// Ne pas oublier qu'on a fait ça à l'ajout de l'arc :
-        /* EdgeInterface *ei = new EdgeInterface(m_vertices[id_vert1], m_vertices[id_vert2]); */
-        /* m_interface->m_main_box.add_child(ei->m_top_edge); */
-        /* m_edges[idx] = Edge(weight, ei); */
-/// Le new EdgeInterface ne nécessite pas de delete car on a un shared_ptr
-/// Le Edge ne nécessite pas non plus de delete car on n'a pas fait de new (sémantique par valeur)
-/// mais il faut bien enlever le conteneur d'interface m_top_edge de l'arc de la main_box du graphe
         m_interface->m_main_box.remove_child( remed.m_interface->m_top_edge );
     }
 
-/// Il reste encore à virer l'arc supprimé de la liste des entrants et sortants des 2 sommets to et from !
-/// References sur les listes de edges des sommets from et to
+    //Reference sur les vecteurs respectifs des 2 sommets concernés par l'arete
     std::vector<int> &vefrom = m_vertices[remed.m_from].m_out;
     std::vector<int> &veto = m_vertices[remed.m_to].m_in;
-    vefrom.erase( std::remove( vefrom.begin(), vefrom.end(), eidx ), vefrom.end() );
-    veto.erase( std::remove( veto.begin(), veto.end(), eidx ), veto.end() );
 
-/// Le Edge ne nécessite pas non plus de delete car on n'a pas fait de new (sémantique par valeur)
-/// Il suffit donc de supprimer l'entrée de la map pour supprimer à la fois l'Edge et le EdgeInterface
-/// mais malheureusement ceci n'enlevait pas automatiquement l'interface top_edge en tant que child de main_box !
+    //on retrouve l'arete à suppr dans le vecteur m_out ou m_in la contenant
+    for(unsigned int i=0; i< vefrom.size(); i++)
+    {
+        //Qd on l'a retrouvé on la supprime du vecteur
+        if( vefrom[i] == eidx) vefrom.erase(vefrom.begin() + i);
+    }
 
-    /** on ajoute l'arête dans une autre map contenant les aretes suppr**/
+    //idem
+    for(unsigned int i=0; i< veto.size(); i++)
+    {
+        if( vefrom[i] == eidx) veto.erase(veto.begin() + i);
+    }
+
+    //on ajoute l'arête dans une autre map contenant les aretes supprimées
     Edge_bin e_bin(eidx, remed.getFrom(), remed.getTo(), remed.getWeight());
     m_bin_edges.push_back(e_bin);
 
+    //Enfin on suppr l'arete de la map contenant les aretes du graphe
     m_edges.erase( eidx );
-
-/// Tester la cohérence : nombre d'arc entrants et sortants des sommets 1 et 2
-    std::cout << "nb entrante du sommet depart ="<< m_vertices[remed.m_from].m_in.size() << " nb sortante de sommet depart=" << m_vertices[remed.m_from].m_out.size() << std::endl;
-    std::cout << "nb entrante du sommet arrive ="<<m_vertices[remed.m_to].m_in.size() << " nb sortante de sommet arrive=" << m_vertices[remed.m_to].m_out.size() << std::endl;
-    std::cout <<"nb arete apres avoir suppr=" << m_edges.size() << std::endl;
 
 }
 

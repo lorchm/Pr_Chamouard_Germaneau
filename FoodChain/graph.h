@@ -366,10 +366,6 @@ private :
         void add_interfaced_vertex(int idx, int value, int x, int y, std::string pic_name="", int pic_idx=0 );
         void add_interfaced_edge(int idx, int vert1, int vert2, int weight=0);
 
-//        void add_interfaced_bin_vertex(int idx, int value, int x, int y, std::string pic_name="", int pic_idx=0);
-//        void add_interfaced_bin_edge(int idx, int vert1, int vert2, int weight=0);
-
-
         /// Méthode spéciale qui construit un graphe arbitraire (démo)
         /// Voir implémentation dans le .cpp
         /// Cette méthode est à enlever et remplacer par un système
@@ -384,7 +380,6 @@ private :
 
         ///Ajouter et supprimer espèce
         void delete_espece();
-        void add_espece();
 
         /// La méthode update à appeler dans la boucle de jeu pour les graphes avec interface
         void update();
