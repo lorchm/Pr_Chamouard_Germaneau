@@ -10,12 +10,12 @@
 7 100 768 3 graphec8.jpg
 8 100 3 617 graphec10.jpg
 9 100 483 617 graphec11.jpg
-10 100 775 444 graphec12.jpg
+10 100 688 324 graphec12.jpg
 11 100 343 534 graphec13.jpg
 12 100 180 617 graphec14.jpg
 13 100 775 617 graphec15.jpg
-
 0
+
 
 19
 
@@ -38,6 +38,8 @@
 16 13 4 1
 17 13 9 1
 18 13 7 1
+19 10 4 1
+20 13 5 1
 
 0
 
