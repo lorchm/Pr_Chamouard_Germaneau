@@ -973,14 +973,7 @@ void Graph::Marquer_composantes()
     }
 
 }
-/*******************************************
 
-
-PENSER PEUT ETRE A VIDER M_VEC_COPOSANTE
-
-EFFACER LES MARQUAGES D APPARTENANCE A COMPO MAIS FAIT BEUGS
-
-************************************************/
 void Graph::afficher()
 {
     std::cout << "Voici les sommets de la composante fortement connexe : ";
@@ -1078,7 +1071,6 @@ bool Graph::CFC(int sommet_ancre)
 bool Graph::marquage(std::vector<int> v1, std::vector<int> v2 )
 {
     std::vector<int> v;
-    int cpt=0;
     bool compo_existe = false;
 
     for ( unsigned int i = 0 ; i < v1.size() ; i++ )
@@ -1098,9 +1090,11 @@ bool Graph::marquage(std::vector<int> v1, std::vector<int> v2 )
         for ( unsigned int i = 0 ; i < v.size() ; i++ )
         {
             m_vertices[v[i]].set_present_ds_compo(true);
-            m_vect_composantes[cpt].push_back( m_vertices[v[i]]);
+            m_vect_composantes[m_nb_compo].push_back( m_vertices[v[i]]);
         }
-        cpt++;
+        }
+        m_nb_comp++;
+
     }
 
 
@@ -1269,6 +1263,11 @@ void Graph::acces_G1(int* n)
     {
         std::cout << "RECHERCHE DE COMPOSANTE FORTEMENT CONNEXE" << std::endl;
         Marquer_composantes();
+
+        for (auto &elt : m_vertices)
+        {
+            elt.second.set_present_ds_compo(false);
+        }
     }
 
     /// Mise à jour générale (clavier/souris/buffer etc...)
@@ -1278,10 +1277,7 @@ void Graph::acces_G1(int* n)
     delete_espece();
     sortie();
 
-    if(key[KEY_P])
-    {
-        //graph_simpl();
-    }
+
 
     get_interface()->get_buttonG3().interact_focus();
 
@@ -1295,6 +1291,11 @@ void Graph::acces_G1(int* n)
     if(get_interface()->get_buttonG2().clicked())
     {
         *n=2;
+    }
+
+    if(key[KEY_P])
+    {
+        graph_simpl();
     }
 
     //var_temps();
@@ -1436,45 +1437,46 @@ void Graph::sortie()
     }
 }
 
-void Graph::graph_simpl(std::vector<std::vector<Vertex>> cfc)
+void Graph::graph_simpl()
 {
 
     std::cout << "aff graphe simplifi" << std::endl;
 
     ///Créer le buffer
     BITMAP* buffer = create_bitmap(908,720);
+    rectfill(buffer,0,0,908,720, BLANC);
 
     ///Faire les aretes
-    for(unsigned int i = 0 ; i< cfc.size() ; i++)
+    for(unsigned int i = 0 ; i< m_vect_composantes.size() ; i++)
     {
-        for(unsigned int j = 0 ; j < cfc[i].size() ; j++)
+        for(unsigned int j = 0 ; j < m_vect_composantes[i].size() ; j++)
         {
             for(auto &elem : m_edges)
             {
-                if(get_indice(cfc[i][j]) == elem.second.m_from)
+                if(get_indice(m_vect_composantes[i][j]) == elem.second.m_from)
                 {
-                    for(unsigned int k = 0 ; k < cfc.size() ; k++)
+                    for(unsigned int k = 0 ; k < m_vect_composantes.size() ; k++)
                     {
-                        for(unsigned int l = 0 ; l < cfc.size() ; l++)
+                        for(unsigned int l = 0 ; l < m_vect_composantes.size() ; l++)
                         {
-                            if(get_indice(cfc[k][l]) == elem.second.m_to)
+                            if(get_indice(m_vect_composantes[k][l]) == elem.second.m_to)
                             {
-                                line(buffer, cfc[i][j].m_interface->m_top_box.get_frame().pos.x+50,cfc[i][j].m_interface->m_top_box.get_frame().pos.y+50, cfc[k][l].m_interface->m_top_box.get_frame().pos.x+50,cfc[k][l].m_interface->m_top_box.get_frame().pos.y+50, NOIR);
-                                textprintf_ex(buffer, font, ((cfc[i][j].m_interface->m_top_box.get_frame().pos.x+50+cfc[k][l].m_interface->m_top_box.get_frame().pos.x+50)/2), ((cfc[i][j].m_interface->m_top_box.get_frame().pos.y+50+cfc[k][l].m_interface->m_top_box.get_frame().pos.y+50)/2), NOIR, -1, " de %d a %d", get_indice(cfc[i][j]),get_indice(cfc[k][l]));
+                                line(buffer, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+50,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+50, m_vect_composantes[k][l].m_interface->m_top_box.get_frame().pos.x+50,m_vect_composantes[k][l].m_interface->m_top_box.get_frame().pos.y+50, NOIR);
+                                textprintf_ex(buffer, font, ((m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+50+m_vect_composantes[k][l].m_interface->m_top_box.get_frame().pos.x+50)/2), ((m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+50+m_vect_composantes[k][l].m_interface->m_top_box.get_frame().pos.y+50)/2), NOIR, -1, " de %d a %d", get_indice(m_vect_composantes[i][j]),get_indice(m_vect_composantes[k][l]));
                             }
                         }
                     }
                 }
-                else if(get_indice(cfc[i][j]) == elem.second.m_to)
+                else if(get_indice(m_vect_composantes[i][j]) == elem.second.m_to)
                 {
-                    for(unsigned int k = 0 ; k < cfc.size() ; k++)
+                    for(unsigned int k = 0 ; k < m_vect_composantes.size() ; k++)
                     {
-                        for(unsigned int l = 0 ; l < cfc.size() ; l++)
+                        for(unsigned int l = 0 ; l < m_vect_composantes.size() ; l++)
                         {
-                            if(get_indice(cfc[k][l]) == elem.second.m_from)
+                            if(get_indice(m_vect_composantes[k][l]) == elem.second.m_from)
                             {
-                                line(buffer, cfc[k][l].m_interface->m_top_box.get_frame().pos.x+50,cfc[k][l].m_interface->m_top_box.get_frame().pos.y+50,cfc[i][j].m_interface->m_top_box.get_frame().pos.x+50,cfc[i][j].m_interface->m_top_box.get_frame().pos.y+50, NOIR);
-                                textprintf_ex(buffer, font, ((cfc[i][j].m_interface->m_top_box.get_frame().pos.x+50+cfc[k][l].m_interface->m_top_box.get_frame().pos.x+50)/2), ((cfc[k][l].m_interface->m_top_box.get_frame().pos.y+50+cfc[i][j].m_interface->m_top_box.get_frame().pos.y+50)/2), NOIR, -1, " de %d a %d", get_indice(cfc[k][l]),get_indice(cfc[i][j]));
+                                line(buffer, m_vect_composantes[k][l].m_interface->m_top_box.get_frame().pos.x+50,m_vect_composantes[k][l].m_interface->m_top_box.get_frame().pos.y+50,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+50,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+50, NOIR);
+                                textprintf_ex(buffer, font, ((m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+50+m_vect_composantes[k][l].m_interface->m_top_box.get_frame().pos.x+50)/2), ((m_vect_composantes[k][l].m_interface->m_top_box.get_frame().pos.y+50+m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+50)/2), NOIR, -1, " de %d a %d", get_indice(m_vect_composantes[k][l]),get_indice(m_vect_composantes[i][j]));
                             }
                         }
                     }
@@ -1484,15 +1486,15 @@ void Graph::graph_simpl(std::vector<std::vector<Vertex>> cfc)
     }
 
     ///Affichage des sommets de fortes connexités
-    for(unsigned int i = 0 ; i< cfc.size() ; i++)
+    for(unsigned int i = 0 ; i< m_vect_composantes.size() ; i++)
     {
-        for(unsigned int j = 0 ; j < cfc[i].size() ; j++)
+        for(unsigned int j = 0 ; j < m_vect_composantes[i].size() ; j++)
         {
             //Affichage du sommet
-            rectfill(buffer,cfc[i][j].m_interface->m_top_box.get_frame().pos.x+45, cfc[i][j].m_interface->m_top_box.get_frame().pos.y+45,cfc[i][j].m_interface->m_top_box.get_frame().pos.x+55,cfc[i][j].m_interface->m_top_box.get_frame().pos.y+55, BLANC );
-            rect(buffer,cfc[i][j].m_interface->m_top_box.get_frame().pos.x+45, cfc[i][j].m_interface->m_top_box.get_frame().pos.y+45,cfc[i][j].m_interface->m_top_box.get_frame().pos.x+55,cfc[i][j].m_interface->m_top_box.get_frame().pos.y+55, NOIR);
+            rectfill(buffer,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+45, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+45,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+55,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+55, BLANC );
+            rect(buffer,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+45, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+45,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+55,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+55, NOIR);
 
-            textprintf_ex(buffer, font, cfc[i][j].m_interface->m_top_box.get_frame().pos.x+50, cfc[i][j].m_interface->m_top_box.get_frame().pos.y+50, NOIR, -1, "%d", get_indice(cfc[i][j]));
+            textprintf_ex(buffer, font, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+50, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+50, NOIR, -1, "%d", get_indice(m_vect_composantes[i][j]));
         }
     }
 
