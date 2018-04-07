@@ -387,6 +387,7 @@ private :
 
     ///vecteur qui contient les composantes fort. connexes
     std::vector<std::vector<Vertex>> m_vect_composantes;
+    int m_nb_comp;
 
     public:
 
@@ -442,7 +443,7 @@ private :
 
         void sortie();
 
-        void graph_simpl(std::vector<std::vector<Vertex>> cfc);
+        void graph_simpl();
 
         int get_indice(Vertex V);
 
