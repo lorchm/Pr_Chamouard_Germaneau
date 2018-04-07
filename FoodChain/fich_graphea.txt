@@ -1,16 +1,16 @@
 11
 
-0 100 14 3 graphea2.jpg
-1 100 3 617 graphea1.jpg
-2 100 265 3 graphea3.jpg
-3 100 446 570 graphea6.jpg
-4 100 389 372 graphea5.jpg
-5 100 553 3 graphea4.jpg
-6 100 772 526 graphea7.jpg
-7 100 653 397 graphea8.jpg
-8 100 775 159 graphea9.jpg
-9 100 319 164 graphea10.jpg
-10 100 3 287 graphea11.jpg
+0 100 14 3 graphea2.jpg 10
+1 100 3 617 graphea1.jpg 100
+2 100 265 3 graphea3.jpg 50
+3 100 446 570 graphea6.jpg 20
+4 100 389 372 graphea5.jpg 10
+5 100 553 3 graphea4.jpg 3
+6 100 772 526 graphea7.jpg 10
+7 100 653 397 graphea8.jpg 10
+8 100 775 159 graphea9.jpg 5
+9 100 319 164 graphea10.jpg 80
+10 100 3 287 graphea11.jpg 10
 
 0
 

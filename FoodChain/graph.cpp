@@ -45,7 +45,6 @@ VertexInterface::VertexInterface(int idx, int x, int y, std::string pic_name, in
 
 }
 
-
 /// Gestion du Vertex avant l'appel à l'interface
 void Vertex::pre_update()
 {
@@ -59,7 +58,6 @@ void Vertex::pre_update()
     m_interface->m_label_value.set_message( std::to_string( (int)m_value) );
 }
 
-
 /// Gestion du Vertex après l'appel à l'interface
 void Vertex::post_update()
 {
@@ -69,8 +67,6 @@ void Vertex::post_update()
     /// Reprendre la valeur du slider dans la donnée m_value locale
     m_value = m_interface->m_slider_value.get_value();
 }
-
-
 
 /***************************************************
                     EDGE
@@ -106,7 +102,6 @@ EdgeInterface::EdgeInterface(Vertex& from, Vertex& to)
 
 }
 
-
 /// Gestion du Edge avant l'appel à l'interface
 void Edge::pre_update()
 {
@@ -132,7 +127,6 @@ void Edge::post_update()
 }
 
 ///GETTERS
-
 int Edge::getFrom()
 {
     return m_from;
@@ -142,7 +136,6 @@ int Edge::getTo()
 {
     return m_to;
 }
-
 
 /***************************************************
                     GRAPH
@@ -167,53 +160,46 @@ GraphInterface::GraphInterface(int x, int y, int w, int h)
 
     //Bouton 1 de la tool box, pour le graphe 1
     m_tool_box.add_child(m_buttonG1);
-    m_buttonG1.set_frame(2,0,80,80);
+    m_buttonG1.set_frame(5,5,74,74);
     m_buttonG1.set_bg_color(ROSE);
     m_buttonG1.set_gravity_xy(grman::GravityX::Left, grman::GravityY::Up);
 
     //Bouton 2 de la tool box, pour le graphe 2
     m_tool_box.add_child(m_buttonG2);
-    m_buttonG2.set_frame(2,80,80,80);
+    m_buttonG2.set_frame(5,84,74,75);
     m_buttonG2.set_bg_color(VERTCLAIR);
 
     //Bouton 3 de la tool box, pour le graphe 3
     m_tool_box.add_child(m_buttonG3);
-    m_buttonG3.set_frame(2,160,80,80);
+    m_buttonG3.set_frame(5,164,74,74);
     m_buttonG3.set_bg_color(ORANGECLAIR);
 
     //Bouton ajout espèce de la tool box
     m_tool_box.add_child(m_buttonAdd);
-    m_buttonAdd.set_frame(2,486,80,80);
+    m_buttonAdd.set_frame(2,484,74,74);
     m_buttonAdd.set_bg_color(FUCHSIACLAIR);
 
     //Bouton enlever espece de la tool box
     m_tool_box.add_child(m_buttonDelete);
-    m_buttonDelete.set_frame(2,566,80,80);
+    m_buttonDelete.set_frame(5,564,74,74);
     m_buttonDelete.set_bg_color(VIOLETCLAIR);
 
     //Bouton exit de la tool box
     m_tool_box.add_child(m_buttonExit);
-    m_buttonExit.set_frame(2,646,80,80);
+    m_buttonExit.set_frame(5,644,74,74);
     m_buttonExit.set_bg_color(BLANCROSE);
 
     //Bouton save de la tool box
     m_tool_box.add_child(m_save);
-    m_save.set_frame(2,286,80,80);
+    m_save.set_frame(5,246,74,74);
     m_save.set_bg_color(BLANC);
 
     //Bouton read de la tool box
     m_tool_box.add_child(m_lect);
-    m_lect.set_frame(2,366,80,80);
-    m_save.set_bg_color(BLANC);
-
+    m_lect.set_frame(5,326,74,74);
+    m_save.set_bg_color(BLEU);
 }
 
-
-/// Méthode spéciale qui construit un graphe arbitraire (démo)
-/// Cette méthode est à enlever et remplacer par un système
-/// de chargement de fichiers par exemple.
-/// Bien sûr on ne veut pas que vos graphes soient construits
-/// "à la main" dans le code comme ça.
 void Graph::chargement_fichier_a()
 {
     m_interface = std::make_shared<GraphInterface>(50, 0, 750, 600);
@@ -227,6 +213,7 @@ void Graph::chargement_fichier_a()
     int var_coordx;
     int var_coordy;
     std::string var_image;
+    int var_repro;
 
     int indice;
     int nb_aretes;
@@ -241,8 +228,8 @@ void Graph::chargement_fichier_a()
 
         for(int i=0 ; i<nb_sommets ; i++)
         {
-            file >> idx >>var_nb_pop >> var_coordx >> var_coordy >> var_image;
-            add_interfaced_vertex(idx, var_nb_pop, var_coordx, var_coordy, var_image);
+            file >> idx >>var_nb_pop >> var_coordx >> var_coordy >> var_image >> var_repro;
+            add_interfaced_vertex(idx, var_nb_pop, var_coordx, var_coordy, var_image, 0, var_repro);
 
         }
 
@@ -250,8 +237,8 @@ void Graph::chargement_fichier_a()
 
         for(int k=0; k<nb_sommets_supp ; k++)
         {
-            file >> idx >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
-            Vertex_bin temp = Vertex_bin(idx,var_nb_pop, var_coordx, var_coordy, var_image,0);
+            file >> idx >> var_nb_pop >> var_coordx >> var_coordy >> var_image >> var_repro;
+            Vertex_bin temp = Vertex_bin(idx,var_nb_pop, var_coordx, var_coordy, var_image,0, var_repro);
             m_bin_vertices.push_back(temp);
         }
 
@@ -294,6 +281,7 @@ void Graph::chargement_fichier_b()
     int var_coordx;
     int var_coordy;
     std::string var_image;
+    int var_repro;
 
     int indice;
     int nb_aretes;
@@ -308,8 +296,8 @@ void Graph::chargement_fichier_b()
 
         for(int i=0 ; i<nb_sommets ; i++)
         {
-            file >> idx >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
-            add_interfaced_vertex(idx, var_nb_pop, var_coordx, var_coordy, var_image);
+            file >> idx >> var_nb_pop >> var_coordx >> var_coordy >> var_image >> var_repro;
+            add_interfaced_vertex(idx, var_nb_pop, var_coordx, var_coordy, var_image, 0, var_repro);
 
         }
 
@@ -317,8 +305,8 @@ void Graph::chargement_fichier_b()
 
         for(int k=0; k<nb_sommets_supp ; k++)
         {
-            file >> idx >>var_nb_pop >> var_coordx >> var_coordy >> var_image;
-            Vertex_bin temp = Vertex_bin(idx,var_nb_pop, var_coordx, var_coordy, var_image,0);
+            file >> idx >>var_nb_pop >> var_coordx >> var_coordy >> var_image >> var_repro;
+            Vertex_bin temp = Vertex_bin(idx,var_nb_pop, var_coordx, var_coordy, var_image,0, var_repro);
             m_bin_vertices.push_back(temp);
         }
 
@@ -361,6 +349,7 @@ void Graph::chargement_fichier_c()
     int var_coordx;
     int var_coordy;
     std::string var_image;
+    int var_repro;
 
     int indice;
     int nb_aretes;
@@ -375,8 +364,8 @@ void Graph::chargement_fichier_c()
 
         for(int i=0 ; i<nb_sommets ; i++)
         {
-            file >> idx >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
-            add_interfaced_vertex(idx, var_nb_pop, var_coordx, var_coordy, var_image);
+            file >> idx >> var_nb_pop >> var_coordx >> var_coordy >> var_image >> var_repro;
+            add_interfaced_vertex(idx, var_nb_pop, var_coordx, var_coordy, var_image,0,var_repro);
 
         }
 
@@ -384,8 +373,8 @@ void Graph::chargement_fichier_c()
 
         for(int k=0; k<nb_sommets_supp ; k++)
         {
-            file >> idx >> var_nb_pop >> var_coordx >> var_coordy >> var_image;
-            Vertex_bin temp = Vertex_bin(idx,var_nb_pop, var_coordx, var_coordy, var_image,0);
+            file >> idx >> var_nb_pop >> var_coordx >> var_coordy >> var_image >> var_repro;
+            Vertex_bin temp = Vertex_bin(idx,var_nb_pop, var_coordx, var_coordy, var_image,0, var_repro);
             m_bin_vertices.push_back(temp);
         }
 
@@ -428,7 +417,7 @@ void Graph::sauv_graphea()
         ///Ecrire la valeur et positions des sommets
         for (auto &elt : m_vertices)
         {
-            file << elt.first << " " << elt.second.m_value << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name()<< std::endl;
+            file << elt.first << " " << elt.second.m_value << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name()<< " " << elt.second.m_taux_repro <<std::endl;
         }
 
         ///Nombre vertices dans la bin
@@ -437,7 +426,7 @@ void Graph::sauv_graphea()
         ///Ecrire la valeur et positions des sommets
         for (unsigned int i = 0; i< m_bin_vertices.size() ; i++)
         {
-            file << m_bin_vertices[i].m_indice << " " <<  m_bin_vertices[i].m_value << " " << m_bin_vertices[i].m_x << " " << m_bin_vertices[i].m_y << " " << m_bin_vertices[i].m_pic_name << std::endl;
+            file << m_bin_vertices[i].m_indice << " " <<  m_bin_vertices[i].m_value << " " << m_bin_vertices[i].m_x << " " << m_bin_vertices[i].m_y << " " << m_bin_vertices[i].m_pic_name << " " << m_bin_vertices[i].m_taux_repro << std::endl;
         }
 
         ///Ecrire le nombre de edges
@@ -482,7 +471,7 @@ void Graph::sauv_grapheb()
         ///Ecrire la valeur et positions des sommets
         for (auto &elt : m_vertices)
         {
-            file << elt.first << " " << elt.second.m_value << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name()<< std::endl;
+            file << elt.first << " " << elt.second.m_value << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name() << " " << elt.second.m_taux_repro << std::endl;
         }
 
         ///Nombre vertices dans la bin
@@ -491,7 +480,7 @@ void Graph::sauv_grapheb()
         ///Ecrire la valeur et positions des sommets
         for (unsigned int i = 0 ; i<m_bin_vertices.size() ; i++)
         {
-            file << m_bin_vertices[i].m_indice << " " << m_bin_vertices[i].m_value << " " << m_bin_vertices[i].m_x << " " << m_bin_vertices[i].m_y << " " << m_bin_vertices[i].m_pic_name << std::endl;
+            file << m_bin_vertices[i].m_indice << " " << m_bin_vertices[i].m_value << " " << m_bin_vertices[i].m_x << " " << m_bin_vertices[i].m_y << " " << m_bin_vertices[i].m_pic_name << " " << m_bin_vertices[i].m_taux_repro << " " << std::endl;
         }
 
         ///Ecrire le nombre de edges
@@ -536,7 +525,7 @@ void Graph::sauv_graphec()
         ///Ecrire la valeur et positions des sommets
         for (auto &elt : m_vertices)
         {
-            file << elt.first << " " <<elt.second.m_value << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name()<< std::endl;
+            file << elt.first << " " <<elt.second.m_value << " " << elt.second.m_interface->m_top_box.get_frame().pos.x << " " << elt.second.m_interface->m_top_box.get_frame().pos.y << " " << elt.second.m_interface->m_img.get_pic_name() << " " << elt.second.m_taux_repro << std::endl;
         }
 
         ///Nombre vertices dans la bin
@@ -545,7 +534,7 @@ void Graph::sauv_graphec()
         ///Ecrire la valeur et positions des sommets
         for (unsigned int i = 0 ; i<m_bin_vertices.size() ; i++)
         {
-            file << m_bin_vertices[i].m_indice << " " << m_bin_vertices[i].m_value << " " << m_bin_vertices[i].m_x << " " << m_bin_vertices[i].m_y << " " << m_bin_vertices[i].m_pic_name << std::endl;
+            file << m_bin_vertices[i].m_indice << " " << m_bin_vertices[i].m_value << " " << m_bin_vertices[i].m_x << " " << m_bin_vertices[i].m_y << " " << m_bin_vertices[i].m_pic_name << " " << m_bin_vertices[i].m_taux_repro << std::endl;
         }
 
         ///Ecrire le nombre de edges
@@ -599,9 +588,11 @@ void Graph::add_espece1()
             std::cout << "6. Geai bleu " << std::endl;
             std::cout << "7. Aigle " << std::endl;
             std::cout << "8. Chouette " << std::endl;
+            std::cout << "9. Decompositeur" << std::endl;
+            std::cout << "10. Plante carnivore" << std::endl;
             std::cin >> add;
 
-            while(add < 0 || add > 8 )
+            while(add < 0 || add > 10 )
             {
                 std::cout << "Vous ne pouvez pas ajouter cette espèce" << std::endl;
                 std::cout << " Quelle espèce voulez vous ajouter ? " << std::endl;
@@ -614,6 +605,8 @@ void Graph::add_espece1()
                 std::cout << "6. Geai bleu " << std::endl;
                 std::cout << "7. Aigle " << std::endl;
                 std::cout << "8. Chouette " << std::endl;
+                std::cout << "9. Decompositeur" << std::endl;
+                std::cout << "10. Plante carnivore" << std::endl;
                 std::cin >> add;
             }
 
@@ -622,7 +615,7 @@ void Graph::add_espece1()
                 std::cout << m_bin_vertices[i].m_indice << std::endl;
                 if(m_bin_vertices[i].m_indice == add)
                 {
-                    add_interfaced_vertex(add, m_bin_vertices[i].m_value, m_bin_vertices[i].m_x, m_bin_vertices[i].m_y, m_bin_vertices[i].m_pic_name, m_bin_vertices[i].m_pic_idx);
+                    add_interfaced_vertex(add, m_bin_vertices[i].m_value, m_bin_vertices[i].m_x, m_bin_vertices[i].m_y, m_bin_vertices[i].m_pic_name, m_bin_vertices[i].m_pic_idx, m_bin_vertices[i].m_taux_repro);
 
                     int a = m_bin_edges.size();
                     std::cout << a << std::endl;
@@ -641,6 +634,7 @@ void Graph::add_espece1()
                         }
 
                         //2eme cas possible
+
                         if( m_bin_edges[i].m_vert2 == add)
                         {
                             Edge_bin &e_temp = m_bin_edges[i];
@@ -648,7 +642,6 @@ void Graph::add_espece1()
                             add_interfaced_edge(e_temp.m_indice, e_temp.m_vert1, e_temp.m_vert2, e_temp.m_weight);
                             ///SUPPRIME L'ARETE DU VECTEUR POUBELLE
                             ar_a_eff.push_back(e_temp.m_indice);
-
 
                         }
                     }
@@ -664,32 +657,18 @@ void Graph::add_espece1()
                         }
                     }
 
-
-
-
-
-                    //retirer de map poubelles
-                    //FAIRE ERASE MAIS PEUT AVOIR PB COMME AVEC DELETE
                     ///SUPPRIME LE SOMMET DU VECTEUR POUBELLE
                     m_bin_vertices.erase( m_bin_vertices.begin() + i);
 
                 }
                 else
                 {
-                    std::cout << "C'est deja sur le graphe petit coquin" << std::endl;
+                    std::cout << "Deja present sur le graphe" << std::endl;
                 }
             }
         }
-
-
-
-
-
     }
-
-
 }
-
 
 ///Ajouter et supprimer une espèce dans le graphe 2
 void Graph::add_espece2()
@@ -738,12 +717,12 @@ void Graph::add_espece2()
                 std::cin >> add;
             }
 
-                        for(unsigned int i = 0 ; i< m_bin_vertices.size() ; i++)
+            for(unsigned int i = 0 ; i< m_bin_vertices.size() ; i++)
             {
                 std::cout << m_bin_vertices[i].m_indice << std::endl;
                 if(m_bin_vertices[i].m_indice == add)
                 {
-                    add_interfaced_vertex(add, m_bin_vertices[i].m_value, m_bin_vertices[i].m_x, m_bin_vertices[i].m_y, m_bin_vertices[i].m_pic_name, m_bin_vertices[i].m_pic_idx);
+                    add_interfaced_vertex(add, m_bin_vertices[i].m_value, m_bin_vertices[i].m_x, m_bin_vertices[i].m_y, m_bin_vertices[i].m_pic_name, m_bin_vertices[i].m_pic_idx, m_bin_vertices[i].m_taux_repro);
 
                     int a = m_bin_edges.size();
                     std::cout << a << std::endl;
@@ -769,8 +748,6 @@ void Graph::add_espece2()
                             add_interfaced_edge(e_temp.m_indice, e_temp.m_vert1, e_temp.m_vert2, e_temp.m_weight);
                             ///SUPPRIME L'ARETE DU VECTEUR POUBELLE
                             ar_a_eff.push_back(e_temp.m_indice);
-
-
                         }
                     }
 
@@ -785,25 +762,15 @@ void Graph::add_espece2()
                         }
                     }
 
-
-
-
-
-                    //retirer de map poubelles
-                    //FAIRE ERASE MAIS PEUT AVOIR PB COMME AVEC DELETE
                     ///SUPPRIME LE SOMMET DU VECTEUR POUBELLE
                     m_bin_vertices.erase( m_bin_vertices.begin() + i);
-
                 }
                 else
                 {
-                    std::cout << "C'est deja sur le graphe petit coquin" << std::endl;
+                    std::cout << "Deja present sur le graphe" << std::endl;
                 }
             }
-
         }
-
-
     }
 }
 
@@ -817,7 +784,6 @@ void Graph::add_espece3()
 
     if(m_interface->get_buttonAdd().clicked())
     {
-
         if(m_bin_vertices.size() != 0)
         {
             std::cout << " Quelle espèce voulez vous ajouter ? " << std::endl;
@@ -856,13 +822,12 @@ void Graph::add_espece3()
                 std::cout << "13. Souris" << std::endl;
                 std::cin >> add;
             }
-
-                        for(unsigned int i = 0 ; i< m_bin_vertices.size() ; i++)
+            for(unsigned int i = 0 ; i< m_bin_vertices.size() ; i++)
             {
                 std::cout << m_bin_vertices[i].m_indice << std::endl;
                 if(m_bin_vertices[i].m_indice == add)
                 {
-                    add_interfaced_vertex(add, m_bin_vertices[i].m_value, m_bin_vertices[i].m_x, m_bin_vertices[i].m_y, m_bin_vertices[i].m_pic_name, m_bin_vertices[i].m_pic_idx);
+                    add_interfaced_vertex(add, m_bin_vertices[i].m_value, m_bin_vertices[i].m_x, m_bin_vertices[i].m_y, m_bin_vertices[i].m_pic_name, m_bin_vertices[i].m_pic_idx,m_bin_vertices[i].m_taux_repro);
 
                     int a = m_bin_edges.size();
                     std::cout << a << std::endl;
@@ -888,8 +853,6 @@ void Graph::add_espece3()
                             add_interfaced_edge(e_temp.m_indice, e_temp.m_vert1, e_temp.m_vert2, e_temp.m_weight);
                             ///SUPPRIME L'ARETE DU VECTEUR POUBELLE
                             ar_a_eff.push_back(e_temp.m_indice);
-
-
                         }
                     }
 
@@ -904,26 +867,15 @@ void Graph::add_espece3()
                         }
                     }
 
-
-
-
-
-                    //retirer de map poubelles
-                    //FAIRE ERASE MAIS PEUT AVOIR PB COMME AVEC DELETE
                     ///SUPPRIME LE SOMMET DU VECTEUR POUBELLE
                     m_bin_vertices.erase( m_bin_vertices.begin() + i);
-
                 }
                 else
                 {
-                    std::cout << "C'est deja sur le graphe petit coquin" << std::endl;
+                    std::cout << "Deja present sur le graphe" << std::endl;
                 }
             }
-
-
         }
-
-
     }
 }
 
@@ -979,8 +931,7 @@ void Graph::delete_espece()
         }
 
         //Puis ajouter le sommet à la map poubelle retirer le sommet de la map normale
-        Vertex_bin v_bin(indice, remove_vertex.m_value, remove_vertex.m_interface->m_top_box.get_frame().pos.x,
-                         remove_vertex.m_interface->m_top_box.get_frame().pos.y, remove_vertex.m_interface->m_img.get_pic_name(), 0);
+        Vertex_bin v_bin(indice, remove_vertex.m_value, remove_vertex.m_interface->m_top_box.get_frame().pos.x, remove_vertex.m_interface->m_top_box.get_frame().pos.y, remove_vertex.m_interface->m_img.get_pic_name(), 0, remove_vertex.m_taux_repro);
         m_bin_vertices.push_back(v_bin);
 
         ///On supprime le sommet
@@ -1066,7 +1017,7 @@ void Graph::update()
 }
 
 /// Aide à l'ajout de sommets interfacés
-void Graph::add_interfaced_vertex(int idx, int value, int x, int y, std::string pic_name, int pic_idx)
+void Graph::add_interfaced_vertex(int idx, int value, int x, int y, std::string pic_name, int pic_idx, int taux_repro)
 {
     /*parcours les indices de sommet de la map pour voir si le sommet a pas déjà été crée, si c le cas y un message d'erreur*/
     if ( m_vertices.find(idx)!=m_vertices.end() )
@@ -1079,7 +1030,7 @@ void Graph::add_interfaced_vertex(int idx, int value, int x, int y, std::string 
     // Ajout de la top box de l'interface de sommet
     m_interface->m_main_box.add_child(vi->m_top_box);
     // On peut ajouter directement des vertices dans la map avec la notation crochet :
-    m_vertices[idx] = Vertex(value, vi);
+    m_vertices[idx] = Vertex(value, vi, taux_repro);
 }
 
 /// Aide à l'ajout d'arcs interfacés
@@ -1107,8 +1058,6 @@ void Graph::add_interfaced_edge(int idx, int id_vert1, int id_vert2, int weight)
     m_vertices[id_vert2].m_in.push_back(idx);
 }
 
-
-
 /*****************************************************
 Affichage tour de boucle
 ******************************************************/
@@ -1118,19 +1067,17 @@ void Graph::affichage_outil()
     grman::show_picture(grman::page, "G1.bmp", 24,6,0);
     grman::show_picture(grman::page, "G2.bmp", 24,86,0);
     grman::show_picture(grman::page, "G3.bmp", 24,166,0);
+    grman::show_picture(grman::page,"save.bmp",24,246,0);
+    grman::show_picture(grman::page,"read.bmp",24,326,0);
+    grman::show_picture(grman::page,"cfc.bmp",24, 406,0);
     grman::show_picture(grman::page, "add.bmp", 24,486,0);
     grman::show_picture(grman::page, "delete.bmp", 24,566,0);
     grman::show_picture(grman::page, "logout.bmp", 24,646,0);
-
-    grman::show_picture(grman::page,"save.bmp",24,290,0);
-    grman::show_picture(grman::page,"read.bmp",24,370,0);
-
-
 }
 
 void Graph::acces_G1(int* n)
 {
-    std::cout << "Bienvenue sur le graphe 1 :) " << std::endl;
+    //std::cout << "Bienvenue sur le graphe 1 :) " << std::endl;
 
     ///LECTURE
     get_interface()->get_lect().interact_focus();
@@ -1167,6 +1114,11 @@ void Graph::acces_G1(int* n)
     delete_espece();
     sortie();
 
+    if(key[KEY_P])
+    {
+        //graph_simpl();
+    }
+
     get_interface()->get_buttonG3().interact_focus();
 
     if(get_interface()->get_buttonG3().clicked())
@@ -1181,12 +1133,14 @@ void Graph::acces_G1(int* n)
         *n=2;
     }
 
+    //var_temps();
+
 }
 
 void Graph::acces_G2(int* n)
 {
 
-    std::cout << "Bienvenue sur le graphe 2 :) " << std::endl;
+    //std::cout << "Bienvenue sur le graphe 2 :) " << std::endl;
 
     ///LECTURE
     get_interface()->get_lect().interact_focus();
@@ -1221,6 +1175,12 @@ void Graph::acces_G2(int* n)
     delete_espece();
     sortie();
 
+    while(key[KEY_P])
+    {
+        //graph_simpl();
+    }
+
+
     get_interface()->get_buttonG1().interact_focus();
 
     if(get_interface()->get_buttonG1().clicked())
@@ -1235,12 +1195,14 @@ void Graph::acces_G2(int* n)
         *n=3;
     }
 
+    //var_temps();
+
 }
 
 void Graph::acces_G3(int* n)
 {
 
-    std::cout << "Bienvenue sur le graphe 3 :) " << std::endl;
+    //std::cout << "Bienvenue sur le graphe 3 :) " << std::endl;
 
     ///LECTURE
     get_interface()->get_lect().interact_focus();
@@ -1275,6 +1237,11 @@ void Graph::acces_G3(int* n)
     delete_espece();
     sortie();
 
+    while(key[KEY_P])
+    {
+        //graph_simpl();
+    }
+
     get_interface()->get_buttonG1().interact_focus();
 
     if(get_interface()->get_buttonG1().clicked())
@@ -1289,6 +1256,8 @@ void Graph::acces_G3(int* n)
         *n=2;
     }
 
+    //var_temps();
+
 }
 
 void Graph::sortie()
@@ -1302,4 +1271,112 @@ void Graph::sortie()
         exit(0);
     }
 }
+
+void Graph::graph_simpl(std::vector<std::vector<Vertex>> cfc)
+{
+
+    std::cout << "aff graphe simplifi" << std::endl;
+
+    ///Créer le buffer
+    BITMAP* buffer = create_bitmap(908,720);
+
+    ///Faire les aretes
+    for(unsigned int i = 0 ; i< cfc.size() ; i++)
+    {
+        for(unsigned int j = 0 ; j < cfc[i].size() ; j++)
+        {
+            for(auto &elem : m_edges)
+            {
+                if(get_indice(cfc[i][j]) == elem.second.m_from)
+                {
+                    for(unsigned int k = 0 ; k < cfc.size() ; k++)
+                    {
+                        for(unsigned int l = 0 ; l < cfc.size() ; l++)
+                        {
+                            if(get_indice(cfc[k][l]) == elem.second.m_to)
+                            {
+                                line(buffer, cfc[i][j].m_interface->m_top_box.get_frame().pos.x+50,cfc[i][j].m_interface->m_top_box.get_frame().pos.y+50, cfc[k][l].m_interface->m_top_box.get_frame().pos.x+50,cfc[k][l].m_interface->m_top_box.get_frame().pos.y+50, NOIR);
+                                textprintf_ex(buffer, font, ((cfc[i][j].m_interface->m_top_box.get_frame().pos.x+50+cfc[k][l].m_interface->m_top_box.get_frame().pos.x+50)/2), ((cfc[i][j].m_interface->m_top_box.get_frame().pos.y+50+cfc[k][l].m_interface->m_top_box.get_frame().pos.y+50)/2), NOIR, -1, " de %d a %d", get_indice(cfc[i][j]),get_indice(cfc[k][l]));
+                            }
+                        }
+                    }
+                }
+                else if(get_indice(cfc[i][j]) == elem.second.m_to)
+                {
+                    for(unsigned int k = 0 ; k < cfc.size() ; k++)
+                    {
+                        for(unsigned int l = 0 ; l < cfc.size() ; l++)
+                        {
+                            if(get_indice(cfc[k][l]) == elem.second.m_from)
+                            {
+                                line(buffer, cfc[k][l].m_interface->m_top_box.get_frame().pos.x+50,cfc[k][l].m_interface->m_top_box.get_frame().pos.y+50,cfc[i][j].m_interface->m_top_box.get_frame().pos.x+50,cfc[i][j].m_interface->m_top_box.get_frame().pos.y+50, NOIR);
+                                textprintf_ex(buffer, font, ((cfc[i][j].m_interface->m_top_box.get_frame().pos.x+50+cfc[k][l].m_interface->m_top_box.get_frame().pos.x+50)/2), ((cfc[k][l].m_interface->m_top_box.get_frame().pos.y+50+cfc[i][j].m_interface->m_top_box.get_frame().pos.y+50)/2), NOIR, -1, " de %d a %d", get_indice(cfc[k][l]),get_indice(cfc[i][j]));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    ///Affichage des sommets de fortes connexités
+    for(unsigned int i = 0 ; i< cfc.size() ; i++)
+    {
+        for(unsigned int j = 0 ; j < cfc[i].size() ; j++)
+        {
+            //Affichage du sommet
+            rectfill(buffer,cfc[i][j].m_interface->m_top_box.get_frame().pos.x+45, cfc[i][j].m_interface->m_top_box.get_frame().pos.y+45,cfc[i][j].m_interface->m_top_box.get_frame().pos.x+55,cfc[i][j].m_interface->m_top_box.get_frame().pos.y+55, BLANC );
+            rect(buffer,cfc[i][j].m_interface->m_top_box.get_frame().pos.x+45, cfc[i][j].m_interface->m_top_box.get_frame().pos.y+45,cfc[i][j].m_interface->m_top_box.get_frame().pos.x+55,cfc[i][j].m_interface->m_top_box.get_frame().pos.y+55, NOIR);
+
+            textprintf_ex(buffer, font, cfc[i][j].m_interface->m_top_box.get_frame().pos.x+50, cfc[i][j].m_interface->m_top_box.get_frame().pos.y+50, NOIR, -1, "%d", get_indice(cfc[i][j]));
+        }
+    }
+
+    ///Affichage du buffer
+    blit(buffer,grman::page,0,0, 100, 5,908,720);
+
+
+}
+
+int Graph::get_indice(Vertex V)
+{
+    if(V.m_in.size() != 0)
+    {
+        return m_edges[V.m_in[0]].m_to;
+    }
+    else
+    {
+        return m_edges[V.m_out[0]].m_from;
+    }
+}
+
+void Graph::var_temps()
+{
+    ///On modifie tous les K
+    for(auto &elem : m_vertices)
+    {
+        elem.second.m_K = 0;
+
+        for(unsigned int i = 0 ; i < elem.second.m_in.size() ; i++ )
+        {
+
+            elem.second.m_K = elem.second.m_K + ( m_edges[elem.second.m_in[i]].m_weight * m_vertices[m_edges[elem.second.m_in[i]].m_from].m_value );
+            std::cout << elem.second.m_K << std::endl;
+        }
+    }
+
+
+    ///On modifie tous les N
+    for(auto &elem : m_vertices)
+    {
+        elem.second.m_value = elem.second.m_value + (elem.second.m_taux_repro*elem.second.m_value*(1 - (elem.second.m_value/elem.second.m_K)));
+        for(unsigned int i = 0 ; i < elem.second.m_out.size() ; i++)
+        {
+            elem.second.m_value = elem.second.m_value - ( m_edges[elem.second.m_out[i]].m_weight * m_vertices[m_edges[elem.second.m_out[i]].m_to].m_value );
+        }
+    }
+}
+
+
+
 

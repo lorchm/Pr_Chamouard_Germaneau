@@ -1,23 +1,24 @@
 14
 
-0 100 3 3 graphec1.jpg
-1 100 3 211 graphec2.jpg
-2 100 300 140 graphec3.jpg
-3 100 200 3 graphec4.jpg
-4 100 359 3 graphec5.jpg
-5 100 697 176 graphec6.jpg
-6 100 560 3 graphec7.jpg
-7 100 768 3 graphec8.jpg
-8 100 3 617 graphec10.jpg
-9 100 483 617 graphec11.jpg
-10 100 688 324 graphec12.jpg
-11 100 343 534 graphec13.jpg
-12 100 180 617 graphec14.jpg
-13 100 775 617 graphec15.jpg
+0 100 3 3 graphec1.jpg 10
+1 100 3 211 graphec2.jpg 10
+2 100 73 469 graphec3.jpg 10
+3 100 200 3 graphec4.jpg 10
+4 100 359 3 graphec5.jpg 10
+5 100 644 137 graphec6.jpg 10
+6 100 560 3 graphec7.jpg 15
+7 100 768 3 graphec8.jpg 15
+8 100 3 617 graphec10.jpg 20
+9 100 483 617 graphec11.jpg 20
+10 100 721 433 graphec12.jpg 10 
+11 100 343 534 graphec13.jpg 15
+12 100 180 617 graphec14.jpg 15
+13 100 775 617 graphec15.jpg 50
 
 0
 
-19
+
+21
 
 0 0 1 1
 1 4 2 1
@@ -38,6 +39,9 @@
 16 13 4 1
 17 13 9 1
 18 13 7 1
+19 13 5 1
+20 8 5 1
+
 
 0
 

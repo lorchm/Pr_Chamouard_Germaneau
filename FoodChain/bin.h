@@ -24,8 +24,9 @@ public:
     int m_y;    //d
     std::string m_pic_name; //e
     int m_pic_idx; //f
+    int m_taux_repro;
 
-    Vertex_bin(int a, int b, int c, int d, std::string e, int f);
+    Vertex_bin(int a, int b, int c, int d, std::string e, int f, int g);
     ~Vertex_bin();
 
 };

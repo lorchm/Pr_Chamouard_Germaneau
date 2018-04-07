@@ -121,7 +121,7 @@ public :
 
     // Le constructeur met en place les éléments de l'interface
     // voir l'implémentation dans le .cpp
-    VertexInterface(int idx, int x, int y, std::string pic_name="", int pic_idx=0);
+    VertexInterface(int idx, int x, int y, std::string pic_name, int pic_idx);
 };
 
 
@@ -135,13 +135,18 @@ class Vertex
     friend class EdgeInterface;
 
 private :
-    ///bool qui indique si le sommet est affiché ou pas
+
+    ///Attributs du style de vie
+    int m_taux_repro;
+
+    ///K qu'on utilise pour calculer la taille de la population
+    int m_K;
 
 
-    /// liste des indices des arcs arrivant au sommet : accès aux prédécesseurs
+    ///Indices arcs entrants
     std::vector<int> m_in;
 
-    /// liste des indices des arcs partant du sommet : accès aux successeurs
+    ///Indices arcs sortants
     std::vector<int> m_out;
 
     /// un exemple de donnée associée au sommet, on peut en ajouter d'autres...
@@ -158,8 +163,8 @@ public:
 
     /// Les constructeurs sont à compléter selon vos besoin...
     /// Ici on ne donne qu'un seul constructeur qui peut utiliser une interface
-    Vertex (int value=0, VertexInterface *interface=nullptr) :
-        m_value(value), m_interface(interface)  {  }
+    Vertex (int value=0, VertexInterface *interface=nullptr, int taux=0) :
+        m_value(value), m_interface(interface), m_taux_repro(taux)  {  }
 
     /// Vertex étant géré par Graph ce sera la méthode update de graph qui appellera
     /// le pre_update et post_update de Vertex (pas directement la boucle de jeu)
@@ -280,19 +285,22 @@ private :
 
     // A compléter éventuellement par des widgets de décoration ou
     // d'édition (boutons ajouter/enlever ...)
-    ///Boutton pour accéder aux 3 réseaux
+    ///Bouton pour accéder aux 3 réseaux
     grman::WidgetButton m_buttonG1;
     grman::WidgetButton m_buttonG2;
     grman::WidgetButton m_buttonG3;
-    ///Boutton pour ajouter/enlever une espèce
+    ///Bouton pour ajouter/enlever une espèce
     grman::WidgetButton m_buttonAdd;
     grman::WidgetButton m_buttonDelete;
-    ///Boutton pour quitter les programme
+    ///Bouton pour quitter les programme
     grman::WidgetButton m_buttonExit;
 
-    ///Boutton save/lecture
+    ///Bouton save/lecture
     grman::WidgetButton m_lect;
     grman::WidgetButton m_save;
+
+    ///Bouton affichage graphe simplifié des composantes fortement connexes
+    grman::WidgetButton m_buttonAffSimp;
 
 public :
 
@@ -335,6 +343,10 @@ public :
         return m_save;
     }
 
+    grman::WidgetButton &get_buttonGr_simpl()
+    {
+        return m_buttonAffSimp;
+    }
 
 };
 
@@ -363,7 +375,7 @@ private :
         Graph (GraphInterface *interface=nullptr) :
             m_interface(interface)  {  }
 
-        void add_interfaced_vertex(int idx, int value, int x, int y, std::string pic_name="", int pic_idx=0 );
+        void add_interfaced_vertex(int idx, int value, int x, int y, std::string pic_name, int pic_idx,int taux_repro);
         void add_interfaced_edge(int idx, int vert1, int vert2, int weight=0);
 
         /// Méthode spéciale qui construit un graphe arbitraire (démo)
@@ -408,6 +420,12 @@ private :
         void acces_G3(int* n);
 
         void sortie();
+
+        void graph_simpl(std::vector<std::vector<Vertex>> cfc);
+
+        int get_indice(Vertex V);
+
+        void var_temps();
 
 };
 
