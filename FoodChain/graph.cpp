@@ -1,6 +1,7 @@
 #include "graph.h"
 #include <fstream>
 #include <stack>
+#include <ctime>
 
 using namespace std;
 
@@ -960,7 +961,7 @@ void Graph::Marquer_composantes()
     for(auto &elt : m_vertices)
     {
         //si non marqué
-       if ( elt.second.m_present_ds_compo == false )
+        if ( elt.second.m_present_ds_compo == false )
         {
             //enregistrer l'indice de ce sommet
             reset_marquages();
@@ -968,19 +969,13 @@ void Graph::Marquer_composantes()
             //marquer_composante (de ce sommet)
             bool compo_existe = CFC(elt.first);
 
-            if( compo_existe ) afficher();
+            if( compo_existe )
+                afficher();
         }
     }
 
 }
-/*******************************************
 
-
-PENSER PEUT ETRE A VIDER M_VEC_COPOSANTE
-
-EFFACER LES MARQUAGES D APPARTENANCE A COMPO MAIS FAIT BEUGS
-
-************************************************/
 void Graph::afficher()
 {
     std::cout << "Voici les sommets de la composante fortement connexe : ";
@@ -1084,9 +1079,11 @@ bool Graph::marquage(std::vector<int> v1, std::vector<int> v2 )
     {
         for (unsigned int j = 0 ; j < v2.size() ; j ++ )
         {
-            if( v1[i] == v2[j] ) v.push_back(v1[i]); //on met ds v les indice de sommet se retour à la fois ds v1 et v2, se sont les indices des sommets appartenant à la composante
+            if( v1[i] == v2[j] )
+                v.push_back(v1[i]); //on met ds v les indice de sommet se retour à la fois ds v1 et v2, se sont les indices des sommets appartenant à la composante
         }
     }
+
 
     //s'il y a + de 1 sommet dans la composante fort. connexe alors on marque ces sommets comme faisant parti d'une compo sinon non
     if ( v.size() > 1 )
@@ -1097,26 +1094,25 @@ bool Graph::marquage(std::vector<int> v1, std::vector<int> v2 )
         for ( unsigned int i = 0 ; i < v.size() ; i++ )
         {
             m_vertices[v[i]].set_present_ds_compo(true);
-            std::cout << get_indice(m_vertices[v[i]]) << std::endl;
-            //m_vect_composantes[m_nb_comp].push_back( m_vertices[v[i]]);
         }
-        m_nb_comp++;
-        std::cout << m_nb_comp << std::endl;
+
+
+        std::vector<Vertex> vect_temp;
+        for ( unsigned int i = 0 ; i < v.size() ; i++ )
+        {
+            vect_temp.push_back(m_vertices[v[i]]);
+        }
+
+        //on mets les sommets de la compo dans un vecteur de vecteur qui repertorira tt le monde
+        m_vect_composantes.push_back( vect_temp );
+        //reinitialise
+        vect_temp.clear();
+
     }
 
-//    std::cout << "/********************************************/" << std::endl;
-//        for ( unsigned int i = 0 ; i < m_vect_composantes.size() ; i++ )
-//    {
-//        for (unsigned int j = 0 ; j < m_vect_composantes[i].size() ; j ++ )
-//        {
-//            std::cout << m_edges[m_vect_composantes[i][j].m_out[0]].m_from << " " ;
-//
-//        }
-//        std::cout << std::endl;
-//    }
     return compo_existe;
-}
 
+}
 
 /*Source principale Monsieur Fercoq*/
 void Graph::remove_edge(int eidx)
@@ -1229,6 +1225,7 @@ void Graph::add_interfaced_edge(int idx, int id_vert1, int id_vert2, int weight)
 /*****************************************************
 Affichage tour de boucle
 ******************************************************/
+
 void Graph::affichage_outil()
 {
     //affichage/chargement des images pour la tool bar
@@ -1245,7 +1242,7 @@ void Graph::affichage_outil()
 
 void Graph::acces_G1(int* n)
 {
-    //std::cout << "Bienvenue sur le graphe 1 :) " << std::endl;
+    std::cout << "Bienvenue sur le graphe 1 :) " << std::endl;
 
     ///LECTURE
     get_interface()->get_lect().interact_focus();
@@ -1278,12 +1275,16 @@ void Graph::acces_G1(int* n)
     if (key[KEY_SPACE])
     {
         std::cout << "RECHERCHE DE COMPOSANTE FORTEMENT CONNEXE" << std::endl;
+        rest(100);
         Marquer_composantes();
 
         for (auto &elt : m_vertices)
         {
             elt.second.set_present_ds_compo(false);
         }
+
+
+
     }
 
     /// Mise à jour générale (clavier/souris/buffer etc...)
@@ -1311,7 +1312,12 @@ void Graph::acces_G1(int* n)
 
     if(key[KEY_P])
     {
-        graph_simpl();
+        if(m_vect_composantes.size() > 0 )
+        {
+                graph_simpl();
+                m_vect_composantes.clear();
+        }
+
     }
 
     //var_temps();
@@ -1321,7 +1327,7 @@ void Graph::acces_G1(int* n)
 void Graph::acces_G2(int* n)
 {
 
-    //std::cout << "Bienvenue sur le graphe 2 :) " << std::endl;
+    std::cout << "Bienvenue sur le graphe 2 :) " << std::endl;
 
     ///LECTURE
     get_interface()->get_lect().interact_focus();
@@ -1460,7 +1466,7 @@ void Graph::graph_simpl()
 
     ///Créer le buffer
     BITMAP* buffer = create_bitmap(908,720);
-    rectfill(buffer,0,0,908,720, BLANC);
+    rectfill(buffer,0,0,908,720, CYANSOMBRE);
 
     ///Faire les aretes
     for(unsigned int i = 0 ; i< m_vect_composantes.size() ; i++)
@@ -1471,54 +1477,88 @@ void Graph::graph_simpl()
             {
                 if(get_indice(m_vect_composantes[i][j]) == elem.second.m_from)
                 {
-                    for(unsigned int k = 0 ; k < m_vect_composantes.size() ; k++)
+                    for(unsigned int k = 0 ; k < m_vect_composantes[i].size() ; k++)
                     {
-                        for(unsigned int l = 0 ; l < m_vect_composantes.size() ; l++)
-                        {
-                            if(get_indice(m_vect_composantes[k][l]) == elem.second.m_to)
+                            if(get_indice(m_vect_composantes[i][k]) == elem.second.m_to)
                             {
-                                line(buffer, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+50,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+50, m_vect_composantes[k][l].m_interface->m_top_box.get_frame().pos.x+50,m_vect_composantes[k][l].m_interface->m_top_box.get_frame().pos.y+50, NOIR);
-                                textprintf_ex(buffer, font, ((m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+50+m_vect_composantes[k][l].m_interface->m_top_box.get_frame().pos.x+50)/2), ((m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+50+m_vect_composantes[k][l].m_interface->m_top_box.get_frame().pos.y+50)/2), NOIR, -1, " de %d a %d", get_indice(m_vect_composantes[i][j]),get_indice(m_vect_composantes[k][l]));
+                                line(buffer, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+50,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+50, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x+50,m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y+50, NOIR);
+                                ///si a gauche top de b
+                                if(m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x < m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x && m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y < m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y )
+                                {
+                                    circlefill(buffer, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x+50, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y+50, 10, NOIR);
+                                }
+                                ///si a gauche bas de b
+                                if(m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x < m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x && m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y > m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y)
+                                {
+                                    circlefill(buffer, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x+50, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y+50, 10, NOIR);
+                                }
+                                ///si a droite bas de b
+                                if(m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x > m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x && m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y > m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y)
+                                {
+                                    circlefill(buffer, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x+50, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y+50, 10, NOIR);
+                                }
+                                ///si a droit top de b
+                                if(m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x > m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x && m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y < m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y )
+                                {
+                                    circlefill(buffer, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x+50, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y+50, 10, NOIR);
+                                }
                             }
-                        }
                     }
                 }
                 else if(get_indice(m_vect_composantes[i][j]) == elem.second.m_to)
                 {
-                    for(unsigned int k = 0 ; k < m_vect_composantes.size() ; k++)
+                    for(unsigned int k = 0 ; k < m_vect_composantes[i].size() ; k++)
                     {
-                        for(unsigned int l = 0 ; l < m_vect_composantes.size() ; l++)
-                        {
-                            if(get_indice(m_vect_composantes[k][l]) == elem.second.m_from)
+                            if(get_indice(m_vect_composantes[i][k]) == elem.second.m_from)
                             {
-                                line(buffer, m_vect_composantes[k][l].m_interface->m_top_box.get_frame().pos.x+50,m_vect_composantes[k][l].m_interface->m_top_box.get_frame().pos.y+50,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+50,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+50, NOIR);
-                                textprintf_ex(buffer, font, ((m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+50+m_vect_composantes[k][l].m_interface->m_top_box.get_frame().pos.x+50)/2), ((m_vect_composantes[k][l].m_interface->m_top_box.get_frame().pos.y+50+m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+50)/2), NOIR, -1, " de %d a %d", get_indice(m_vect_composantes[k][l]),get_indice(m_vect_composantes[i][j]));
+                                line(buffer, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x+50,m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y+50,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+50,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+50, NOIR);
+                                ///si a gauche top de b
+                                if(m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x < m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x && m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y < m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y )
+                                {
+                                    circlefill(buffer, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+58, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+65, 10, NOIR);
+                                }
+                                ///si a gauche bas de b
+                                if(m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x < m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x && m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y > m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y)
+                                {
+                                    circlefill(buffer, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+55, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+45, 10, NOIR);
+                                }
+                                ///si a droite bas de b
+                                if(m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x > m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x && m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y > m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y)
+                                {
+                                    circlefill(buffer, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+40, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+45, 10, NOIR);
+                                }
+                                ///si a droit top de b
+                                if(m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x > m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x && m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y < m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y )
+                                {
+                                    circlefill(buffer, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+43, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+55, 10, NOIR);
+                                }
+
+                                //textprintf_ex(buffer, font, ((m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+50+m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x+50)/2), ((m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y+50+m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+50)/2), NOIR, -1, " de %d a %d", get_indice(m_vect_composantes[i][k]),get_indice(m_vect_composantes[i][j]));
                             }
                         }
                     }
                 }
             }
         }
-    }
 
     ///Affichage des sommets de fortes connexités
-    for(unsigned int i = 0 ; i< m_vect_composantes.size() ; i++)
+    for(unsigned int k = 0 ; k < m_vect_composantes.size() ; k++)
     {
-        for(unsigned int j = 0 ; j < m_vect_composantes[i].size() ; j++)
+        for(unsigned int m = 0 ; m < m_vect_composantes[k].size() ; m++)
         {
             //Affichage du sommet
-            rectfill(buffer,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+45, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+45,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+55,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+55, BLANC );
-            rect(buffer,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+45, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+45,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+55,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+55, NOIR);
+            rectfill(buffer,m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.x+40, m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.y+40,m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.x+70,m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.y+70, BLANC );
+            rect(buffer,m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.x+40, m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.y+40,m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.x+70,m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.y+70, NOIR);
 
-            textprintf_ex(buffer, font, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+50, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+50, NOIR, -1, "%d", get_indice(m_vect_composantes[i][j]));
+            textprintf_ex(buffer, font, m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.x+50, m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.y+50, NOIR, -1, "%d", get_indice(m_vect_composantes[k][m]));
         }
     }
 
     ///Affichage du buffer
-    blit(buffer,screen,0,0, 100, 5,908,720);
-
-
+    blit(buffer,screen,0,0, 110, 5,908,720);
+    rest(5000);
 }
+
 
 int Graph::get_indice(Vertex V)
 {
