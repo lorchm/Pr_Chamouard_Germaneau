@@ -948,7 +948,6 @@ void Graph::reset_marquages()
     {
         elt.second.set_Bool1(false);
         elt.second.set_Bool2(false);
-//elt.second.set_present_ds_compo(true);
     }
 }
 
@@ -973,8 +972,48 @@ void Graph::Marquer_composantes()
         }
     }
 
+    ///Mise en valeur des composantes connexes
+    //on affiche d'une certaine couleur les arêtes reliant les sommets appartenent à la compo fort connexe
+    for(unsigned int i = 0 ; i< m_vect_composantes.size() ; i++)
+    {
+        for(unsigned int j = 0 ; j < m_vect_composantes[i].size() ; j++)
+        {
+            for(auto &elem : m_edges)
+            {
+                if(get_indice(m_vect_composantes[i][j]) == elem.second.m_from)
+                {
+                    for(unsigned int k = 0 ; k < m_vect_composantes.size() ; k++)
+                    {
+                        for(unsigned int l = 0 ; l < m_vect_composantes.size() ; l++)
+                        {
+                            if(get_indice(m_vect_composantes[k][l]) == elem.second.m_to)
+                            {
+                                elem.second.m_interface->m_top_edge.set_color(ORANGECLAIR);
+                            }
+                        }
+                    }
+                }
+                else if(get_indice(m_vect_composantes[i][j]) == elem.second.m_to)
+                {
+                    for(unsigned int k = 0 ; k < m_vect_composantes.size() ; k++)
+                    {
+                        for(unsigned int l = 0 ; l < m_vect_composantes.size() ; l++)
+                        {
+                            if(get_indice(m_vect_composantes[k][l]) == elem.second.m_from)
+                            {
+                                elem.second.m_interface->m_top_edge.set_color(ORANGECLAIR);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
+/*
+afficher = afficher les indices des sommets appartenant à une composante fortement connexe
+*/
 void Graph::afficher()
 {
     std::cout << "Voici les sommets de la composante fortement connexe : ";
@@ -988,6 +1027,11 @@ void Graph::afficher()
     std::cout << std::endl;
 }
 
+/*
+CFC = recherhce de composante(s) fortement connexe(s)
+ENTREES : sommet ancre à partir duquel la recherche commencera
+SORTIES : retourne un booléen indiquant s'il s'agit bien d'un composante fortement connexe (true)
+*/
 bool Graph::CFC(int sommet_ancre)
 {
     //piles pour traiter les arcs sortants et entrants
@@ -1104,19 +1148,14 @@ bool Graph::marquage(std::vector<int> v1, std::vector<int> v2 )
 
         //on mets les sommets de la compo dans un vecteur de vecteur qui repertorira tt le monde
         m_vect_composantes.push_back( vect_temp );
+
         //reinitialise
         vect_temp.clear();
     }
 
-
-
-
     return compo_existe;
 
 }
-
-
-
 
 /*Source principale Monsieur Fercoq*/
 void Graph::remove_edge(int eidx)
@@ -1245,8 +1284,6 @@ void Graph::affichage_outil()
 
 void Graph::acces_G1(int* n)
 {
-    std::cout << "Bienvenue sur le graphe 1 :) " << std::endl;
-
     ///LECTURE
     get_interface()->get_lect().interact_focus();
 
@@ -1275,16 +1312,18 @@ void Graph::acces_G1(int* n)
     ///Affichage barre outil
     affichage_outil();
 
+    ///recherche de composante fortement connexe
     if (key[KEY_SPACE])
     {
         std::cout << "RECHERCHE DE COMPOSANTE FORTEMENT CONNEXE" << std::endl;
         Marquer_composantes();
 
-        for (auto &elt : m_vertices)
-        {
-            elt.second.set_present_ds_compo(false);
-        }
+    }
 
+    ///RECHERCHE DE(S) SOMMET(S) A ENLEVER POUR DECONNECTER LE GRAPHE
+    if ( key[KEY_K] )
+    {
+        k_connexite();
 
     }
 
@@ -1311,20 +1350,27 @@ void Graph::acces_G1(int* n)
         *n=2;
     }
 
+    //affiche graph simplifé de fortement connexe
     if(key[KEY_P])
     {
         graph_simpl();
+        m_vect_composantes.clear();
     }
 
-    //var_temps();
+    //affiche graph simplifé de connexe
+    if(key[KEY_B])
+    {
+        graph_simpl_connex();
+        m_connexe.clear();
+    }
 
+
+
+    //var_temps();
 }
 
 void Graph::acces_G2(int* n)
 {
-
-    std::cout << "Bienvenue sur le graphe 2 :) " << std::endl;
-
     ///LECTURE
     get_interface()->get_lect().interact_focus();
 
@@ -1358,6 +1404,12 @@ void Graph::acces_G2(int* n)
     delete_espece();
     sortie();
 
+    ///RECHERCHE DE(S) SOMMET(S) A ENLEVER POUR DECONNECTER LE GRAPHE
+    if ( key[KEY_K] )
+    {
+        k_connexite();
+    }
+
     while(key[KEY_P])
     {
         //graph_simpl();
@@ -1384,9 +1436,6 @@ void Graph::acces_G2(int* n)
 
 void Graph::acces_G3(int* n)
 {
-
-    //std::cout << "Bienvenue sur le graphe 3 :) " << std::endl;
-
     ///LECTURE
     get_interface()->get_lect().interact_focus();
 
@@ -1419,6 +1468,12 @@ void Graph::acces_G3(int* n)
     add_espece3();
     delete_espece();
     sortie();
+
+    ///RECHERCHE DE(S) SOMMET(S) A ENLEVER POUR DECONNECTER LE GRAPHE
+    if ( key[KEY_K] )
+    {
+        k_connexite();
+    }
 
     while(key[KEY_P])
     {
@@ -1455,6 +1510,9 @@ void Graph::sortie()
     }
 }
 
+/*
+graph_simpl = affiche graphe simplicié avec les différentes composantes fortement connexes
+*/
 void Graph::graph_simpl()
 {
 
@@ -1561,6 +1619,130 @@ void Graph::var_temps()
     }
 }
 
+/*
+k_connexite = trouver le minimum de sommet à enlever pour déconnecter le graphe
+
+*/
+void Graph::k_connexite()
+{
+    std::vector<int> v; //va contenir le nb d'arete sortantes et entrantes d'un sommet
+    std::vector<Vertex> w;  //va contenir les sommets à déconnecter
+
+    //On cherche le sommets qui a le plus haut degre
+    for (auto elem: m_vertices)
+    {
+        int nb_edges;      //sortants et rentrants d'un sommet
+
+        nb_edges = elem.second.m_out.size() + elem.second.m_in.size();
+
+        v.push_back(nb_edges);
+    }
+
+    //on trie ds ordre croissant les nb récupérer
+    std::sort( v.begin(), v.end() );
+
+    //On retrouve le(s) sommet(s) avec le nb d'arete min
+    for ( auto &elem : m_vertices)
+    {
+        if ( elem.second.m_out.size() + elem.second.m_in.size() == v[ v.size() -1 ] )
+        {
+            w.push_back( elem.second );
+       //     elem.second.set_Bool1(true);    //on marque les sommets à déconnecter
+        }
+    }
+
+    //On indique en console les indices des sommets à deconnecter pour avoir un graphe non connexe
+    std::cout << " Il faut enlever " << w.size() << " sommet pour deconnecter le graphe"<< std::endl << "Voici le(s) sommet(s) a deconnecter : " ;
+    for( unsigned int i =0 ; i < w.size() ; i++)
+    {
+        std::cout << get_indice( w[i] ) << " "  << std::endl;
+    }
+
+    ///afficher le graphe simplifié avec les differentes composantes connexes
+    //on recherche les sommets que l'on va afficher c-a-d ceux qu l'on ne doit pas suppr
+    std::vector<Vertex> v_temp;
+
+    for (auto &elem: m_vertices)
+    {
+        if ( elem.second.m_1 == false)
+        {
+            v_temp.push_back( elem.second );
+        }
+    }
+
+    //on remet à false tout les attributs utilisé pour pouvoit les réutiliser
+    reset_marquages();
+
+    //vecteur qui servira à afficher les composantes connexes
+    m_connexe.push_back( v_temp );
+}
+
+/*
+graph_simpl_connex = affiche graphe simplicié avec les différentes composantes connexes
+*/
+void Graph::graph_simpl_connex()
+{
+
+    std::cout << "aff graphe simplifi" << std::endl;
+
+    ///Créer le buffer
+    BITMAP* buffer = create_bitmap(908,720);
+    rectfill(buffer,0,0,908,720, BLANC);
+
+    ///Faire les aretes
+    for(unsigned int i = 0 ; i< m_connexe.size() ; i++)
+    {
+        for(unsigned int j = 0 ; j < m_connexe[i].size() ; j++)
+        {
+            for(auto &elem : m_edges)
+            {
+                if(get_indice(m_connexe[i][j]) == elem.second.m_from)
+                {
+                    for(unsigned int k = 0 ; k < m_connexe.size() ; k++)
+                    {
+                        for(unsigned int l = 0 ; l < m_connexe.size() ; l++)
+                        {
+                            if(get_indice(m_connexe[k][l]) == elem.second.m_to)
+                            {
+                                line(buffer, m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x+50,m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y+50, m_connexe[k][l].m_interface->m_top_box.get_frame().pos.x+50,m_connexe[k][l].m_interface->m_top_box.get_frame().pos.y+50, NOIR);
+                                textprintf_ex(buffer, font, ((m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x+50+m_connexe[k][l].m_interface->m_top_box.get_frame().pos.x+50)/2), ((m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y+50+m_connexe[k][l].m_interface->m_top_box.get_frame().pos.y+50)/2), NOIR, -1, " de %d a %d", get_indice(m_connexe[i][j]),get_indice(m_connexe[k][l]));
+                            }
+                        }
+                    }
+                }
+                else if(get_indice(m_connexe[i][j]) == elem.second.m_to)
+                {
+                    for(unsigned int k = 0 ; k < m_connexe.size() ; k++)
+                    {
+                        for(unsigned int l = 0 ; l < m_connexe.size() ; l++)
+                        {
+                            if(get_indice(m_connexe[k][l]) == elem.second.m_from)
+                            {
+                                line(buffer, m_connexe[k][l].m_interface->m_top_box.get_frame().pos.x+50,m_connexe[k][l].m_interface->m_top_box.get_frame().pos.y+50,m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x+50,m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y+50, NOIR);
+                                textprintf_ex(buffer, font, ((m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x+50+m_connexe[k][l].m_interface->m_top_box.get_frame().pos.x+50)/2), ((m_connexe[k][l].m_interface->m_top_box.get_frame().pos.y+50+m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y+50)/2), NOIR, -1, " de %d a %d", get_indice(m_connexe[k][l]),get_indice(m_connexe[i][j]));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    ///Affichage des sommets de fortes connexités
+    for(unsigned int i = 0 ; i< m_connexe.size() ; i++)
+    {
+        for(unsigned int j = 0 ; j < m_connexe[i].size() ; j++)
+        {
+            //Affichage du sommet
+            rectfill(buffer,m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x+45, m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y+45,m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x+55,m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y+55, BLANC );
+            rect(buffer,m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x+45, m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y+45,m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x+55,m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y+55, NOIR);
+
+            textprintf_ex(buffer, font, m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x+50, m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y+50, NOIR, -1, "%d", get_indice(m_connexe[i][j]));
+        }
+    }
+
+    ///Affichage du buffer
+    blit(buffer,grman::page,0,0, 100, 5,908,720);
 
 
-
+}

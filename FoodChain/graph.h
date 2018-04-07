@@ -145,7 +145,6 @@ private :
     bool m_2=false;
     bool m_present_ds_compo=false;
 
-
     ///K qu'on utilise pour calculer la taille de la population
     int m_K;
 
@@ -389,6 +388,9 @@ private :
     std::vector<std::vector<Vertex>> m_vect_composantes;
     int m_nb_comp=0;
 
+    ///vecteur qui contient les sommets à afficher pour les différentes composantes connexes
+    std::vector<std::vector<Vertex>> m_connexe;
+
     public:
 
         /// Les constructeurs sont à compléter selon vos besoin...
@@ -424,6 +426,9 @@ private :
         void afficher();
         bool marquage(std::vector<int> v1, std::vector<int> v2 );
 
+        ///Rendre le graphe non connexe
+        void k_connexite();
+
         /// La méthode update à appeler dans la boucle de jeu pour les graphes avec interface
         void update();
 
@@ -444,6 +449,7 @@ private :
         void sortie();
 
         void graph_simpl();
+        void graph_simpl_connex();
 
         int get_indice(Vertex V);
 

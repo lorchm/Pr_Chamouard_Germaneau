@@ -4,6 +4,19 @@
 #include "graph.h"
 #include "Interface.h"
 
+
+/******************************** INFOS UTILES *******************************************************************************
+Touche 'SPACE' = trouve les composantes fortements connexes
+Touche 'P' = afficher graphe simplifié des composantes fortements connexes, toujours le faire après avoir fait 'SPACE'
+
+Touche 'K' = recherche le nb de sommet minimum à enlever pour déconnecter le graphe
+Touche 'B' = afficher les composantes connexes après avoir déconnecter le graph ( apres avoir fait 'k' )
+
+
+
+******************************************************************************************************************************/
+
+
 int main()
 {
     ///Initialisations
