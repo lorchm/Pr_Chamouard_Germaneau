@@ -1098,21 +1098,12 @@ bool Graph::marquage(std::vector<int> v1, std::vector<int> v2 )
         for ( unsigned int i = 0 ; i < v.size() ; i++ )
         {
             m_vertices[v[i]].set_present_ds_compo(true);
-         //   m_vect_composantes[cpt].push_back( m_vertices[v[i]]);
+            m_vect_composantes[cpt].push_back( m_vertices[v[i]]);
         }
-     //   cpt++;
+        cpt++;
     }
 
-//    std::cout << "/********************************************/" << std::endl;
-//        for ( unsigned int i = 0 ; i < m_vect_composantes.size() ; i++ )
-//    {
-//        for (unsigned int j = 0 ; j < m_vect_composantes[i].size() ; j ++ )
-//        {
-//            std::cout << m_edges[m_vect_composantes[i][j].m_out[0]].m_from << " " ;
-//
-//        }
-//        std::cout << std::endl;
-//    }
+
     return compo_existe;
 }
 
@@ -1244,7 +1235,7 @@ void Graph::affichage_outil()
 
 void Graph::acces_G1(int* n)
 {
-    //std::cout << "Bienvenue sur le graphe 1 :) " << std::endl;
+    std::cout << "Bienvenue sur le graphe 1 :) " << std::endl;
 
     ///LECTURE
     get_interface()->get_lect().interact_focus();
@@ -1313,7 +1304,7 @@ void Graph::acces_G1(int* n)
 void Graph::acces_G2(int* n)
 {
 
-    //std::cout << "Bienvenue sur le graphe 2 :) " << std::endl;
+    std::cout << "Bienvenue sur le graphe 2 :) " << std::endl;
 
     ///LECTURE
     get_interface()->get_lect().interact_focus();
