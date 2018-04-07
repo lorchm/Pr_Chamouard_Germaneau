@@ -386,7 +386,9 @@ private :
 
     ///vecteur qui contient les composantes fort. connexes
     std::vector<std::vector<Vertex>> m_vect_composantes;
-    int m_nb_comp=0;
+
+    int m_nb_comp = 0;
+
 
     ///vecteur qui contient les sommets à afficher pour les différentes composantes connexes
     std::vector<std::vector<Vertex>> m_connexe;
