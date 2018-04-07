@@ -1,6 +1,7 @@
 #include "graph.h"
 #include <fstream>
 #include <stack>
+#include <queue>
 #include <ctime>
 
 using namespace std;
@@ -962,7 +963,6 @@ void Graph::Marquer_composantes()
         //si non marqué
         if ( elt.second.m_present_ds_compo == false )
         {
-            //enregistrer l'indice de ce sommet
             reset_marquages();
 
             //marquer_composante (de ce sommet)
@@ -1156,7 +1156,7 @@ bool Graph::marquage(std::vector<int> v1, std::vector<int> v2 )
 
 }
 
-/*Source principale Monsieur Fercoq*/
+/*Source Monsieur Fercoq*/
 void Graph::remove_edge(int eidx)
 {
     // référence vers le Edge à enlever
@@ -1177,19 +1177,9 @@ void Graph::remove_edge(int eidx)
     std::vector<int> &veto = m_vertices[remed.m_to].m_in;
 
     //on retrouve l'arete à suppr dans le vecteur m_out ou m_in la contenant
-    for(unsigned int i=0; i< vefrom.size(); i++)
-    {
-        //Qd on l'a retrouvé on la supprime du vecteur
-        if( vefrom[i] == eidx)
-            vefrom.erase(vefrom.begin() + i);
-    }
+    vefrom.erase( std::remove( vefrom.begin(), vefrom.end(), eidx ), vefrom.end() );
 
-    //idem
-    for(unsigned int i=0; i< veto.size(); i++)
-    {
-        if( vefrom[i] == eidx)
-            veto.erase(veto.begin() + i);
-    }
+    veto.erase( std::remove( veto.begin(), veto.end(), eidx ), veto.end() );
 
     //on ajoute l'arête dans une autre map contenant les aretes supprimées
     Edge_bin e_bin(eidx, remed.getFrom(), remed.getTo(), remed.getWeight());
@@ -1324,7 +1314,10 @@ void Graph::acces_G1(int* n)
     ///RECHERCHE DE(S) SOMMET(S) A ENLEVER POUR DECONNECTER LE GRAPHE
     if ( key[KEY_K] )
     {
+        rest(100);
         k_connexite();
+        /*******il faudra l'enlever qd on mergera avec laure************************************/
+        m_connexe.clear();
     }
 
     /// Mise à jour générale (clavier/souris/buffer etc...)
@@ -1353,20 +1346,22 @@ void Graph::acces_G1(int* n)
     //affiche graph simplifé de fortement connexe
     if(key[KEY_P])
     {
-        graph_simpl();
-        m_vect_composantes.clear();
+        rest(100);
+        if(m_vect_composantes.size() > 0 )
+        {
+            graph_simpl();
+            m_vect_composantes.clear();
+        }
     }
 
     //affiche graph simplifé de connexe
     if(key[KEY_B])
     {
-        graph_simpl_connex();
-        m_connexe.clear();
-
-        if(m_vect_composantes.size() > 0 )
+        rest(100);
+        if(m_connexe.size() > 0 )
         {
-            graph_simpl();
-            m_vect_composantes.clear();
+            graph_simpl_connex();
+            m_connexe.clear();
         }
     }
 
@@ -1422,26 +1417,29 @@ void Graph::acces_G2(int* n)
     ///RECHERCHE DE(S) SOMMET(S) A ENLEVER POUR DECONNECTER LE GRAPHE
     if ( key[KEY_K] )
     {
+        rest(100);
         k_connexite();
+        /*******il faudra l'enlever qd on mergera avec laure************************************/
+        m_connexe.clear();
     }
 
     //affiche graph simplifé de fortement connexe
     if(key[KEY_P])
     {
-        graph_simpl();
-        m_vect_composantes.clear();
+        if(m_vect_composantes.size() > 0 )
+        {
+            graph_simpl();
+            m_vect_composantes.clear();
+        }
     }
 
     //affiche graph simplifé de connexe
     if(key[KEY_B])
     {
-        graph_simpl_connex();
-        m_connexe.clear();
-
-        if(m_vect_composantes.size() > 0 )
+        if(m_connexe.size() > 0 )
         {
-            graph_simpl();
-            m_vect_composantes.clear();
+            graph_simpl_connex();
+            m_connexe.clear();
         }
     }
 
@@ -1511,26 +1509,30 @@ void Graph::acces_G3(int* n)
     ///RECHERCHE DE(S) SOMMET(S) A ENLEVER POUR DECONNECTER LE GRAPHE
     if ( key[KEY_K] )
     {
+        rest(100);
         k_connexite();
+
+        /*******il faudra l'enlever qd on mergera avec laure************************************/
+        m_connexe.clear();
     }
 
     //affiche graph simplifé de fortement connexe
     if(key[KEY_P])
     {
-        graph_simpl();
-        m_vect_composantes.clear();
+        if(m_vect_composantes.size() > 0 )
+        {
+            graph_simpl();
+            m_vect_composantes.clear();
+        }
     }
 
     //affiche graph simplifé de connexe
     if(key[KEY_B])
     {
-        graph_simpl_connex();
-        m_connexe.clear();
-
-        if(m_vect_composantes.size() > 0 )
+        if(m_connexe.size() > 0 )
         {
-            graph_simpl();
-            m_vect_composantes.clear();
+            graph_simpl_connex();
+            m_connexe.clear();
         }
     }
 
@@ -1708,64 +1710,6 @@ void Graph::var_temps()
 }
 
 /*
-k_connexite = trouver le minimum de sommet à enlever pour déconnecter le graphe
-
-*/
-void Graph::k_connexite()
-{
-    std::vector<int> v; //va contenir le nb d'arete sortantes et entrantes d'un sommet
-    std::vector<Vertex> w;  //va contenir les sommets à déconnecter
-
-    //On cherche le sommets qui a le plus haut degre
-    for (auto elem: m_vertices)
-    {
-        int nb_edges;      //sortants et rentrants d'un sommet
-
-        nb_edges = elem.second.m_out.size() + elem.second.m_in.size();
-
-        v.push_back(nb_edges);
-    }
-
-    //on trie ds ordre croissant les nb récupérer
-    std::sort( v.begin(), v.end() );
-
-    //On retrouve le(s) sommet(s) avec le nb d'arete min
-    for ( auto &elem : m_vertices)
-    {
-        if ( elem.second.m_out.size() + elem.second.m_in.size() == v[ v.size() -1 ] )
-        {
-            w.push_back( elem.second );
-            //     elem.second.set_Bool1(true);    //on marque les sommets à déconnecter
-        }
-    }
-
-    //On indique en console les indices des sommets à deconnecter pour avoir un graphe non connexe
-    std::cout << " Il faut enlever " << w.size() << " sommet pour deconnecter le graphe"<< std::endl << "Voici le(s) sommet(s) a deconnecter : " ;
-    for( unsigned int i =0 ; i < w.size() ; i++)
-    {
-        std::cout << get_indice( w[i] ) << " "  << std::endl;
-    }
-
-    ///afficher le graphe simplifié avec les differentes composantes connexes
-    //on recherche les sommets que l'on va afficher c-a-d ceux qu l'on ne doit pas suppr
-    std::vector<Vertex> v_temp;
-
-    for (auto &elem: m_vertices)
-    {
-        if ( elem.second.m_1 == false)
-        {
-            v_temp.push_back( elem.second );
-        }
-    }
-
-    //on remet à false tout les attributs utilisé pour pouvoit les réutiliser
-    reset_marquages();
-
-    //vecteur qui servira à afficher les composantes connexes
-    m_connexe.push_back( v_temp );
-}
-
-/*
 graph_simpl_connex = affiche graphe simplicié avec les différentes composantes connexes
 */
 void Graph::graph_simpl_connex()
@@ -1867,3 +1811,200 @@ void Graph::graph_simpl_connex()
     blit(buffer,screen,0,0, 110, 5,908,720);
     rest(5000);
 }
+
+
+/*
+k_connexite = trouver le minimum de sommet à enlever pour déconnecter le graphe
+
+*/
+void Graph::k_connexite()
+{
+    std::vector<int> v; //va contenir le nb d'arete sortantes et entrantes d'un sommet
+    std::vector<Vertex*> w;  //va contenir les sommets à déconnecter
+
+    ///On cherche le sommets qui a le plus haut degre
+    for (auto elem: m_vertices)
+    {
+        int nb_edges;      //sortants et rentrants d'un sommet
+
+        nb_edges = elem.second.m_out.size() + elem.second.m_in.size();
+
+        v.push_back(nb_edges);
+    }
+
+    //on trie ds ordre croissant les nb récupérer
+    std::sort( v.begin(), v.end() );
+
+    //On retrouve le(s) sommet(s) avec le nb d'arete max
+    for ( auto &elem : m_vertices)
+    {
+        if ( elem.second.m_out.size() + elem.second.m_in.size() == v[ v.size() -1 ] )
+        {
+            w.push_back( &elem.second ); //on stocke les sommets qui peuvent deconnecter le graph
+        }
+    }
+
+    std::cout << "taille w=" << w.size() << std::endl;
+
+    ///VERIFICATION SI LES SOMMETS TROUVES DECONNECTE LE GRAPHe
+    ///POUR TT LES SOMMETS POTENTIELS LES MARQUER AVEC UN BOOL POUR DIRE S'ILS SONT PAS PRESENT DS LE GRAPH ET VOIR SI LE GRAPH EST DECONNECTER
+    for ( unsigned int i =0 ; i < w.size() ; i ++)
+    {
+        w[i]->set_prst_graph(false);  //en le marquant il ne sera pas reelement present ds le graphe
+        //algo qui calcul cb y a de composante sans le sommet que l'on a choisit de supprimer temporairement
+        bool many_compo = Rechercher_connexes();
+
+        //si true a été retourné alors c'est que le sommet deconnecte le graph
+        if ( many_compo == true )
+        {
+            w[i]->set_deconnect(true);
+
+            //On rempli le vecteur avec les sommets qui reste apres avoir suppr le sommet qui deconnecte, c'est pour visualiser apres le graph simplifie
+            std::vector<Vertex> v_temp;
+
+            for (auto &elem: m_vertices)
+            {
+                if ( elem.second.m_prst_graph == true )
+                {
+                    v_temp.push_back( elem.second );
+                }
+            }
+            //vecteur qui servira à afficher les composantes connexes
+            m_connexe.push_back( v_temp );
+        }
+
+        //on a fait la verification donc on remet à true = prst ds le graphe
+        w[i]->set_prst_graph(true);
+    }
+
+    //CLEAR VECTEUR W
+    w.clear();
+
+    ///REMPLIR VECTEUR W AVEC LES BONS SOMMETS A ENLEVER
+    for (auto &elem: m_vertices)
+    {
+        if ( elem.second.m_deconnect == true)
+        {
+            w.push_back( &elem.second );
+        }
+    }
+
+    ///AFFICHAGE DES INDDECES DE SOMMETS A ENLEVER POUR AVOIR AVOIR GRAPHE NON CONNEXE
+    std::cout << " Il faut enlever " << m_connexe.size() << " sommet pour deconnecter le graphe"<< std::endl << "Voici le(s) sommet(s) a deconnecter : ";
+    for ( auto &elem: m_vertices)
+    {
+        if ( elem.second.m_deconnect == true )
+        {
+            std::cout << elem.first <<  " ";
+        }
+    }
+
+    std::cout << std::endl;
+    std::cout << " Il y a " << m_connexe.size() << " " << m_vertices.size() - m_connexe[0].size() << "-uplet" << std::endl;
+
+    //on remet à false tout les attributs utilisé pour pouvoit les réutiliser
+    reset_marquages();
+}
+
+
+/*recherche une composante*/
+/*utilisation du BFS*/
+void Graph::Rechercher_connexe(int sommet_ancre)
+{
+    //Création variable
+    std::queue<int> file;
+
+    /// 1. On part du sommet donné en paramètre
+    //On enfile le 1er sommet (son indice)
+    file.push(sommet_ancre);
+
+    ///2. Marquage du sommet de départ
+    m_vertices[sommet_ancre].set_Bool1(true);
+
+    ///3. on fait tourner tant que la file n'est pas vide
+    //tant que la file n'est pas vide on continu
+    while (!file.empty())
+    {
+        //On utilise une variable temp qui prend la valeur de l'indice du sommet en tête de file
+        int id_sommet_actuel = file.front();
+
+        ///5. défiler le sommet en tête de file
+        file.pop();
+
+        ///POUR VOISINS AVEC ARC ENTRANTS
+        ///6. enfile sommet(s) voisin(s) si pas déjà marqué
+        //on fait en fonction du nombre de voisin du sommet en tête de file
+        for(unsigned int i=0; i<  m_vertices[id_sommet_actuel].m_in.size(); i++)
+        {
+            ///7. On vérifie si les sommets adj sont déjà marqué si c'est le cas il ne faut pas les enfiler et s'il est présent sur le graph temporaire
+            if( m_vertices[m_edges[m_vertices[id_sommet_actuel].m_in[i]].m_from].m_1 == false && m_vertices[m_edges[m_vertices[id_sommet_actuel].m_in[i]].m_from].m_prst_graph == true )
+            {
+                // std::cout << "s" << m_edges[m_vertices[id_sommet_actuel].m_in[i]].m_from << " b1=" <<m_vertices[m_edges[m_vertices[id_sommet_actuel].m_in[i]].m_from].m_1<< " prst g=" <<m_vertices[m_edges[m_vertices[id_sommet_actuel].m_in[i]].m_from].m_prst_graph << std::endl;
+
+                //m_adjacent contient indice du sommet adj
+                ///8. enfile sommet(s) voisin(s) non marqué(s)
+                file.push( m_edges[m_vertices[id_sommet_actuel].m_in[i]].m_from );
+
+                ///9. marquage
+                m_vertices[m_edges[m_vertices[id_sommet_actuel].m_in[i]].m_from].set_Bool1(true);
+            }
+        }
+
+        ///POUR VOISINS AVEC ARC SORTANTS
+        ///6. enfile sommet(s) voisin(s) si pas déjà marqué
+        //on fait en fonction du nombre de voisin du sommet en tête de file
+        for(unsigned int i=0; i<  m_vertices[id_sommet_actuel].m_out.size() ; i++)
+        {
+            ///7. On vérifie si les sommets adj sont déjà marqué si c'est le cas il ne faut pas les enfiler et s'il est présent sur le graph temporaire
+            if( m_vertices[m_edges[m_vertices[id_sommet_actuel].m_out[i]].m_to].m_1 == false && m_vertices[m_edges[m_vertices[id_sommet_actuel].m_out[i]].m_to].m_prst_graph == true )
+            {
+                //std::cout << "s" << m_edges[m_vertices[id_sommet_actuel].m_out[i]].m_to << " b1=" <<m_vertices[m_edges[m_vertices[id_sommet_actuel].m_out[i]].m_to].m_1<< " prst g=" <<m_vertices[m_edges[m_vertices[id_sommet_actuel].m_out[i]].m_to].m_prst_graph << std::endl;
+                //m_adjacent contient indice du sommet adj
+                ///8. enfile sommet(s) voisin(s) non marqué(s)
+                file.push( m_edges[m_vertices[id_sommet_actuel].m_out[i]].m_to );
+
+                ///9. marquage
+                m_vertices[m_edges[m_vertices[id_sommet_actuel].m_out[i]].m_to].set_Bool1(true);
+            }
+        }
+    }
+}
+
+/*recherche les composantes*/
+bool Graph::Rechercher_connexes()
+{
+    //effacer marquage
+    reset_marquages();
+
+    //pour chaque sommets
+    for(auto &elt : m_vertices)
+    {
+        //si  pas marque (pas ds compo connexe) et si present ds le graph
+        if ( elt.second.m_1 == false && elt.second.m_prst_graph == true)
+        {
+            //enregistrer l'indice de ce sommet
+            m_indice_sommet_ancre.push_back(elt.first);
+
+            //marquer_composante (de ce sommet)
+            Rechercher_connexe( elt.first );
+        }
+    }
+
+    //s'il y a plus de 1 composante connexe alors le sommet que l'on testait permet bien de deconnecter le graphe
+    if ( m_indice_sommet_ancre.size() > 1 )
+    {
+        std::cout << "Il y a " << m_indice_sommet_ancre.size() << " composantes connexes" <<std::endl;
+        m_indice_sommet_ancre.clear();
+        return true;
+    }
+
+    else
+    {
+        m_indice_sommet_ancre.clear();
+        std::cout << "Il y a 1 composante connexe" << std::endl;
+        return false;
+
+    }
+}
+
+

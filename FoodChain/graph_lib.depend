@@ -45,7 +45,7 @@
 1523011702 source:c:\users\barba\documents\pr_chamouard_germaneau\foodchain\grman\widget.cpp
 	"widget.h"
 
-1523126020 source:c:\users\barba\documents\pr_chamouard_germaneau\foodchain\interface.cpp
+1523131067 source:c:\users\barba\documents\pr_chamouard_germaneau\foodchain\interface.cpp
 	"Interface.h"
 
 1523011702 c:\users\barba\documents\pr_chamouard_germaneau\foodchain\interface.h
@@ -59,7 +59,7 @@
 
 1523099186 D
 
-1523125188 c:\users\barba\documents\pr_chamouard_germaneau\foodchain\graph.h
+1523137881 c:\users\barba\documents\pr_chamouard_germaneau\foodchain\graph.h
 	<vector>
 	<map>
 	<string>
@@ -99,10 +99,11 @@
 	<fstream>
 	<stack>
 
-1523126020 source:c:\users\barba\documents\pr_chamouard_germaneau\foodchain\graph.cpp
+1523145311 source:c:\users\barba\documents\pr_chamouard_germaneau\foodchain\graph.cpp
 	"graph.h"
 	<fstream>
 	<stack>
+	<queue>
 	<ctime>
 
 1523097644 source:c:\users\laure\documents\pr_chamouard_germaneau\foodchain\main.cpp
