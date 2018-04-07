@@ -1097,9 +1097,11 @@ bool Graph::marquage(std::vector<int> v1, std::vector<int> v2 )
         for ( unsigned int i = 0 ; i < v.size() ; i++ )
         {
             m_vertices[v[i]].set_present_ds_compo(true);
-            //m_vect_composantes[cpt].push_back( m_vertices[v[i]]);
+            std::cout << get_indice(m_vertices[v[i]]) << std::endl;
+            //m_vect_composantes[m_nb_comp].push_back( m_vertices[v[i]]);
         }
         m_nb_comp++;
+        std::cout << m_nb_comp << std::endl;
     }
 
 //    std::cout << "/********************************************/" << std::endl;
@@ -1513,7 +1515,7 @@ void Graph::graph_simpl()
     }
 
     ///Affichage du buffer
-    blit(buffer,grman::page,0,0, 100, 5,908,720);
+    blit(buffer,screen,0,0, 100, 5,908,720);
 
 
 }
