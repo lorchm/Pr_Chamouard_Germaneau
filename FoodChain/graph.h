@@ -129,7 +129,7 @@ class Vertex
 {
     // Les (methodes des) classes amies pourront accéder
     // directement aux attributs (y compris privés)
-    friend class Graph;
+    friend class Graph;n
     friend class VertexInterface;
     friend class Edge;
     friend class EdgeInterface;
@@ -146,7 +146,7 @@ private :
     bool m_present_ds_compo=false;
 
     ///K qu'on utilise pour calculer la taille de la population
-    int m_K;
+    int m_K=1;
 
 
     ///Indices arcs entrants
