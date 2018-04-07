@@ -1,5 +1,6 @@
 #include "graph.h"
 #include <fstream>
+#include <stack>
 
 using namespace std;
 
@@ -738,7 +739,7 @@ void Graph::add_espece2()
                 std::cin >> add;
             }
 
-                        for(unsigned int i = 0 ; i< m_bin_vertices.size() ; i++)
+            for(unsigned int i = 0 ; i< m_bin_vertices.size() ; i++)
             {
                 std::cout << m_bin_vertices[i].m_indice << std::endl;
                 if(m_bin_vertices[i].m_indice == add)
@@ -857,7 +858,7 @@ void Graph::add_espece3()
                 std::cin >> add;
             }
 
-                        for(unsigned int i = 0 ; i< m_bin_vertices.size() ; i++)
+            for(unsigned int i = 0 ; i< m_bin_vertices.size() ; i++)
             {
                 std::cout << m_bin_vertices[i].m_indice << std::endl;
                 if(m_bin_vertices[i].m_indice == add)
@@ -989,15 +990,180 @@ void Graph::delete_espece()
     }
 }
 
-void Graph::CFC()
+void Graph::reset_marquages()
 {
-
+    for (auto &elt : m_vertices)
+    {
+        elt.second.set_Bool1(false);
+        elt.second.set_Bool2(false);
+//elt.second.set_present_ds_compo(true);
+    }
 }
 
-void Graph::recherche_connexite()
+/*recherche les composantes*/
+void Graph::Marquer_composantes()
 {
+    reset_marquages();
+    //pour chaque sommets
+    for(auto &elt : m_vertices)
+    {
+        //si non marqué
+       if ( elt.second.m_present_ds_compo == false )
+        {
+            //enregistrer l'indice de ce sommet
+            reset_marquages();
+
+            //marquer_composante (de ce sommet)
+            bool compo_existe = CFC(elt.first);
+
+            if( compo_existe ) afficher();
+        }
+    }
 
 }
+/*******************************************
+
+
+PENSER PEUT ETRE A VIDER M_VEC_COPOSANTE
+
+EFFACER LES MARQUAGES D APPARTENANCE A COMPO MAIS FAIT BEUGS
+
+************************************************/
+void Graph::afficher()
+{
+    std::cout << "Voici les sommets de la composante fortement connexe : ";
+    for ( auto &elt : m_vertices )
+    {
+        if ( elt.second.m_1 == true && elt.second.m_2 == true && elt.second.m_present_ds_compo == true )
+        {
+            std::cout << elt.first << " ";
+        }
+    }
+    std::cout << std::endl;
+}
+
+bool Graph::CFC(int sommet_ancre)
+{
+    //piles pour traiter les arcs sortants et entrants
+    std::stack<int> pile1;
+    std::stack<int> pile2;
+
+    // On part du sommet donné en paramètre
+    //On enfile le 1er sommet (son indice)
+    pile1.push(sommet_ancre);
+    pile2.push(sommet_ancre);
+
+    //vecteur qui serviront à retrouver les composantes fortement connexe
+    std::vector<int> v1;
+    std::vector<int> v2;
+
+    v1.push_back(sommet_ancre);
+    v2.push_back(sommet_ancre);
+
+    // Marquage du sommet de départ
+    m_vertices[sommet_ancre].set_Bool1(true);
+    m_vertices[sommet_ancre].set_Bool2(true);
+
+    ///PARCOURS DES ARCS ENTRANTS
+    //tant que la pile n'est pas vide on continu
+    while ( !pile1.empty() )
+    {
+        //On utilise une variable temp qui prend la valeur de l'indice du sommet en tête de pile
+        int id_sommet_actuel = pile1.top();
+
+        // depile sommet en tête de pile
+        pile1.pop();
+
+        //empiler sommets predecessuer ( contenu m_in -> m_from )
+        for( unsigned int i=0; i < m_vertices[id_sommet_actuel].m_in.size() ; i++)
+        {
+            //on verifie si le sommet est pas dejà marqué
+            if ( m_vertices[m_edges[m_vertices[id_sommet_actuel].m_in[i]].m_from].m_1 == false )
+            {
+                //on ajoute indice du sommet predecessuer soit le m_from de m_in[i]
+                pile1.push( m_edges[m_vertices[id_sommet_actuel].m_in[i]].m_from );
+
+                v1.push_back( m_edges[m_vertices[id_sommet_actuel].m_in[i]].m_from );
+
+                //on le marque et il devient le nouveau sommet_actuel
+                m_vertices[m_edges[m_vertices[id_sommet_actuel].m_in[i]].m_from].set_Bool1(true);
+            }
+        }
+    }
+
+    ///PARCOURS DES ARCS SORTANTS
+    while (!pile2.empty())
+    {
+        //On utilise une variable temp qui prend la valeur de l'indice du sommet en tête de pile
+        int id_sommet_actuel = pile2.top();
+
+        /// depile sommet en tête de pile
+        pile2.pop();
+
+        //empiler sommets predecessuer ( contenu m_in -> m_from )
+        for( unsigned int i=0; i < m_vertices[id_sommet_actuel].m_out.size() ; i++)
+        {
+            //on verifie si le sommet est pas dejà marqué
+            if (m_vertices[m_edges[m_vertices[id_sommet_actuel].m_out[i]].m_to].m_2  == false )
+            {
+                //on ajoute indice du sommet predecessuer soit le m_from de m_in[i]
+                pile2.push( m_edges[m_vertices[id_sommet_actuel].m_out[i]].m_to );
+
+                v2.push_back( m_edges[m_vertices[id_sommet_actuel].m_out[i]].m_to );
+
+                //on le marque et il devient le nouveau sommet_actuel
+                m_vertices[m_edges[m_vertices[id_sommet_actuel].m_out[i]].m_to].set_Bool2(true);
+            }
+        }
+    }
+
+    //marquer les sommet faisant partie de la composante fort connexe
+    bool compo_existe = marquage(v1, v2);
+
+    return compo_existe;
+}
+
+bool Graph::marquage(std::vector<int> v1, std::vector<int> v2 )
+{
+    std::vector<int> v;
+    int cpt=0;
+    bool compo_existe = false;
+
+    for ( unsigned int i = 0 ; i < v1.size() ; i++ )
+    {
+        for (unsigned int j = 0 ; j < v2.size() ; j ++ )
+        {
+            if( v1[i] == v2[j] ) v.push_back(v1[i]); //on met ds v les indice de sommet se retour à la fois ds v1 et v2, se sont les indices des sommets appartenant à la composante
+        }
+    }
+
+    //s'il y a + de 1 sommet dans la composante fort. connexe alors on marque ces sommets comme faisant parti d'une compo sinon non
+    if ( v.size() > 1 )
+    {
+        //a chaque fois qu'on entre ds ce if cela signifie qu'il existe une nvelle compo connexe, le cpt nous permettra de savoir cb il y en a
+        compo_existe = true ;
+
+        for ( unsigned int i = 0 ; i < v.size() ; i++ )
+        {
+            m_vertices[v[i]].set_present_ds_compo(true);
+         //   m_vect_composantes[cpt].push_back( m_vertices[v[i]]);
+        }
+     //   cpt++;
+    }
+
+//    std::cout << "/********************************************/" << std::endl;
+//        for ( unsigned int i = 0 ; i < m_vect_composantes.size() ; i++ )
+//    {
+//        for (unsigned int j = 0 ; j < m_vect_composantes[i].size() ; j ++ )
+//        {
+//            std::cout << m_edges[m_vect_composantes[i][j].m_out[0]].m_from << " " ;
+//
+//        }
+//        std::cout << std::endl;
+//    }
+    return compo_existe;
+}
+
 
 /*Source principale Monsieur Fercoq*/
 void Graph::remove_edge(int eidx)
@@ -1159,6 +1325,12 @@ void Graph::acces_G1(int* n)
 
     ///Affichage barre outil
     affichage_outil();
+
+    if (key[KEY_SPACE])
+    {
+        std::cout << "RECHERCHE DE COMPOSANTE FORTEMENT CONNEXE" << std::endl;
+        Marquer_composantes();
+    }
 
     /// Mise à jour générale (clavier/souris/buffer etc...)
     grman::mettre_a_jour();

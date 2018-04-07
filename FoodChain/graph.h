@@ -135,8 +135,10 @@ class Vertex
     friend class EdgeInterface;
 
 private :
-    ///bool qui indique si le sommet est affiché ou pas
-
+    ///bool pour appartient à la connexité et appartient à la forte connexité
+    bool m_1=false;
+    bool m_2=false;
+    bool m_present_ds_compo=false;
 
     /// liste des indices des arcs arrivant au sommet : accès aux prédécesseurs
     std::vector<int> m_in;
@@ -166,6 +168,13 @@ public:
     /// Voir l'implémentation Graph::update dans le .cpp
     void pre_update();
     void post_update();
+
+    bool get_Bool1(){return m_1;}
+    bool get_Bool2(){return m_2;}
+
+    void set_Bool1 (bool b){ m_1 = b;}
+    void set_Bool2 (bool b){ m_2 = b;}
+    void set_present_ds_compo(bool p){ m_present_ds_compo = p;}
 
 };
 
@@ -356,6 +365,12 @@ private :
     std::vector<Edge_bin> m_bin_edges;
     std::vector<Vertex_bin> m_bin_vertices;
 
+    ///vecteur qui contient les sommet ancre des compo fort connexe
+    std::vector<int> m_id_sommet_ancre;
+
+    ///vecteur qui contient les composantes fort. connexes
+    std::vector<std::vector<Vertex>> m_vect_composantes;
+
     public:
 
         /// Les constructeurs sont à compléter selon vos besoin...
@@ -379,16 +394,17 @@ private :
         void sauv_graphec();
 
         ///Ajouter et supprimer espèce
-
         void delete_espece();
         void add_espece1();
         void add_espece2();
         void add_espece3();
 
         ///Recherche de composantes fortement connexe
-        void CFC();
-        void recherche_connexite();
-
+        bool CFC(int sommet_ancre);
+        void Marquer_composantes();
+        void reset_marquages();
+        void afficher();
+        bool marquage(std::vector<int> v1, std::vector<int> v2 );
 
         /// La méthode update à appeler dans la boucle de jeu pour les graphes avec interface
         void update();
