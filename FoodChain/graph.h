@@ -387,7 +387,7 @@ private :
 
     ///vecteur qui contient les composantes fort. connexes
     std::vector<std::vector<Vertex>> m_vect_composantes;
-    int m_nb_comp;
+    int m_nb_comp=0;
 
     public:
 

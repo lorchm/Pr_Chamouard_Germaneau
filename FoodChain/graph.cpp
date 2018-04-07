@@ -960,7 +960,7 @@ void Graph::Marquer_composantes()
     for(auto &elt : m_vertices)
     {
         //si non marqué
-       if ( elt.second.m_present_ds_compo == false )
+        if ( elt.second.m_present_ds_compo == false )
         {
             //enregistrer l'indice de ce sommet
             reset_marquages();
@@ -968,7 +968,8 @@ void Graph::Marquer_composantes()
             //marquer_composante (de ce sommet)
             bool compo_existe = CFC(elt.first);
 
-            if( compo_existe ) afficher();
+            if( compo_existe )
+                afficher();
         }
     }
 
@@ -1077,9 +1078,11 @@ bool Graph::marquage(std::vector<int> v1, std::vector<int> v2 )
     {
         for (unsigned int j = 0 ; j < v2.size() ; j ++ )
         {
-            if( v1[i] == v2[j] ) v.push_back(v1[i]); //on met ds v les indice de sommet se retour à la fois ds v1 et v2, se sont les indices des sommets appartenant à la composante
+            if( v1[i] == v2[j] )
+                v.push_back(v1[i]); //on met ds v les indice de sommet se retour à la fois ds v1 et v2, se sont les indices des sommets appartenant à la composante
         }
     }
+
 
     //s'il y a + de 1 sommet dans la composante fort. connexe alors on marque ces sommets comme faisant parti d'une compo sinon non
     if ( v.size() > 1 )
@@ -1090,16 +1093,29 @@ bool Graph::marquage(std::vector<int> v1, std::vector<int> v2 )
         for ( unsigned int i = 0 ; i < v.size() ; i++ )
         {
             m_vertices[v[i]].set_present_ds_compo(true);
-            m_vect_composantes[m_nb_compo].push_back( m_vertices[v[i]]);
         }
-        }
-        m_nb_comp++;
 
+
+        std::vector<Vertex> vect_temp;
+        for ( unsigned int i = 0 ; i < v.size() ; i++ )
+        {
+            vect_temp.push_back(m_vertices[v[i]]);
+        }
+
+        //on mets les sommets de la compo dans un vecteur de vecteur qui repertorira tt le monde
+        m_vect_composantes.push_back( vect_temp );
+        //reinitialise
+        vect_temp.clear();
     }
 
 
+
+
     return compo_existe;
+
 }
+
+
 
 
 /*Source principale Monsieur Fercoq*/
@@ -1268,6 +1284,8 @@ void Graph::acces_G1(int* n)
         {
             elt.second.set_present_ds_compo(false);
         }
+
+
     }
 
     /// Mise à jour générale (clavier/souris/buffer etc...)
