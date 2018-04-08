@@ -129,7 +129,7 @@ class Vertex
 {
     // Les (methodes des) classes amies pourront accéder
     // directement aux attributs (y compris privés)
-    friend class Graph;n
+    friend class Graph;
     friend class VertexInterface;
     friend class Edge;
     friend class EdgeInterface;
@@ -145,9 +145,14 @@ private :
     bool m_2=false;
     bool m_present_ds_compo=false;
 
+    ///utile pour la recherche de k sommets connexite
+    bool m_deconnect=false;
+    bool m_prst_graph=true;
+
+     std::vector<int> m_indice_sommet_ancre;
+
     ///K qu'on utilise pour calculer la taille de la population
     int m_K=1;
-
 
     ///Indices arcs entrants
     std::vector<int> m_in;
@@ -184,6 +189,8 @@ public:
     void set_Bool1 (bool b){ m_1 = b;}
     void set_Bool2 (bool b){ m_2 = b;}
     void set_present_ds_compo(bool p){ m_present_ds_compo = p;}
+    void set_deconnect( bool d){ m_deconnect = d;}
+    void set_prst_graph( bool g){ m_prst_graph = g;}
 
 };
 
@@ -381,14 +388,13 @@ private :
     std::vector<Edge_bin> m_bin_edges;
     std::vector<Vertex_bin> m_bin_vertices;
 
-    ///vecteur qui contient les sommet ancre des compo fort connexe
-    std::vector<int> m_id_sommet_ancre;
+    ///vecteur qui contient les sommet ancre des compo connexe
+    std::vector<int> m_indice_sommet_ancre;
 
     ///vecteur qui contient les composantes fort. connexes
     std::vector<std::vector<Vertex>> m_vect_composantes;
 
     int m_nb_comp = 0;
-
 
     ///vecteur qui contient les sommets à afficher pour les différentes composantes connexes
     std::vector<std::vector<Vertex>> m_connexe;
@@ -431,6 +437,9 @@ private :
         ///Rendre le graphe non connexe
         void k_connexite();
 
+        ///Recherche graph connexe
+        bool Rechercher_connexes();
+        void Rechercher_connexe(int sommet_ancre);
         /// La méthode update à appeler dans la boucle de jeu pour les graphes avec interface
         void update();
 
@@ -456,6 +465,8 @@ private :
         int get_indice(Vertex V);
 
         void var_temps();
+
+        std::vector<std::vector<int>> Coeff_binomial();
 
 };
 
