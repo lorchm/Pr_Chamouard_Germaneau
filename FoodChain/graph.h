@@ -466,7 +466,7 @@ private :
 
         void var_temps();
 
-        std::vector<std::vector<int>> Coeff_binomial();
+        std::vector<std::vector<int>> Coeff_binomial(const int k);
 
 };
 

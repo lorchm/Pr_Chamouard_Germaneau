@@ -576,7 +576,10 @@ void Graph::sauv_graphec()
 /*************************************************************
 AJOUTS ET SUPPRESSION
 *************************************************************/
-///Ajouter et supprimer une espèce dans le graphe 1
+/* add_espece
+
+
+*/
 void Graph::add_espece1()
 {
     int add;
@@ -586,6 +589,7 @@ void Graph::add_espece1()
 
     if(m_interface->get_buttonAdd().clicked())
     {
+        //Affichage des espèces du graphe
         if(m_bin_vertices.size() != 0 )
         {
             std::cout << " Quelle espèce voulez vous ajouter ? " << std::endl;
@@ -602,6 +606,7 @@ void Graph::add_espece1()
             std::cout << "10. Plante carnivore" << std::endl;
             std::cin >> add;
 
+            //Blindage
             while(add < 0 || add > 10 )
             {
                 std::cout << "Vous ne pouvez pas ajouter cette espèce" << std::endl;
@@ -620,11 +625,13 @@ void Graph::add_espece1()
                 std::cin >> add;
             }
 
+            //Pour tous les sommets de la bin
             for(unsigned int i = 0 ; i< m_bin_vertices.size() ; i++)
             {
-                std::cout << m_bin_vertices[i].m_indice << std::endl;
+                //Si l'indice du sommet correspond à celui qu'on veut add
                 if(m_bin_vertices[i].m_indice == add)
                 {
+                    //On le crée + interface
                     add_interfaced_vertex(add, m_bin_vertices[i].m_value, m_bin_vertices[i].m_x, m_bin_vertices[i].m_y, m_bin_vertices[i].m_pic_name, m_bin_vertices[i].m_pic_idx, m_bin_vertices[i].m_taux_repro);
 
                     int a = m_bin_edges.size();
@@ -656,6 +663,7 @@ void Graph::add_espece1()
                         }
                     }
 
+                    //On efface l'arête
                     for(unsigned int b = 0; b<m_bin_edges.size() ; b++)
                     {
                         for(unsigned int c = 0 ; c < ar_a_eff.size() ; c++)
@@ -680,7 +688,10 @@ void Graph::add_espece1()
     }
 }
 
-///Ajouter et supprimer une espèce dans le graphe 2
+/* add_espece 2 : ajoute une espèce sur le graphe 2
+Entrée : /
+Sortie : /
+*/
 void Graph::add_espece2()
 {
     int add;
@@ -690,7 +701,7 @@ void Graph::add_espece2()
 
     if(m_interface->get_buttonAdd().clicked())
     {
-
+        //Affichage des espèces
         if (m_bin_vertices.size() != 0)
         {
             std::cout << " Quelle espèce voulez vous ajouter ? " << std::endl;
@@ -708,6 +719,7 @@ void Graph::add_espece2()
             std::cout << "11. Orque" << std::endl;
             std::cin >> add;
 
+            //Blindage
             while(add < 0 || add > 11 )
             {
                 std::cout << "Vous ne pouvez pas ajouter cette espèce" << std::endl;
@@ -727,11 +739,13 @@ void Graph::add_espece2()
                 std::cin >> add;
             }
 
+            //Pour tous les sommets
             for(unsigned int i = 0 ; i< m_bin_vertices.size() ; i++)
             {
-                std::cout << m_bin_vertices[i].m_indice << std::endl;
+                //Si l'indice du sommet correspond à celui qu'on veut suppr
                 if(m_bin_vertices[i].m_indice == add)
                 {
+                    //On le crée avec une interface
                     add_interfaced_vertex(add, m_bin_vertices[i].m_value, m_bin_vertices[i].m_x, m_bin_vertices[i].m_y, m_bin_vertices[i].m_pic_name, m_bin_vertices[i].m_pic_idx, m_bin_vertices[i].m_taux_repro);
 
                     int a = m_bin_edges.size();
@@ -761,6 +775,7 @@ void Graph::add_espece2()
                         }
                     }
 
+                    //On supprime l'arête
                     for(unsigned int b = 0; b<m_bin_edges.size() ; b++)
                     {
                         for(unsigned int c = 0 ; c < ar_a_eff.size() ; c++)
@@ -784,7 +799,10 @@ void Graph::add_espece2()
     }
 }
 
-///Ajouter et supprimer une espèce dans le graphe 3
+/* add_espece3 : ajoute une espèce sur le graphe 3
+Entrée : /
+Sortie : /
+*/
 void Graph::add_espece3()
 {
     int add;
@@ -794,6 +812,7 @@ void Graph::add_espece3()
 
     if(m_interface->get_buttonAdd().clicked())
     {
+        //Affichage de toutes les espèces
         if(m_bin_vertices.size() != 0)
         {
             std::cout << " Quelle espèce voulez vous ajouter ? " << std::endl;
@@ -813,6 +832,7 @@ void Graph::add_espece3()
             std::cout << "13. Souris" << std::endl;
             std::cin >> add;
 
+            //Blindage
             if( add <0 || add>13)
             {
                 std::cout << "Vous ne pouvez pas ajouter cette espèce" << std::endl;
@@ -833,15 +853,17 @@ void Graph::add_espece3()
                 std::cin >> add;
             }
 
+            //Parcours des sommets supprimés
             for(unsigned int i = 0 ; i< m_bin_vertices.size() ; i++)
             {
-                std::cout << m_bin_vertices[i].m_indice << std::endl;
+                //Si un des sommets supprimés correspond à celui qu'on veut ajouter
                 if(m_bin_vertices[i].m_indice == add)
                 {
+                    //Création du sommet avec une interface
                     add_interfaced_vertex(add, m_bin_vertices[i].m_value, m_bin_vertices[i].m_x, m_bin_vertices[i].m_y, m_bin_vertices[i].m_pic_name, m_bin_vertices[i].m_pic_idx,m_bin_vertices[i].m_taux_repro);
 
+
                     int a = m_bin_edges.size();
-                    std::cout << a << std::endl;
                     std::vector<int> ar_a_eff;
 
                     //retrouver les aretes qui vont avec le sommet
@@ -867,6 +889,7 @@ void Graph::add_espece3()
                         }
                     }
 
+                    //Suppresion de l'arête
                     for(unsigned int b = 0; b<m_bin_edges.size() ; b++)
                     {
                         for(unsigned int c = 0 ; c < ar_a_eff.size() ; c++)
@@ -890,6 +913,10 @@ void Graph::add_espece3()
     }
 }
 
+/* delete_espece : supprime l'espèce choisit grace à son indice
+Entrée : /
+Sortie : /
+*/
 void Graph::delete_espece()
 {
     //On voit si y a un clique sur les bouttons de la barre outils
@@ -951,7 +978,10 @@ void Graph::delete_espece()
     }
 }
 
-/*Source Monsieur Fercoq*/
+/* remove_edge : enlève l'edge d'indice passé en paramètre (source Monsieur Fercoq)
+Entrée : int eidx (indice de l'arête à retirer)
+Sortie : /
+*/
 void Graph::remove_edge(int eidx)
 {
     // référence vers le Edge à enlever
@@ -990,7 +1020,10 @@ void Graph::remove_edge(int eidx)
 MISES A JOUR
 ********************************************************/
 
-/// La méthode update à appeler dans la boucle de jeu pour les graphes avec interface
+/* update : appelle les fonctions de update pour les vertex/edge/interfaces
+Entrée : /
+Sortie : /
+*/
 void Graph::update()
 {
     if (!m_interface)
@@ -1047,7 +1080,7 @@ void Graph::var_temps()
 /*****************************************************
 INITIALISATIONS / CONSTRUCTEURS
 ******************************************************/
-/// Aide à l'ajout de sommets interfacés
+
 /*add_interface_vertex : ajout d'un sommet et son interface
 Entrée : int idx (indice du sommet), int value (nbr population), int x(pos x), int y(pos y), string pic_name (nom de l'image), int pic_idx(si image en mvmt), int taux_repro (facteur de reproduction)
 Sortie : /
@@ -1440,7 +1473,7 @@ void Graph::sortie()
     }
 }
 
-/*graph_simpl_connex = affiche graphe simplicié avec les différentes composantes connexes
+/*graph_simpl_connex = affiche graphe simplicié avec les différentes composantes connexes (k_connexité)
 Entrée : /
 Sortie : Affichage allegro
 */
@@ -1451,16 +1484,16 @@ void Graph::graph_simpl_connex()
 
     std::cout << "aff graphe simplifi des k_connexités" << std::endl;
 
-    ///Nettoyage du buffer
-    clear_bitmap(buffer);
-
-    ///Fond du buffer
-    rectfill(buffer,0,0,908,720,BLANCROSE);
-
     ///Faire les aretes
     //Pour chaque connexité
     for(unsigned int i = 0 ; i< m_connexe.size() ; i++)
     {
+        ///Nettoyage du buffer
+        clear_bitmap(buffer);
+
+        ///Fond du buffer
+        rectfill(buffer,0,0,908,720,BLANCROSE);
+
         //Pour chaque sommet de la connexité
         for(unsigned int j = 0 ; j < m_connexe[i].size() ; j++)
         {
@@ -1552,7 +1585,7 @@ void Graph::graph_simpl_connex()
 
         ///Affichage du buffer
         blit(buffer,screen,0,0, 110, 5,908,720);
-        rest(500);
+        rest(1000);
     }
 }
 
@@ -1716,7 +1749,7 @@ int Graph::get_indice(Vertex V)
     }
 }
 
-/*CFC = recherhce de composante(s) fortement connexe(s)
+/*CFC = recherche de composante(s) fortement connexe(s)
 Entrées : sommet ancre à partir duquel la recherche commencera
 Sorties : retourne un booléen indiquant s'il s'agit bien d'un composante fortement connexe (true)*/
 bool Graph::CFC(int sommet_ancre)
@@ -2026,6 +2059,7 @@ void Graph::k_connexite()
     reset_marquages();
 }
 
+///JSP
 /*recherche une composante*/
 /*utilisation du BFS*/
 void Graph::Rechercher_connexe(int sommet_ancre)
@@ -2089,6 +2123,7 @@ void Graph::Rechercher_connexe(int sommet_ancre)
     }
 }
 
+///JSP
 /*recherche les composantes*/
 bool Graph::Rechercher_connexes()
 {
@@ -2126,14 +2161,22 @@ bool Graph::Rechercher_connexes()
     }
 }
 
-std::vector<std::vector<int>> Coeff_binomial()
+/* Coeff_binomial : retourne les différentes combinaisons de k_plets (source : http://www.commentcamarche.net/forum/affich-4567474-algo-affichage-combinaison-de-p-elemt-parmi-n)
+Entrée : int k
+Sortie : retourne les combinaisons de k_plets dans des vecteurs d'indices
+*/
+std::vector<std::vector<int>> Graph::Coeff_binomial(const int k)
 {
+    //Initialisation des vecteurs qui vont contenir les indices
     std::vector<std::vector <int>> grogro;
     std::vector<int> lala;
-    const int n = 5;
-    const int k = 3;
+
+    //Definition des variables
+    const int n = m_vertices.size();
     int comb[40] = {0};
     int i = 0;
+
+
     while (i >= 0)
     {
         if (comb[i] < n + i - k + 1)
@@ -2141,11 +2184,15 @@ std::vector<std::vector<int>> Coeff_binomial()
             comb[i]++;
             if (i == k - 1)
             {
+                //Pour tous les indices du k_plet
                 for (int j = 0; j < k; j++)
                 {
+                    //On ajoute les indices dans un vecteur
                     lala.push_back(comb[j]-1);
                 }
+                //On ajoute le vecteur dans le vecteur de vecteur
                 grogro.push_back(lala);
+                //On vide le vecteur des indices
                 lala.clear();
 
             }
@@ -2158,6 +2205,7 @@ std::vector<std::vector<int>> Coeff_binomial()
             i--;
     }
 
+    //On retourne le vecteur de vecteur d'indice
     return grogro;
 }
 
