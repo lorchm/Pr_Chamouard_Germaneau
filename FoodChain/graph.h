@@ -322,6 +322,11 @@ private :
     ///Bouton affichage graphe simplifié des composantes fortement connexes
     grman::WidgetButton m_buttonAffSimp;
 
+    grman::WidgetButton m_cfc;
+
+    grman::WidgetButton m_k_connexite;
+
+
 public :
 
     // Le constructeur met en place les éléments de l'interface
@@ -367,6 +372,17 @@ public :
     {
         return m_buttonAffSimp;
     }
+
+        grman::WidgetButton &get_cfc()
+    {
+        return m_cfc;
+    }
+
+        grman::WidgetButton &get_kconnex()
+    {
+        return m_k_connexite;
+    }
+
 
 };
 

@@ -20,9 +20,6 @@ Touche 'B' = afficher les composantes connexes après avoir déconnecter le graph 
 int main()
 {
 
-
-
-
     ///Initialisations
     grman::init();
     grman::set_pictures_path("pics");
@@ -38,7 +35,7 @@ int main()
 
     while ( !key[KEY_ESC] )
     {
-        if(compteur>100000000)
+        if(compteur>1000000)
         {
             if(n==1)
             {
