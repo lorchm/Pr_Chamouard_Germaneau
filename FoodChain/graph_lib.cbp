@@ -38,12 +38,6 @@
 			<Add library="jpgalleg" />
 			<Add library="alleg44.dll" />
 		</Linker>
-		<Unit filename="Interface.cpp">
-			<Option target="Debug" />
-		</Unit>
-		<Unit filename="Interface.h">
-			<Option target="Debug" />
-		</Unit>
 		<Unit filename="bin.cpp">
 			<Option target="Debug" />
 		</Unit>
@@ -52,6 +46,7 @@
 		</Unit>
 		<Unit filename="graph.cpp" />
 		<Unit filename="graph.h" />
+		<Unit filename="graphe_algo.cpp" />
 		<Unit filename="grman/coords.cpp" />
 		<Unit filename="grman/coords.h" />
 		<Unit filename="grman/grman.cpp" />

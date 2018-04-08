@@ -1,0 +1,27 @@
+Code de base + suppression de sommet/arête : 
+- Mr. Fercoq
+
+Algorithme du coefficient binomial :
+- http://www.commentcamarche.net/forum/affich-4567474-algo-affichage-combinaison-de-p-elemt-parmi-n
+
+Images :
+- https://www.flaticon.com/ (graphe 2 + oeil bouton)
+- https://purepng.com/photo/182/line-of-grass (graphe 1)
+- https://www.vexels.com/svg-png/leaves/ (graphe 1)
+- http://www.iemoji.com/view/emoji/216/animals-nature/bug (graphe 1)
+- https://www.pinterest.fr/pin/293508100692942264/ (graphe 1)
+- http://southoldlibrary.org/event/story-harry-o-southold-rabbit-thursday-406/ (graphe 1)
+- https://twitter.com/grasshopperspot (graphe 1)
+- https://www.fimfiction.net/user/277143/-Blue+Jay- (graphe 1)
+- http://paradise-bay.wikia.com/wiki/Snowy_Owl (graphe 1)
+- https://www.pinterest.co.uk/pin/566679565603312235/ (graphe 1)
+- http://www.stickpng.com/img/at-the-movies/cartoons/various/cartoon-lion (graphe 3)
+- https://www.tumblr.com/search/wild%20dog? (graphe 3)
+- https://twitter.com/thebosscheetah (graphe 3)
+- http://unanything.wikia.com/wiki/Serval (graphe 3)
+- http://data.abuledu.org/wp/?terms=vautour (graphe 3)
+- https://twitter.com/briandshoaf (graphe 3)
+- https://www.greatbigcanvas.com/view/side-profile-of-a-wildebeest-giving-birth-to-its-calf-ngorongoro-crater-ngorongoro-conservation-area-tanzania,95746/ (graphe 3)
+- https://twitter.com/harrygazelle (graphe 3)
+- https://twitter.com/themouselad (graphe 3)
+

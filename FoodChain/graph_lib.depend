@@ -152,3 +152,88 @@
 	"graph.h"
 	"Interface.h"
 
+1523208043 source:c:\users\laure\documents\piscine\pr_chamouard_germaneau\foodchain\bin.cpp
+	"bin.h"
+
+1523208147 c:\users\laure\documents\piscine\pr_chamouard_germaneau\foodchain\bin.h
+	<string>
+
+1523199548 source:c:\users\laure\documents\piscine\pr_chamouard_germaneau\foodchain\grman\coords.cpp
+	"coords.h"
+
+1523199548 c:\users\laure\documents\piscine\pr_chamouard_germaneau\foodchain\grman\coords.h
+	<cmath>
+
+1523199548 source:c:\users\laure\documents\piscine\pr_chamouard_germaneau\foodchain\grman\grman.cpp
+	<cmath>
+	<unordered_map>
+	<unordered_set>
+	<utility>
+	<string>
+	<iostream>
+	<regex>
+	"grman.h"
+	<allegro.h>
+	<png.h>
+	<loadpng.h>
+	<jpgalleg.h>
+
+1523208216 c:\users\laure\documents\piscine\pr_chamouard_germaneau\foodchain\grman\grman.h
+	<allegro.h>
+	<string>
+	"grman_couleurs.h"
+	"coords.h"
+	"widget.h"
+
+1523199548 c:\users\laure\documents\piscine\pr_chamouard_germaneau\foodchain\grman\grman_couleurs.h
+
+1523205835 c:\users\laure\documents\piscine\pr_chamouard_germaneau\foodchain\grman\widget.h
+	"grman.h"
+	<iostream>
+	<string>
+	<vector>
+	<algorithm>
+	<allegro.h>
+
+1523199548 source:c:\users\laure\documents\piscine\pr_chamouard_germaneau\foodchain\grman\widget.cpp
+	"widget.h"
+
+1523205835 source:c:\users\laure\documents\piscine\pr_chamouard_germaneau\foodchain\interface.cpp
+	"Interface.h"
+
+1523199548 c:\users\laure\documents\piscine\pr_chamouard_germaneau\foodchain\interface.h
+	<iostream>
+	<vector>
+	<map>
+	<string>
+	<memory>
+	"grman/widget.h"
+	"Graph.h"
+
+1523209630 c:\users\laure\documents\piscine\pr_chamouard_germaneau\foodchain\graph.h
+	<vector>
+	<map>
+	<string>
+	<memory>
+	"grman/grman.h"
+	"grman/widget.h"
+	"bin.h"
+
+1523211428 source:c:\users\laure\documents\piscine\pr_chamouard_germaneau\foodchain\main.cpp
+	"grman/grman.h"
+	<iostream>
+	"graph.h"
+	"Interface.h"
+
+1523211426 source:c:\users\laure\documents\piscine\pr_chamouard_germaneau\foodchain\graph.cpp
+	"graph.h"
+	<fstream>
+	<stack>
+	<queue>
+	<ctime>
+
+1523211070 source:c:\users\laure\documents\piscine\pr_chamouard_germaneau\foodchain\graphe_algo.cpp
+	"graph.h"
+	<stack>
+	<queue>
+
