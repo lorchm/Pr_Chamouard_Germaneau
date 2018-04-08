@@ -201,6 +201,17 @@ GraphInterface::GraphInterface(int x, int y, int w, int h)
     m_tool_box.add_child(m_lect);
     m_lect.set_frame(5,326,74,74);
     m_lect.set_bg_color(BLEU);
+
+    //Bouton cfc
+    m_tool_box.add_child(m_cfc);
+    m_cfc.set_frame(5,404,75,18);
+    m_cfc.set_bg_color(BLANC);
+
+    //bouton k connexite
+    m_tool_box.add_child(m_k_connexite);
+    m_k_connexite.set_frame(5,443,75,18);
+    m_k_connexite.set_bg_color(ORANGECLAIR);
+
 }
 
 /*********************************************************
@@ -638,6 +649,7 @@ void Graph::var_temps()
         for(unsigned int i = 0 ; i < elem.second.m_in.size() ; i++ )
         {
             elem.second.m_K = elem.second.m_K + ( m_edges[elem.second.m_in[i]].m_weight * m_vertices[m_edges[elem.second.m_in[i]].m_from].m_value );
+
             //std::cout << elem.second.m_K << std::endl;
         }
 
@@ -649,11 +661,11 @@ void Graph::var_temps()
     for(auto &elem : m_vertices)
     {
         elem.second.m_value = elem.second.m_value + (elem.second.m_taux_repro*elem.second.m_value*(1 - (elem.second.m_value/elem.second.m_K)));
+
         for(unsigned int i = 0 ; i < elem.second.m_out.size() ; i++)
         {
             elem.second.m_value = elem.second.m_value - ( m_edges[elem.second.m_out[i]].m_weight * m_vertices[m_edges[elem.second.m_out[i]].m_to].m_value );
         }
-
         std::cout << elem.first << ". N = " <<  elem.second.m_value << std::endl;
     }
 }
@@ -731,6 +743,15 @@ void Graph::affichage_outil()
     grman::show_picture(grman::page, "add.bmp", 24,486,0);
     grman::show_picture(grman::page, "delete.bmp", 24,566,0);
     grman::show_picture(grman::page, "logout.bmp", 24,646,0);
+
+    textprintf_ex(grman::page,font,32,414, NOIR,-1,"CFC");
+    grman::show_picture(grman::page, "show_cfc.bmp", 24,428,0);
+    textprintf_ex(grman::page,font,46,432, NOIR,-1,"Press P");
+
+    textprintf_ex(grman::page,font,32,453, NOIR,-1,"K-CONNEX");
+    grman::show_picture(grman::page, "show_kconnex.bmp", 24,467,0);
+    textprintf_ex(grman::page,font,46,473, NOIR,-1,"Press B");
+
 }
 
 /* acces_G1 : Affichage et action sur le graphe 1
@@ -766,19 +787,21 @@ void Graph::acces_G1(int* n)
     affichage_outil();
 
     //Recherche de composantes fortement connexes
-    if (key[KEY_SPACE])
+    get_interface()->get_cfc().interact_focus();
+    if(get_interface()->get_cfc().clicked())
     {
         rest(100);
         std::cout << "Recherche de composantes fortement connexes" << std::endl;
         Marquer_composantes();
-
     }
 
     //Recherche de sommet(s) à enlever pour déconnecter le graphe
-    if ( key[KEY_K] )
+    get_interface()->get_kconnex().interact_focus();
+    if(get_interface()->get_kconnex().clicked())
     {
         rest(100);
         k_connexite();
+
     }
 
     //Mise à jour générale (clavier/souris/buffer etc...)
@@ -818,6 +841,8 @@ void Graph::acces_G1(int* n)
         }
     }
 
+
+
     //Affichage du graphe simplifé des différentes k_connexités
     if(key[KEY_B])
     {
@@ -828,6 +853,8 @@ void Graph::acces_G1(int* n)
             m_connexe.clear();
         }
     }
+
+
 
     //Modifications K et N
     //var_temps();
@@ -876,19 +903,21 @@ void Graph::acces_G2(int* n)
     sortie();
 
     //Recherche de composantes fortement connexes
-    if (key[KEY_SPACE])
+    get_interface()->get_cfc().interact_focus();
+    if(get_interface()->get_cfc().clicked())
     {
-        std::cout << "Recherche de composant fortement connexe" << std::endl;
         rest(100);
+        std::cout << "Recherche de composantes fortement connexes" << std::endl;
         Marquer_composantes();
-
     }
 
-    //Recherche de sommet(s) à déconnecter pour séparer le graphe
-    if ( key[KEY_K] )
+    //Recherche de sommet(s) à enlever pour déconnecter le graphe
+    get_interface()->get_kconnex().interact_focus();
+    if(get_interface()->get_kconnex().clicked())
     {
         rest(100);
         k_connexite();
+
     }
 
     //Si on clique sur P, affiche graphe simplifié des fortes connexités
@@ -962,6 +991,24 @@ void Graph::acces_G3(int* n)
     //Affichage barre à outils
     affichage_outil();
 
+    //Recherche de composantes fortement connexes
+    get_interface()->get_cfc().interact_focus();
+    if(get_interface()->get_cfc().clicked())
+    {
+        rest(100);
+        std::cout << "Recherche de composantes fortement connexes" << std::endl;
+        Marquer_composantes();
+    }
+
+    //Recherche de sommet(s) à enlever pour déconnecter le graphe
+    get_interface()->get_kconnex().interact_focus();
+    if(get_interface()->get_kconnex().clicked())
+    {
+        rest(100);
+        k_connexite();
+
+    }
+
     // Mise à jour générale (clavier/souris/buffer etc...)
     grman::mettre_a_jour();
 
@@ -974,23 +1021,8 @@ void Graph::acces_G3(int* n)
     //Sort du programme si on clique sur le bouton exit
     sortie();
 
-    ///Recherche de composantes fortement connexes
-    if (key[KEY_SPACE])
-    {
-        std::cout << "Recherche de composantes fortement connexes" << std::endl;
-        //Pour ne pas prendre en compte plusieurs fois la barre espace
-        rest(100);
-        //Marque composantes fortement connexes
-        Marquer_composantes();
 
-    }
 
-    //Recherche de sommet(s) à deconnecter pour séparer le graphe
-    if ( key[KEY_K] )
-    {
-        rest(100);
-        k_connexite();
-    }
 
     //Affichage du graphe avec ses composantes fortement connexes
     if(key[KEY_P])

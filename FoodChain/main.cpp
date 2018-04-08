@@ -5,23 +5,21 @@
 #include "Interface.h"
 
 
-/******************************** INFOS UTILES *******************************************************************************
-Il faut parfois cliquer plusieurs fois pour bien faire comprendre au programme que l'on clique
+/******************************** INFOS UTILES ***********************************************************************************************
+Il faut parfois cliquer plusieurs fois pour bien faire comprendre au programme que l'on clique (et appuyer sur la partie gauche du bouton)
 
 Pour voir un graphe : Cliquer sur la case (G1/G2/G3) correspondante puis appuyer sur read
 
 Pour sauvegarder les positions et les espèces supprimées/ajoutées : Bouton "save"
 (Changer de graphe ou quitter le programme ne sauvegarde pas)
 
-Touche 'SPACE' = trouve les composantes fortements connexes
-Touche 'P' = afficher graphe simplifié des composantes fortements connexes, toujours le faire après avoir fait 'SPACE'
+Touche 'P' = afficher graphe simplifié des composantes fortements connexes, toujours le faire après avoir cliquer sur 'CFC'
 
-Touche 'K' = recherche le nb de sommet minimum à enlever pour déconnecter le graphe
-Touche 'B' = afficher les composantes connexes après avoir déconnecter le graph ( apres avoir fait 'k' )
+Touche 'B' = afficher les composantes connexes après avoir déconnecter le graph ( apres avoir fait 'k-connex' )
 
 Le code a été construit à partir du code de Mr. Fercoq.
 
-******************************************************************************************************************************/
+*************************************************************************************************************************************************/
 
 
 int main()
@@ -46,8 +44,7 @@ int main()
     //Boucle de jeu
     while ( !key[KEY_ESC] )
     {
-        //On ralenti le temps grâce au compteur
-        if(compteur>100000000)
+        if(compteur>1000000)
         {
             //Graphe 1
             if(n==1)

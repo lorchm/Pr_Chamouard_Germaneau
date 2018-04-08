@@ -217,6 +217,10 @@ private :
     grman::WidgetButton m_lect;
     grman::WidgetButton m_save;
 
+    ///Boutons pour cfc et recherche k-connexités
+    grman::WidgetButton m_cfc;
+    grman::WidgetButton m_k_connexite;
+
 public :
 
     ///Constructeur
@@ -256,6 +260,17 @@ public :
     {
         return m_save;
     }
+
+    grman::WidgetButton &get_cfc()
+    {
+        return m_cfc;
+    }
+
+    grman::WidgetButton &get_kconnex()
+    {
+        return m_k_connexite;
+    }
+
 };
 
 
