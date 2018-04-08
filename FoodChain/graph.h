@@ -152,7 +152,7 @@ private :
      std::vector<int> m_indice_sommet_ancre;
 
     ///K qu'on utilise pour calculer la taille de la population
-    int m_K;
+    int m_K=1;
 
     ///Indices arcs entrants
     std::vector<int> m_in;
@@ -465,6 +465,8 @@ private :
         int get_indice(Vertex V);
 
         void var_temps();
+
+        std::vector<std::vector<int>> Coeff_binomial();
 
 };
 

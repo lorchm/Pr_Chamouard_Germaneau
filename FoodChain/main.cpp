@@ -35,7 +35,7 @@ int main()
     while ( !key[KEY_ESC] )
     {
 
-        if(compteur>1000)
+        if(compteur>100000000)
         {
             if(n==1)
             {

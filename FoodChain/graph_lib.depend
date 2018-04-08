@@ -1,121 +1,4 @@
 # depslib dependency file v1.0
-1523095953 source:c:\users\barba\documents\pr_chamouard_germaneau\foodchain\bin.cpp
-	"bin.h"
-
-1523095953 c:\users\barba\documents\pr_chamouard_germaneau\foodchain\bin.h
-	<string>
-
-1523011702 source:c:\users\barba\documents\pr_chamouard_germaneau\foodchain\grman\coords.cpp
-	"coords.h"
-
-1523011702 c:\users\barba\documents\pr_chamouard_germaneau\foodchain\grman\coords.h
-	<cmath>
-
-1523011702 source:c:\users\barba\documents\pr_chamouard_germaneau\foodchain\grman\grman.cpp
-	<cmath>
-	<unordered_map>
-	<unordered_set>
-	<utility>
-	<string>
-	<iostream>
-	<regex>
-	"grman.h"
-	<allegro.h>
-	<png.h>
-	<loadpng.h>
-	<jpgalleg.h>
-
-1523011702 c:\users\barba\documents\pr_chamouard_germaneau\foodchain\grman\grman.h
-	<allegro.h>
-	<string>
-	"grman_couleurs.h"
-	"coords.h"
-	"widget.h"
-
-1523011702 c:\users\barba\documents\pr_chamouard_germaneau\foodchain\grman\grman_couleurs.h
-
-1523109135 c:\users\barba\documents\pr_chamouard_germaneau\foodchain\grman\widget.h
-	"grman.h"
-	<iostream>
-	<string>
-	<vector>
-	<algorithm>
-	<allegro.h>
-
-1523011702 source:c:\users\barba\documents\pr_chamouard_germaneau\foodchain\grman\widget.cpp
-	"widget.h"
-
-1523131067 source:c:\users\barba\documents\pr_chamouard_germaneau\foodchain\interface.cpp
-	"Interface.h"
-
-1523011702 c:\users\barba\documents\pr_chamouard_germaneau\foodchain\interface.h
-	<iostream>
-	<vector>
-	<map>
-	<string>
-	<memory>
-	"grman/widget.h"
-	"Graph.h"
-
-1523099186 D
-
-1523137881 c:\users\barba\documents\pr_chamouard_germaneau\foodchain\graph.h
-	<vector>
-	<map>
-	<string>
-	<memory>
-	"grman/grman.h"
-	"grman/widget.h"
-	"bin.h"
-
-1523100940 c:\users\laure\documents\pr_chamouard_germaneau\foodchain\graph.h
-
-1523122827 80275f232f3c2f7ebfdc25f1c0005d5a97c53
-	<vector>
-	<map>
-	<string>
-	<memory>
-	"grman/grman.h"
-	"grman/widget.h"
-	"bin.h"
-	"graph.h"
-	<fstream>
-	<stack>
-	<ctime>
-
-1523099186 987830920e088a3573322566f10753c7b5c3a
-	<vector>
-	<map>
-	<string>
-	<memory>
-	"grman/grman.h"
-	"grman/widget.h"
-	"bin.h"
-	"grman/grman.h"
-	<iostream>
-	"graph.h"
-	"Interface.h"
-	"graph.h"
-	<fstream>
-	<stack>
-
-1523145311 source:c:\users\barba\documents\pr_chamouard_germaneau\foodchain\graph.cpp
-	"graph.h"
-	<fstream>
-	<stack>
-	<queue>
-	<ctime>
-
-1523097644 source:c:\users\laure\documents\pr_chamouard_germaneau\foodchain\main.cpp
-
-1523124949 source:c:\users\barba\documents\pr_chamouard_germaneau\foodchain\main.cpp
-	"grman/grman.h"
-	<iostream>
-	"graph.h"
-	"Interface.h"
-
-1523122827 source:c:\users\laure\documents\pr_chamouard_germaneau\foodchain\graph.cpp
-
 1523045306 source:c:\users\laure\documents\pr_chamouard_germaneau\foodchain\bin.cpp
 	"bin.h"
 
@@ -151,7 +34,7 @@
 
 1523011869 c:\users\laure\documents\pr_chamouard_germaneau\foodchain\grman\grman_couleurs.h
 
-1523011869 c:\users\laure\documents\pr_chamouard_germaneau\foodchain\grman\widget.h
+1523126228 c:\users\laure\documents\pr_chamouard_germaneau\foodchain\grman\widget.h
 	"grman.h"
 	<iostream>
 	<string>
@@ -162,7 +45,7 @@
 1523011869 source:c:\users\laure\documents\pr_chamouard_germaneau\foodchain\grman\widget.cpp
 	"widget.h"
 
-1523011869 source:c:\users\laure\documents\pr_chamouard_germaneau\foodchain\interface.cpp
+1523148585 source:c:\users\laure\documents\pr_chamouard_germaneau\foodchain\interface.cpp
 	"Interface.h"
 
 1523011869 c:\users\laure\documents\pr_chamouard_germaneau\foodchain\interface.h
@@ -173,4 +56,26 @@
 	<memory>
 	"grman/widget.h"
 	"Graph.h"
+
+1523187404 c:\users\laure\documents\pr_chamouard_germaneau\foodchain\graph.h
+	<vector>
+	<map>
+	<string>
+	<memory>
+	"grman/grman.h"
+	"grman/widget.h"
+	"bin.h"
+
+1523128468 source:c:\users\laure\documents\pr_chamouard_germaneau\foodchain\main.cpp
+	"grman/grman.h"
+	<iostream>
+	"graph.h"
+	"Interface.h"
+
+1523149980 source:c:\users\laure\documents\pr_chamouard_germaneau\foodchain\graph.cpp
+	"graph.h"
+	<fstream>
+	<stack>
+	<queue>
+	<ctime>
 

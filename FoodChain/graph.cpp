@@ -129,7 +129,7 @@ void Edge::post_update()
     m_weight = m_interface->m_slider_weight.get_value();
 }
 
-///GETTERS
+///Getters
 int Edge::getFrom()
 {
     return m_from;
@@ -202,6 +202,10 @@ GraphInterface::GraphInterface(int x, int y, int w, int h)
     m_lect.set_frame(5,326,74,74);
     m_save.set_bg_color(BLEU);
 }
+
+/*********************************************************
+LECTURES ET SAUVEGARDES
+**********************************************************/
 
 void Graph::chargement_fichier_a()
 {
@@ -569,6 +573,9 @@ void Graph::sauv_graphec()
 
 }
 
+/*************************************************************
+AJOUTS ET SUPPRESSION
+*************************************************************/
 ///Ajouter et supprimer une espèce dans le graphe 1
 void Graph::add_espece1()
 {
@@ -944,61 +951,701 @@ void Graph::delete_espece()
     }
 }
 
-void Graph::reset_marquages()
+/*Source Monsieur Fercoq*/
+void Graph::remove_edge(int eidx)
 {
-    for (auto &elt : m_vertices)
+    // référence vers le Edge à enlever
+    Edge &remed=m_edges.at(eidx);
+
+    //Affichage de l'arete qui va etre supprimer
+    std::cout << "Suppr arete " << eidx << " " << remed.m_from << "->" << remed.m_to << " " << remed.m_weight << std::endl;
+
+    //Il faut retiré l'arete de la main box
+    //On vérifie que le grape et l'arete on une interface pour ensuite retiré l'arete
+    if (m_interface && remed.m_interface)
     {
-        elt.second.set_Bool1(false);
-        elt.second.set_Bool2(false);
+        m_interface->m_main_box.remove_child( remed.m_interface->m_top_edge );
+    }
+
+    //Reference sur les vecteurs respectifs des 2 sommets concernés par l'arete
+    std::vector<int> &vefrom = m_vertices[remed.m_from].m_out;
+    std::vector<int> &veto = m_vertices[remed.m_to].m_in;
+
+    //on retrouve l'arete à suppr dans le vecteur m_out ou m_in la contenant
+    vefrom.erase( std::remove( vefrom.begin(), vefrom.end(), eidx ), vefrom.end() );
+
+    veto.erase( std::remove( veto.begin(), veto.end(), eidx ), veto.end() );
+
+    //on ajoute l'arête dans une autre map contenant les aretes supprimées
+    Edge_bin e_bin(eidx, remed.getFrom(), remed.getTo(), remed.getWeight());
+    m_bin_edges.push_back(e_bin);
+
+    //Enfin on suppr l'arete de la map contenant les aretes du graphe
+    m_edges.erase( eidx );
+
+}
+
+
+/********************************************************
+MISES A JOUR
+********************************************************/
+
+/// La méthode update à appeler dans la boucle de jeu pour les graphes avec interface
+void Graph::update()
+{
+    if (!m_interface)
+        return;
+
+    for (auto &elt : m_vertices)
+        elt.second.pre_update();
+
+    for (auto &elt : m_edges)
+        elt.second.pre_update();
+
+    m_interface->m_top_box.update();
+
+    for (auto &elt : m_vertices)
+        elt.second.post_update();
+
+    for (auto &elt : m_edges)
+        elt.second.post_update();
+
+}
+
+/* var_temps : Fait varier K et N en fonction du temps
+Entrée : /
+Sortie : /
+*/
+void Graph::var_temps()
+{
+    ///On modifie tous les K
+    for(auto &elem : m_vertices)
+    {
+        for(unsigned int i = 0 ; i < elem.second.m_in.size() ; i++ )
+        {
+            elem.second.m_K = elem.second.m_K + ( m_edges[elem.second.m_in[i]].m_weight * m_vertices[m_edges[elem.second.m_in[i]].m_from].m_value );
+            //std::cout << elem.second.m_K << std::endl;
+        }
+
+        std::cout << elem.first << ". K = " <<  elem.second.m_K << std::endl;
+    }
+
+
+    ///On modifie tous les N
+    for(auto &elem : m_vertices)
+    {
+        elem.second.m_value = elem.second.m_value + (elem.second.m_taux_repro*elem.second.m_value*(1 - (elem.second.m_value/elem.second.m_K)));
+        /*for(unsigned int i = 0 ; i < elem.second.m_out.size() ; i++)
+        {
+            elem.second.m_value = elem.second.m_value - ( m_edges[elem.second.m_out[i]].m_weight * m_vertices[m_edges[elem.second.m_out[i]].m_to].m_value );
+        }*/
+
+        std::cout << elem.first << ". N = " <<  elem.second.m_value << std::endl;
     }
 }
 
-/*recherche les composantes*/
-void Graph::Marquer_composantes()
+/*****************************************************
+INITIALISATIONS / CONSTRUCTEURS
+******************************************************/
+/// Aide à l'ajout de sommets interfacés
+/*add_interface_vertex : ajout d'un sommet et son interface
+Entrée : int idx (indice du sommet), int value (nbr population), int x(pos x), int y(pos y), string pic_name (nom de l'image), int pic_idx(si image en mvmt), int taux_repro (facteur de reproduction)
+Sortie : /
+*/
+void Graph::add_interfaced_vertex(int idx, int value, int x, int y, std::string pic_name, int pic_idx, int taux_repro)
 {
-    reset_marquages();
-    //pour chaque sommets
-    for(auto &elt : m_vertices)
+    /*parcours les indices de sommet de la map pour voir si le sommet a pas déjà été crée, si c le cas y un message d'erreur*/
+    if ( m_vertices.find(idx)!=m_vertices.end() )
     {
-        //si non marqué
-        if ( elt.second.m_present_ds_compo == false )
+        std::cerr << "Error adding vertex at idx=" << idx << " already used..." << std::endl;
+        throw "Error adding vertex";
+    }
+    // Création d'une interface de sommet
+    VertexInterface *vi = new VertexInterface(idx, x, y, pic_name, pic_idx);
+    // Ajout de la top box de l'interface de sommet
+    m_interface->m_main_box.add_child(vi->m_top_box);
+    // On peut ajouter directement des vertices dans la map avec la notation crochet :
+    m_vertices[idx] = Vertex(value, vi, taux_repro);
+}
+
+/* add_interfaced_edge : ajout d'un arc avec une interface
+Entrée : int idx (son indice), int id_vert1 (indice sommet from), int id_vert2 (indice sommet to), int weight (poids de l'arête)
+Sortie : /
+*/
+void Graph::add_interfaced_edge(int idx, int id_vert1, int id_vert2, int weight)
+{
+    //Si l'edge existe déjà
+    if ( m_edges.find(idx)!=m_edges.end() )
+    {
+        std::cerr << "Error adding edge at idx=" << idx << " already used..." << std::endl;
+        throw "Error adding edge";
+    }
+
+    //Si on ne trouve pas un des sommets de l'arête
+    if ( m_vertices.find(id_vert1)==m_vertices.end() || m_vertices.find(id_vert2)==m_vertices.end() )
+    {
+        std::cerr << "Error adding edge idx=" << idx << " between vertices " << id_vert1 << " and " << id_vert2 << " not in m_vertices" << std::endl;
+        throw "Error adding edge";
+    }
+
+    //Création d'une interface et de l'edge
+    EdgeInterface *ei = new EdgeInterface(m_vertices[id_vert1], m_vertices[id_vert2]);
+    m_interface->m_main_box.add_child(ei->m_top_edge);
+    m_edges[idx] = Edge(weight, ei);
+    m_edges[idx].m_from = id_vert1;
+    m_edges[idx].m_to = id_vert2;
+
+    m_vertices[id_vert1].m_out.push_back(idx);
+    m_vertices[id_vert2].m_in.push_back(idx);
+}
+
+/*****************************************************
+AFFICHAGE TOUR DE BOUCLE
+******************************************************/
+/* affichage_outil : Affichage des images de la tool bar
+Entrée : Images dans le dossier du projet
+Sortie : Afichage allegro
+*/
+void Graph::affichage_outil()
+{
+    //affichage/chargement des images pour la tool bar
+    grman::show_picture(grman::page, "G1.bmp", 24,6,0);
+    grman::show_picture(grman::page, "G2.bmp", 24,86,0);
+    grman::show_picture(grman::page, "G3.bmp", 24,166,0);
+    grman::show_picture(grman::page,"save.bmp",24,246,0);
+    grman::show_picture(grman::page,"read.bmp",24,326,0);
+    grman::show_picture(grman::page,"cfc.bmp",24, 406,0);
+    grman::show_picture(grman::page, "add.bmp", 24,486,0);
+    grman::show_picture(grman::page, "delete.bmp", 24,566,0);
+    grman::show_picture(grman::page, "logout.bmp", 24,646,0);
+}
+
+/* acces_G1 : Affichage et action sur le graphe 1
+Entrée : /
+Sortie : Affichage allegro + console
+*/
+void Graph::acces_G1(int* n)
+{
+    //Si clique sur le bouton de lecture -> lecture
+    get_interface()->get_lect().interact_focus();
+    if(get_interface()->get_lect().clicked())
+    {
+        std::cout << "Lecture du fichier 1" << std::endl;
+        m_edges.clear();
+        m_vertices.clear();
+        m_bin_edges.clear();
+        m_bin_vertices.clear();
+        chargement_fichier_a();
+    }
+
+    //Si clique sur le bouton de sauvegarde -> sauvegarde
+    get_interface()->get_save().interact_focus();
+    if(get_interface()->get_save().clicked())
+    {
+        std::cout << "Sauvegarde du fichier 1" << std::endl;
+        sauv_graphea();
+    }
+
+    //Méthodes d'update des objets qui comportent des widgets
+    update();
+
+    //Affichage barre à outils
+    affichage_outil();
+
+    //Recherche de composantes fortement connexes
+    if (key[KEY_SPACE])
+    {
+        rest(100);
+        std::cout << "Recherche de composantes fortement connexes" << std::endl;
+        Marquer_composantes();
+
+    }
+
+    //Recherche de sommet(s) à enlever pour déconnecter le graphe
+    if ( key[KEY_K] )
+    {
+        rest(100);
+        k_connexite();
+    }
+
+    //Mise à jour générale (clavier/souris/buffer etc...)
+    grman::mettre_a_jour();
+
+    //Ajout d'espèce sur le graphe 1
+    add_espece1();
+
+    //Suppression espèce
+    delete_espece();
+
+    //Test sortie du programme
+    sortie();
+
+    //Quand on appuie sur le bouton G3 on passe au graphe 3
+    get_interface()->get_buttonG3().interact_focus();
+    if(get_interface()->get_buttonG3().clicked())
+    {
+        *n=3;
+    }
+
+    //Quand on appuie sur le bouton G2 on passe au graphe 2
+    get_interface()->get_buttonG2().interact_focus();
+    if(get_interface()->get_buttonG2().clicked())
+    {
+        *n=2;
+    }
+
+    //Affiche du graphe simplifé des composantes fortement connexes
+    if(key[KEY_P])
+    {
+        rest(100);
+        if(m_vect_composantes.size() > 0 )
         {
-            reset_marquages();
-
-            //marquer_composante (de ce sommet)
-            bool compo_existe = CFC(elt.first);
-
-            if( compo_existe )
-                afficher();
+            graph_simpl();
+            m_vect_composantes.clear();
         }
     }
 
-    ///Affiche les aretes faisant partie de la compo fort connexe ds une autre couleur
-    for(unsigned int i = 0 ; i< m_vect_composantes.size() ; i++)
+    //Affichage du graphe simplifé des différentes k_connexités
+    if(key[KEY_B])
     {
-        for(unsigned int j = 0 ; j < m_vect_composantes[i].size() ; j++)
+        rest(100);
+        if(m_connexe.size() > 0 )
         {
+            graph_simpl_connex();
+            m_connexe.clear();
+        }
+    }
+
+    //Modifications K et N
+    //var_temps();
+}
+
+/* acces_G2 : Actions et affichage du graphe 2
+Entrée : /
+Sortie : Affichage allegro et console
+*/
+void Graph::acces_G2(int* n)
+{
+    //Si on clique sur lecture -> lecture du fichier
+    get_interface()->get_lect().interact_focus();
+    if(get_interface()->get_lect().clicked())
+    {
+        std::cout << "Lecture du fichier 2" << std::endl;
+        m_edges.clear();
+        m_vertices.clear();
+        chargement_fichier_b();
+    }
+
+    //Si clique sur sauvegarde -> on sauvegarde
+    get_interface()->get_save().interact_focus();
+    if(get_interface()->get_save().clicked())
+    {
+        std::cout << "Sauvegarde du fichier 2" << std::endl;
+        sauv_grapheb();
+    }
+
+    //Méthodes d'update des objets qui comportent des widgets
+    update();
+
+    //Affichage barre à outils
+    affichage_outil();
+
+    //Mise à jour générale (clavier/souris/buffer etc...)
+    grman::mettre_a_jour();
+
+    //Ajouter une espèce sur le graphe 2
+    add_espece2();
+
+    //Suppression d'une espèce
+    delete_espece();
+
+    //Test sortie du programme
+    sortie();
+
+    //Recherche de composantes fortement connexes
+    if (key[KEY_SPACE])
+    {
+        std::cout << "Recherche de composant fortement connexe" << std::endl;
+        rest(100);
+        Marquer_composantes();
+
+    }
+
+    //Recherche de sommet(s) à déconnecter pour séparer le graphe
+    if ( key[KEY_K] )
+    {
+        rest(100);
+        k_connexite();
+    }
+
+    //Si on clique sur P, affiche graphe simplifié des fortes connexités
+    if(key[KEY_P])
+    {
+        rest(100);
+        if(m_vect_composantes.size() > 0 )
+        {
+            graph_simpl();
+            m_vect_composantes.clear();
+        }
+    }
+
+    //Si on clique sur B, affiche graphe simplifé des k-connexités
+    if(key[KEY_B])
+    {
+        rest(100);
+        if(m_connexe.size() > 0 )
+        {
+            graph_simpl_connex();
+            m_connexe.clear();
+        }
+    }
+
+    //Si on clique sur G1 on passe au graphe 1
+    get_interface()->get_buttonG1().interact_focus();
+    if(get_interface()->get_buttonG1().clicked())
+    {
+        *n=1;
+    }
+
+    //Si on clique sur G3 on passe au graphe 3
+    get_interface()->get_buttonG3().interact_focus();
+    if(get_interface()->get_buttonG3().clicked())
+    {
+        *n=3;
+    }
+
+    //Met à jour K et N
+    //var_temps();
+
+}
+
+/* acces_G3 : Effectue toutes les actions sur le graphe 3
+Entrée : /
+Sortie : Affichage allegro et console
+*/
+void Graph::acces_G3(int* n)
+{
+    //Si on clique sur read -> Lecture du fichier
+    get_interface()->get_lect().interact_focus();
+    if(get_interface()->get_lect().clicked())
+    {
+        std::cout << "Lecture du fichier 3" << std::endl;
+        m_edges.clear();
+        m_vertices.clear();
+        chargement_fichier_c();
+    }
+
+    //Si on clique sur sauvegarde -> sauvegarde
+    get_interface()->get_save().interact_focus();
+    if(get_interface()->get_save().clicked())
+    {
+        std::cout << "Sauvegarde du fichier 3" << std::endl;
+        sauv_graphec();
+    }
+
+    //Méthodes d'update des objets qui comportent des widgets
+    update();
+
+    //Affichage barre à outils
+    affichage_outil();
+
+    // Mise à jour générale (clavier/souris/buffer etc...)
+    grman::mettre_a_jour();
+
+    //Ajout d'une espèce sur le graphe 3
+    add_espece3();
+
+    //Suppression d'une espèce
+    delete_espece();
+
+    //Sort du programme si on clique sur le bouton exit
+    sortie();
+
+    ///Recherche de composantes fortement connexes
+    if (key[KEY_SPACE])
+    {
+        std::cout << "Recherche de composantes fortement connexes" << std::endl;
+        //Pour ne pas prendre en compte plusieurs fois la barre espace
+        rest(100);
+        //Marque composantes fortement connexes
+        Marquer_composantes();
+
+    }
+
+    //Recherche de sommet(s) à deconnecter pour séparer le graphe
+    if ( key[KEY_K] )
+    {
+        rest(100);
+        k_connexite();
+    }
+
+    //Affichage du graphe avec ses composantes fortement connexes
+    if(key[KEY_P])
+    {
+        rest(100);
+        if(m_vect_composantes.size() > 0 )
+        {
+            graph_simpl();
+            m_vect_composantes.clear();
+        }
+    }
+
+    //Si on appuie sur B
+    if(key[KEY_B])
+    {
+        rest(100);
+        if(m_connexe.size() > 0 )
+        {
+            //On affiche les graphes qui montre les sommets qui deconnectent le graphe
+            graph_simpl_connex();
+            //On vide le vector
+            m_connexe.clear();
+        }
+    }
+
+    //Si on clique sur G1 on affiche le graphe 1
+    get_interface()->get_buttonG1().interact_focus();
+    if(get_interface()->get_buttonG1().clicked())
+    {
+        *n=1;
+    }
+
+    //Si on clique sur G2 on affiche le graphe 2
+    get_interface()->get_buttonG2().interact_focus();
+    if(get_interface()->get_buttonG2().clicked())
+    {
+        *n=2;
+    }
+
+    //Changement des variables N et K en fonction du temps
+    //var_temps();
+
+}
+
+/* sortie : sortie du programme
+Entrée : /
+Sortie : /
+*/
+void Graph::sortie()
+{
+    //On voit si y a un clique sur le bouton Exit de la barre outils
+    get_interface()->get_buttonExit().interact_focus();
+
+    //Si le bouton a été cliqué
+    if(get_interface()->get_buttonExit().clicked())
+    {
+        std::cout << "A bientot" << std::endl;
+        //On sort du programme
+        exit(0);
+    }
+}
+
+/*graph_simpl_connex = affiche graphe simplicié avec les différentes composantes connexes
+Entrée : /
+Sortie : Affichage allegro
+*/
+void Graph::graph_simpl_connex()
+{
+    ///Initialisation du buffer
+    BITMAP* buffer = create_bitmap(908,720);
+
+    std::cout << "aff graphe simplifi des k_connexités" << std::endl;
+
+    ///Nettoyage du buffer
+    clear_bitmap(buffer);
+
+    ///Fond du buffer
+    rectfill(buffer,0,0,908,720,BLANCROSE);
+
+    ///Faire les aretes
+    //Pour chaque connexité
+    for(unsigned int i = 0 ; i< m_connexe.size() ; i++)
+    {
+        //Pour chaque sommet de la connexité
+        for(unsigned int j = 0 ; j < m_connexe[i].size() ; j++)
+        {
+            //Pour chaques arêtes
             for(auto &elem : m_edges)
             {
-                if(get_indice(m_vect_composantes[i][j]) == elem.second.m_from)
+                //Si l'indice du sommet actuel correspond à l'indice m_from de l'arête
+                if(get_indice(m_connexe[i][j]) == elem.second.m_from)
                 {
-                    for(unsigned int k = 0 ; k < m_vect_composantes[i].size() ; k++)
+                    //pour chaque sommet de la connexité
+                    for(unsigned int k = 0 ; k < m_connexe[i].size() ; k++)
                     {
-                        if(get_indice(m_vect_composantes[i][k]) == elem.second.m_to)
+                        //Si un indice correspond à l'indice m_to de l'arête
+                        if(get_indice(m_connexe[i][k]) == elem.second.m_to)
                         {
-                            elem.second.m_interface->m_top_edge.set_color(ORANGECLAIR);
-
+                            //Affichage de l'arete
+                            line(buffer, m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x+50,m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y+50, m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x+50,m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y+50, NOIR);
+                            ///"affichage de la fleche" -> c'est des ronds parce que c'est trop long sinon
+                            //si sA gauche-haut de sB
+                            if(m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x < m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x && m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y < m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y )
+                            {
+                                circlefill(buffer, m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x+50, m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y+50, 10, NOIR);
+                            }
+                            //si sA gauche-bas de sB
+                            if(m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x < m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x && m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y > m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y)
+                            {
+                                circlefill(buffer, m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x+50, m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y+50, 10, NOIR);
+                            }
+                            //si sA droit-bas de sB
+                            if(m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x > m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x && m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y > m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y)
+                            {
+                                circlefill(buffer, m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x+50, m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y+50, 10, NOIR);
+                            }
+                            //si sA droit-haut de sB
+                            if(m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x > m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x && m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y < m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y )
+                            {
+                                circlefill(buffer, m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x+50, m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y+50, 10, NOIR);
+                            }
                         }
                     }
                 }
-                else if(get_indice(m_vect_composantes[i][j]) == elem.second.m_to)
+                //Si l'indice du sommet actuel est l'indice m_to de l'arete
+                else if(get_indice(m_connexe[i][j]) == elem.second.m_to)
                 {
+                    //Pour chaque sommet
+                    for(unsigned int k = 0 ; k < m_connexe[i].size() ; k++)
+                    {
+                        if(get_indice(m_connexe[i][k]) == elem.second.m_from)
+                        {
+                            //Affichage de l'arete
+                            line(buffer, m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x+50,m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y+50,m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x+50,m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y+50, NOIR);
+                            ///Affichage de la flèche (simulé par un rond)
+                            //si sA gauche-haut de sB
+                            if(m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x < m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x && m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y < m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y )
+                            {
+                                circlefill(buffer, m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x+58, m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y+65, 10, NOIR);
+                            }
+                            //si sA gauche-bas de sB
+                            if(m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x < m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x && m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y > m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y)
+                            {
+                                circlefill(buffer, m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x+55, m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y+45, 10, NOIR);
+                            }
+                            //si sA droite-bas de sB
+                            if(m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x > m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x && m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y > m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y)
+                            {
+                                circlefill(buffer, m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x+40, m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y+45, 10, NOIR);
+                            }
+                            //si sA droit-haut de sB
+                            if(m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x > m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x && m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y < m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y )
+                            {
+                                circlefill(buffer, m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x+43, m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y+55, 10, NOIR);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        ///Affichage des sommets de fortes connexités
+        // Pour tous les sommets
+        for(unsigned int m = 0 ; m < m_connexe[i].size() ; m++)
+        {
+            //Affichage du rectangle du sommet
+            rectfill(buffer,m_connexe[i][m].m_interface->m_top_box.get_frame().pos.x+40, m_connexe[i][m].m_interface->m_top_box.get_frame().pos.y+40,m_connexe[i][m].m_interface->m_top_box.get_frame().pos.x+70,m_connexe[i][m].m_interface->m_top_box.get_frame().pos.y+70, BLANC );
+            rect(buffer,m_connexe[i][m].m_interface->m_top_box.get_frame().pos.x+40, m_connexe[i][m].m_interface->m_top_box.get_frame().pos.y+40,m_connexe[i][m].m_interface->m_top_box.get_frame().pos.x+70,m_connexe[i][m].m_interface->m_top_box.get_frame().pos.y+70, NOIR);
+
+            //Affichage du numéro du sommet
+            textprintf_ex(buffer, font, m_connexe[i][m].m_interface->m_top_box.get_frame().pos.x+50, m_connexe[i][m].m_interface->m_top_box.get_frame().pos.y+50, NOIR, -1, "%d", get_indice(m_connexe[i][m]));
+        }
+
+        ///Affichage du buffer
+        blit(buffer,screen,0,0, 110, 5,908,720);
+        rest(500);
+    }
+}
+
+/*graph_simpl = affiche graphe simplicié avec les différentes composantes fortement connexes
+Entrée : /
+Sortie : Affichage allegro
+*/
+void Graph::graph_simpl()
+{
+
+    std::cout << "aff graphe simplifi" << std::endl;
+
+    //Initialisation du buffer
+    BITMAP* buffer = create_bitmap(908,720);
+    //Remplissage fond buffer
+    rectfill(buffer,0,0,908,720, CYANSOMBRE);
+
+    //Pour toutes les composantes fortement connexes
+    for(unsigned int i = 0 ; i< m_vect_composantes.size() ; i++)
+    {
+        //Pour tous les sommets de la composante i fortement connexe
+        for(unsigned int j = 0 ; j < m_vect_composantes[i].size() ; j++)
+        {
+            //Pour toutes les arêtes
+            for(auto &elem : m_edges)
+            {
+                //Si l'indice du sommet actuel correspond au m_from de l'arete actuelle
+                if(get_indice(m_vect_composantes[i][j]) == elem.second.m_from)
+                {
+                    //Pour tous les sommets de la composante i fortement connexe
                     for(unsigned int k = 0 ; k < m_vect_composantes[i].size() ; k++)
                     {
+                        //Si l'indice du sommet correspond au m_to de l'arete actuelle
+                        if(get_indice(m_vect_composantes[i][k]) == elem.second.m_to)
+                        {
+                            //On dessine l'arete
+                            line(buffer, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+50,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+50, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x+50,m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y+50, NOIR);
+                            ///Affichage de la fleche (cercle pour simplifié le code)
+                            //si sA gauche-haut de sB
+                            if(m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x < m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x && m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y < m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y )
+                            {
+                                circlefill(buffer, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x+50, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y+50, 10, NOIR);
+                            }
+                            //si sA gauche-bas de sB
+                            if(m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x < m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x && m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y > m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y)
+                            {
+                                circlefill(buffer, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x+50, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y+50, 10, NOIR);
+                            }
+                            //si sA droite-bas de sB
+                            if(m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x > m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x && m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y > m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y)
+                            {
+                                circlefill(buffer, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x+50, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y+50, 10, NOIR);
+                            }
+                            //si sA droit-haut de sB
+                            if(m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x > m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x && m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y < m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y )
+                            {
+                                circlefill(buffer, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x+50, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y+50, 10, NOIR);
+                            }
+                        }
+                    }
+                }
+                //Si l'indice du sommet actuel correspond au m_to de l'arete
+                else if(get_indice(m_vect_composantes[i][j]) == elem.second.m_to)
+                {
+                    //Pour tous les sommets de la composante fortement connexe
+                    for(unsigned int k = 0 ; k < m_vect_composantes[i].size() ; k++)
+                    {
+                        //Si l'indice du sommet correspond au m_from de l'arete
                         if(get_indice(m_vect_composantes[i][k]) == elem.second.m_from)
                         {
-                            elem.second.m_interface->m_top_edge.set_color(ORANGECLAIR);
-
+                            //Dessine l'arête
+                            line(buffer, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x+50,m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y+50,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+50,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+50, NOIR);
+                            ///Affichage de la fleche
+                            //si sA gauche-haut de sB
+                            if(m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x < m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x && m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y < m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y )
+                            {
+                                circlefill(buffer, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+58, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+65, 10, NOIR);
+                            }
+                            //si sA gauche-bas de sB
+                            if(m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x < m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x && m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y > m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y)
+                            {
+                                circlefill(buffer, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+55, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+45, 10, NOIR);
+                            }
+                            //si sA droite-bas de sB
+                            if(m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x > m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x && m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y > m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y)
+                            {
+                                circlefill(buffer, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+40, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+45, 10, NOIR);
+                            }
+                            //si sA droit-haut de sB
+                            if(m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x > m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x && m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y < m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y )
+                            {
+                                circlefill(buffer, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+43, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+55, 10, NOIR);
+                            }
                         }
                     }
                 }
@@ -1006,31 +1653,72 @@ void Graph::Marquer_composantes()
         }
     }
 
+    ///Affichage des sommets de fortes connexités
+    //Pour toutes les composantes fortement connexes
+    for(unsigned int k = 0 ; k < m_vect_composantes.size() ; k++)
+    {
+        //Pour tous les sommets de la composante i
+        for(unsigned int m = 0 ; m < m_vect_composantes[k].size() ; m++)
+        {
+            //Affichage du cadre du sommet
+            rectfill(buffer,m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.x+40, m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.y+40,m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.x+70,m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.y+70, BLANC );
+            rect(buffer,m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.x+40, m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.y+40,m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.x+70,m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.y+70, NOIR);
+            //Affichage du numero du sommet
+            textprintf_ex(buffer, font, m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.x+50, m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.y+50, NOIR, -1, "%d", get_indice(m_vect_composantes[k][m]));
+        }
+    }
 
-
+    ///Affichage du buffer
+    blit(buffer,screen,0,0, 110, 5,908,720);
+    rest(5000);
 }
 
-/*
-afficher = afficher les indices des sommets appartenant à une composante fortement connexe
+/* afficher : afficher les indices des sommets appartenant à une composante fortement connexe
+Entrée : /
+Sortie : Affichage console
 */
 void Graph::afficher()
 {
     std::cout << "Voici les sommets de la composante fortement connexe : ";
+    //Pour tous les sommets
     for ( auto &elt : m_vertices )
     {
+        //S'il est marqué deux fois et qu'il est marqué présent dans la compo
         if ( elt.second.m_1 == true && elt.second.m_2 == true && elt.second.m_present_ds_compo == true )
         {
+            //Affiche son indice
             std::cout << elt.first << " ";
         }
     }
     std::cout << std::endl;
 }
 
-/*
-CFC = recherhce de composante(s) fortement connexe(s)
-ENTREES : sommet ancre à partir duquel la recherche commencera
-SORTIES : retourne un booléen indiquant s'il s'agit bien d'un composante fortement connexe (true)
+/************************************************************
+ALGOS ET FONCTIONS DE RECHERCHE
+************************************************************/
+
+/* get_indice : retourne l'indice d'un sommet
+Entrée : Vertex V : Sommet
+Sortie : int : indice sommet
 */
+int Graph::get_indice(Vertex V)
+{
+    //Si le nombre d'arc entrant n'est pas égal à 0
+    if(V.m_in.size() != 0)
+    {
+        //On retourne l'indice m_to du premier arc entrant du sommet
+        return m_edges[V.m_in[0]].m_to;
+    }
+    else
+    {
+        //On retourne l'indice m_from du premier arc sortant du sommet
+        return m_edges[V.m_out[0]].m_from;
+    }
+}
+
+/*CFC = recherhce de composante(s) fortement connexe(s)
+Entrées : sommet ancre à partir duquel la recherche commencera
+Sorties : retourne un booléen indiquant s'il s'agit bien d'un composante fortement connexe (true)*/
 bool Graph::CFC(int sommet_ancre)
 {
     //piles pour traiter les arcs sortants et entrants
@@ -1112,6 +1800,11 @@ bool Graph::CFC(int sommet_ancre)
     return compo_existe;
 }
 
+///JSP
+/*marquage :
+Entrée :
+Sortie :
+*/
 bool Graph::marquage(std::vector<int> v1, std::vector<int> v2 )
 {
     std::vector<int> v;
@@ -1156,666 +1849,93 @@ bool Graph::marquage(std::vector<int> v1, std::vector<int> v2 )
 
 }
 
-/*Source Monsieur Fercoq*/
-void Graph::remove_edge(int eidx)
-{
-    // référence vers le Edge à enlever
-    Edge &remed=m_edges.at(eidx);
-
-    //Affichage de l'arete qui va etre supprimer
-    std::cout << "Suppr arete " << eidx << " " << remed.m_from << "->" << remed.m_to << " " << remed.m_weight << std::endl;
-
-    //Il faut retiré l'arete de la main box
-    //On vérifie que le grape et l'arete on une interface pour ensuite retiré l'arete
-    if (m_interface && remed.m_interface)
-    {
-        m_interface->m_main_box.remove_child( remed.m_interface->m_top_edge );
-    }
-
-    //Reference sur les vecteurs respectifs des 2 sommets concernés par l'arete
-    std::vector<int> &vefrom = m_vertices[remed.m_from].m_out;
-    std::vector<int> &veto = m_vertices[remed.m_to].m_in;
-
-    //on retrouve l'arete à suppr dans le vecteur m_out ou m_in la contenant
-    vefrom.erase( std::remove( vefrom.begin(), vefrom.end(), eidx ), vefrom.end() );
-
-    veto.erase( std::remove( veto.begin(), veto.end(), eidx ), veto.end() );
-
-    //on ajoute l'arête dans une autre map contenant les aretes supprimées
-    Edge_bin e_bin(eidx, remed.getFrom(), remed.getTo(), remed.getWeight());
-    m_bin_edges.push_back(e_bin);
-
-    //Enfin on suppr l'arete de la map contenant les aretes du graphe
-    m_edges.erase( eidx );
-
-}
-
-/// La méthode update à appeler dans la boucle de jeu pour les graphes avec interface
-void Graph::update()
-{
-    if (!m_interface)
-        return;
-
-    for (auto &elt : m_vertices)
-        elt.second.pre_update();
-
-    for (auto &elt : m_edges)
-        elt.second.pre_update();
-
-    m_interface->m_top_box.update();
-
-    for (auto &elt : m_vertices)
-        elt.second.post_update();
-
-    for (auto &elt : m_edges)
-        elt.second.post_update();
-
-}
-
-/// Aide à l'ajout de sommets interfacés
-void Graph::add_interfaced_vertex(int idx, int value, int x, int y, std::string pic_name, int pic_idx, int taux_repro)
-{
-    /*parcours les indices de sommet de la map pour voir si le sommet a pas déjà été crée, si c le cas y un message d'erreur*/
-    if ( m_vertices.find(idx)!=m_vertices.end() )
-    {
-        std::cerr << "Error adding vertex at idx=" << idx << " already used..." << std::endl;
-        throw "Error adding vertex";
-    }
-    // Création d'une interface de sommet
-    VertexInterface *vi = new VertexInterface(idx, x, y, pic_name, pic_idx);
-    // Ajout de la top box de l'interface de sommet
-    m_interface->m_main_box.add_child(vi->m_top_box);
-    // On peut ajouter directement des vertices dans la map avec la notation crochet :
-    m_vertices[idx] = Vertex(value, vi, taux_repro);
-}
-
-/// Aide à l'ajout d'arcs interfacés
-void Graph::add_interfaced_edge(int idx, int id_vert1, int id_vert2, int weight)
-{
-    if ( m_edges.find(idx)!=m_edges.end() )
-    {
-        std::cerr << "Error adding edge at idx=" << idx << " already used..." << std::endl;
-        throw "Error adding edge";
-    }
-
-    if ( m_vertices.find(id_vert1)==m_vertices.end() || m_vertices.find(id_vert2)==m_vertices.end() )
-    {
-        std::cerr << "Error adding edge idx=" << idx << " between vertices " << id_vert1 << " and " << id_vert2 << " not in m_vertices" << std::endl;
-        throw "Error adding edge";
-    }
-
-    EdgeInterface *ei = new EdgeInterface(m_vertices[id_vert1], m_vertices[id_vert2]);
-    m_interface->m_main_box.add_child(ei->m_top_edge);
-    m_edges[idx] = Edge(weight, ei);
-    m_edges[idx].m_from = id_vert1;
-    m_edges[idx].m_to = id_vert2;
-
-    m_vertices[id_vert1].m_out.push_back(idx);
-    m_vertices[id_vert2].m_in.push_back(idx);
-}
-
-/*****************************************************
-Affichage tour de boucle
-******************************************************/
-
-void Graph::affichage_outil()
-{
-    //affichage/chargement des images pour la tool bar
-    grman::show_picture(grman::page, "G1.bmp", 24,6,0);
-    grman::show_picture(grman::page, "G2.bmp", 24,86,0);
-    grman::show_picture(grman::page, "G3.bmp", 24,166,0);
-    grman::show_picture(grman::page,"save.bmp",24,246,0);
-    grman::show_picture(grman::page,"read.bmp",24,326,0);
-    grman::show_picture(grman::page,"cfc.bmp",24, 406,0);
-    grman::show_picture(grman::page, "add.bmp", 24,486,0);
-    grman::show_picture(grman::page, "delete.bmp", 24,566,0);
-    grman::show_picture(grman::page, "logout.bmp", 24,646,0);
-}
-
-void Graph::acces_G1(int* n)
-{
-    ///LECTURE
-    get_interface()->get_lect().interact_focus();
-
-    if(get_interface()->get_lect().clicked())
-    {
-        std::cout << "Lecture du fichier 1" << std::endl;
-        m_edges.clear();
-        m_vertices.clear();
-        m_bin_edges.clear();
-        m_bin_vertices.clear();
-        chargement_fichier_a();
-    }
-
-    ///SAUVEGARDE
-    get_interface()->get_save().interact_focus();
-
-    if(get_interface()->get_save().clicked())
-    {
-        std::cout << "Sauvegarde du fichier 1" << std::endl;
-        sauv_graphea();
-    }
-
-    /// Il faut appeler les méthodes d'update des objets qui comportent des widgets
-    update();
-
-    ///Affichage barre outil
-    affichage_outil();
-
-    ///recherche de composante fortement connexe
-    if (key[KEY_SPACE])
-    {
-        std::cout << "RECHERCHE DE COMPOSANTE FORTEMENT CONNEXE" << std::endl;
-        rest(100);
-        Marquer_composantes();
-
-    }
-
-    ///RECHERCHE DE(S) SOMMET(S) A ENLEVER POUR DECONNECTER LE GRAPHE
-    if ( key[KEY_K] )
-    {
-        rest(100);
-        k_connexite();
-        /*******il faudra l'enlever qd on mergera avec laure************************************/
-        m_connexe.clear();
-    }
-
-    /// Mise à jour générale (clavier/souris/buffer etc...)
-    grman::mettre_a_jour();
-
-    add_espece1();
-    delete_espece();
-    sortie();
-
-
-
-    get_interface()->get_buttonG3().interact_focus();
-
-    if(get_interface()->get_buttonG3().clicked())
-    {
-        *n=3;
-    }
-
-    get_interface()->get_buttonG2().interact_focus();
-
-    if(get_interface()->get_buttonG2().clicked())
-    {
-        *n=2;
-    }
-
-    //affiche graph simplifé de fortement connexe
-    if(key[KEY_P])
-    {
-        rest(100);
-        if(m_vect_composantes.size() > 0 )
-        {
-            graph_simpl();
-            m_vect_composantes.clear();
-        }
-    }
-
-    //affiche graph simplifé de connexe
-    if(key[KEY_B])
-    {
-        rest(100);
-        if(m_connexe.size() > 0 )
-        {
-            graph_simpl_connex();
-            m_connexe.clear();
-        }
-    }
-
-
-
-    //var_temps();
-}
-
-void Graph::acces_G2(int* n)
-{
-    ///LECTURE
-    get_interface()->get_lect().interact_focus();
-
-    if(get_interface()->get_lect().clicked())
-    {
-        std::cout << "Lecture du fichier 2" << std::endl;
-        m_edges.clear();
-        m_vertices.clear();
-        chargement_fichier_b();
-    }
-
-    ///SAUVEGARDE
-    get_interface()->get_save().interact_focus();
-
-    if(get_interface()->get_save().clicked())
-    {
-        std::cout << "Sauvegarde du fichier 2" << std::endl;
-        sauv_grapheb();
-    }
-
-    /// Il faut appeler les méthodes d'update des objets qui comportent des widgets
-    update();
-
-    ///Affichage barre outil
-    affichage_outil();
-
-    /// Mise à jour générale (clavier/souris/buffer etc...)
-    grman::mettre_a_jour();
-
-    add_espece2();
-    delete_espece();
-    sortie();
-
-    ///recherche de composante fortement connexe
-    if (key[KEY_SPACE])
-    {
-        std::cout << "RECHERCHE DE COMPOSANTE FORTEMENT CONNEXE" << std::endl;
-        rest(100);
-        Marquer_composantes();
-
-    }
-
-    ///RECHERCHE DE(S) SOMMET(S) A ENLEVER POUR DECONNECTER LE GRAPHE
-    if ( key[KEY_K] )
-    {
-        rest(100);
-        k_connexite();
-        /*******il faudra l'enlever qd on mergera avec laure************************************/
-        m_connexe.clear();
-    }
-
-    //affiche graph simplifé de fortement connexe
-    if(key[KEY_P])
-    {
-        if(m_vect_composantes.size() > 0 )
-        {
-            graph_simpl();
-            m_vect_composantes.clear();
-        }
-    }
-
-    //affiche graph simplifé de connexe
-    if(key[KEY_B])
-    {
-        if(m_connexe.size() > 0 )
-        {
-            graph_simpl_connex();
-            m_connexe.clear();
-        }
-    }
-
-
-    get_interface()->get_buttonG1().interact_focus();
-
-    if(get_interface()->get_buttonG1().clicked())
-    {
-        *n=1;
-    }
-
-    get_interface()->get_buttonG3().interact_focus();
-
-    if(get_interface()->get_buttonG3().clicked())
-    {
-        *n=3;
-    }
-
-    //var_temps();
-
-}
-
-void Graph::acces_G3(int* n)
-{
-    ///LECTURE
-    get_interface()->get_lect().interact_focus();
-
-    if(get_interface()->get_lect().clicked())
-    {
-        std::cout << "Lecture du fichier 3" << std::endl;
-        m_edges.clear();
-        m_vertices.clear();
-        chargement_fichier_c();
-    }
-
-    ///SAUVEGARDE
-    get_interface()->get_save().interact_focus();
-
-    if(get_interface()->get_save().clicked())
-    {
-        std::cout << "Sauvegarde du fichier 3" << std::endl;
-        sauv_graphec();
-    }
-
-    /// Il faut appeler les méthodes d'update des objets qui comportent des widgets
-    update();
-
-    ///Affichage barre outil
-    affichage_outil();
-
-    /// Mise à jour générale (clavier/souris/buffer etc...)
-    grman::mettre_a_jour();
-
-    add_espece3();
-    delete_espece();
-    sortie();
-
-    ///recherche de composante fortement connexe
-    if (key[KEY_SPACE])
-    {
-        std::cout << "RECHERCHE DE COMPOSANTE FORTEMENT CONNEXE" << std::endl;
-        rest(100);
-        Marquer_composantes();
-
-    }
-
-    ///RECHERCHE DE(S) SOMMET(S) A ENLEVER POUR DECONNECTER LE GRAPHE
-    if ( key[KEY_K] )
-    {
-        rest(100);
-        k_connexite();
-
-        /*******il faudra l'enlever qd on mergera avec laure************************************/
-        m_connexe.clear();
-    }
-
-    //affiche graph simplifé de fortement connexe
-    if(key[KEY_P])
-    {
-        if(m_vect_composantes.size() > 0 )
-        {
-            graph_simpl();
-            m_vect_composantes.clear();
-        }
-    }
-
-    //affiche graph simplifé de connexe
-    if(key[KEY_B])
-    {
-        if(m_connexe.size() > 0 )
-        {
-            graph_simpl_connex();
-            m_connexe.clear();
-        }
-    }
-
-    get_interface()->get_buttonG1().interact_focus();
-
-    if(get_interface()->get_buttonG1().clicked())
-    {
-        *n=1;
-    }
-
-    get_interface()->get_buttonG2().interact_focus();
-
-    if(get_interface()->get_buttonG2().clicked())
-    {
-        *n=2;
-    }
-
-    //var_temps();
-
-}
-
-void Graph::sortie()
-{
-    //On voit si y a un clique sur les bouttons de la barre outils
-    get_interface()->get_buttonExit().interact_focus();
-
-    if(get_interface()->get_buttonExit().clicked())
-    {
-        std::cout << "A bientot" << std::endl;
-        exit(0);
-    }
-}
-
-/*
-graph_simpl = affiche graphe simplicié avec les différentes composantes fortement connexes
+/*reset_marquages : enlève les marquages pour le marquage de l'algo de Tarjan pour les CDC
+Entrée : /
+Sortie : /
 */
-void Graph::graph_simpl()
+void Graph::reset_marquages()
 {
+    //Pour tous les sommets
+    for (auto &elt : m_vertices)
+    {
+        //Met les bool de marquage à false
+        elt.second.set_Bool1(false);
+        elt.second.set_Bool2(false);
+    }
+}
 
-    std::cout << "aff graphe simplifi" << std::endl;
+/*Marquer_composantes : Recherche les composantes fortement connexes
+Entrée : /
+Sortie : /
+*/
+void Graph::Marquer_composantes()
+{
+    reset_marquages();
 
-    ///Créer le buffer
-    BITMAP* buffer = create_bitmap(908,720);
-    rectfill(buffer,0,0,908,720, CYANSOMBRE);
+    //pour chaque sommets
+    for(auto &elt : m_vertices)
+    {
+        //si non marqué
+        if ( elt.second.m_present_ds_compo == false )
+        {
+            //enregistrer l'indice de ce sommet
+            reset_marquages();
 
-    ///Faire les aretes
+            //marquer_composante (de ce sommet)
+            bool compo_existe = CFC(elt.first);
+
+            //Si la compo existe on l'affiche sur la console
+            if( compo_existe )
+                afficher();
+        }
+    }
+
+    ///Affiche les aretes faisant partie de la compo fort connexe ds une autre couleur
+    //Pour toutes les composantes fortement connexes
     for(unsigned int i = 0 ; i< m_vect_composantes.size() ; i++)
     {
+        //Pour tous les sommets de la composante i
         for(unsigned int j = 0 ; j < m_vect_composantes[i].size() ; j++)
         {
+            //Pour toutes les arêtes
             for(auto &elem : m_edges)
             {
+                //Si l'indice du sommet est le m_from de l'arête
                 if(get_indice(m_vect_composantes[i][j]) == elem.second.m_from)
                 {
+                    //Pour tous les sommets de la composante i
                     for(unsigned int k = 0 ; k < m_vect_composantes[i].size() ; k++)
                     {
+                        //Si un sommet correspond au m_to de l'arete
                         if(get_indice(m_vect_composantes[i][k]) == elem.second.m_to)
                         {
-                            line(buffer, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+50,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+50, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x+50,m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y+50, NOIR);
-                            ///si a gauche top de b
-                            if(m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x < m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x && m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y < m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y )
-                            {
-                                circlefill(buffer, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x+50, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y+50, 10, NOIR);
-                            }
-                            ///si a gauche bas de b
-                            if(m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x < m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x && m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y > m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y)
-                            {
-                                circlefill(buffer, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x+50, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y+50, 10, NOIR);
-                            }
-                            ///si a droite bas de b
-                            if(m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x > m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x && m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y > m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y)
-                            {
-                                circlefill(buffer, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x+50, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y+50, 10, NOIR);
-                            }
-                            ///si a droit top de b
-                            if(m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x > m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x && m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y < m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y )
-                            {
-                                circlefill(buffer, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x+50, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y+50, 10, NOIR);
-                            }
+                            //On change la couleur de l'arête
+                            elem.second.m_interface->m_top_edge.set_color(ORANGECLAIR);
                         }
                     }
                 }
+                //Si l'indice du sommet est le m_to de l'arête
                 else if(get_indice(m_vect_composantes[i][j]) == elem.second.m_to)
                 {
+                    //Pour tous les sommets de la composante
                     for(unsigned int k = 0 ; k < m_vect_composantes[i].size() ; k++)
                     {
+                        //Si l'autre sommet est le m_from de l'arête
                         if(get_indice(m_vect_composantes[i][k]) == elem.second.m_from)
                         {
-                            line(buffer, m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x+50,m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y+50,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+50,m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+50, NOIR);
-                            ///si a gauche top de b
-                            if(m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x < m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x && m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y < m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y )
-                            {
-                                circlefill(buffer, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+58, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+65, 10, NOIR);
-                            }
-                            ///si a gauche bas de b
-                            if(m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x < m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x && m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y > m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y)
-                            {
-                                circlefill(buffer, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+55, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+45, 10, NOIR);
-                            }
-                            ///si a droite bas de b
-                            if(m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x > m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x && m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y > m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y)
-                            {
-                                circlefill(buffer, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+40, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+45, 10, NOIR);
-                            }
-                            ///si a droit top de b
-                            if(m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x > m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x && m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y < m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y )
-                            {
-                                circlefill(buffer, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+43, m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+55, 10, NOIR);
-                            }
-
-                            //textprintf_ex(buffer, font, ((m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.x+50+m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.x+50)/2), ((m_vect_composantes[i][k].m_interface->m_top_box.get_frame().pos.y+50+m_vect_composantes[i][j].m_interface->m_top_box.get_frame().pos.y+50)/2), NOIR, -1, " de %d a %d", get_indice(m_vect_composantes[i][k]),get_indice(m_vect_composantes[i][j]));
+                            //On change la couleur de l'arête
+                            elem.second.m_interface->m_top_edge.set_color(ORANGECLAIR);
                         }
                     }
                 }
             }
         }
     }
-
-    ///Affichage des sommets de fortes connexités
-    for(unsigned int k = 0 ; k < m_vect_composantes.size() ; k++)
-    {
-        for(unsigned int m = 0 ; m < m_vect_composantes[k].size() ; m++)
-        {
-            //Affichage du sommet
-            rectfill(buffer,m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.x+40, m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.y+40,m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.x+70,m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.y+70, BLANC );
-            rect(buffer,m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.x+40, m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.y+40,m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.x+70,m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.y+70, NOIR);
-
-            textprintf_ex(buffer, font, m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.x+50, m_vect_composantes[k][m].m_interface->m_top_box.get_frame().pos.y+50, NOIR, -1, "%d", get_indice(m_vect_composantes[k][m]));
-        }
-    }
-
-    ///Affichage du buffer
-    blit(buffer,screen,0,0, 110, 5,908,720);
-    rest(5000);
 }
 
-
-int Graph::get_indice(Vertex V)
-{
-    if(V.m_in.size() != 0)
-    {
-        return m_edges[V.m_in[0]].m_to;
-    }
-    else
-    {
-        return m_edges[V.m_out[0]].m_from;
-    }
-}
-
-void Graph::var_temps()
-{
-    ///On modifie tous les K
-    for(auto &elem : m_vertices)
-    {
-        elem.second.m_K = 0;
-
-        for(unsigned int i = 0 ; i < elem.second.m_in.size() ; i++ )
-        {
-
-            elem.second.m_K = elem.second.m_K + ( m_edges[elem.second.m_in[i]].m_weight * m_vertices[m_edges[elem.second.m_in[i]].m_from].m_value );
-            std::cout << elem.second.m_K << std::endl;
-        }
-    }
-
-
-    ///On modifie tous les N
-    for(auto &elem : m_vertices)
-    {
-        elem.second.m_value = elem.second.m_value + (elem.second.m_taux_repro*elem.second.m_value*(1 - (elem.second.m_value/elem.second.m_K)));
-        for(unsigned int i = 0 ; i < elem.second.m_out.size() ; i++)
-        {
-            elem.second.m_value = elem.second.m_value - ( m_edges[elem.second.m_out[i]].m_weight * m_vertices[m_edges[elem.second.m_out[i]].m_to].m_value );
-        }
-    }
-}
-
-/*
-graph_simpl_connex = affiche graphe simplicié avec les différentes composantes connexes
-*/
-void Graph::graph_simpl_connex()
-{
-
-    std::cout << "aff graphe simplifi" << std::endl;
-
-    ///Créer le buffer
-    BITMAP* buffer = create_bitmap(908,720);
-    rectfill(buffer,0,0,908,720, CYANSOMBRE);
-
-    ///Faire les aretes
-    for(unsigned int i = 0 ; i< m_connexe.size() ; i++)
-    {
-        for(unsigned int j = 0 ; j < m_connexe[i].size() ; j++)
-        {
-            for(auto &elem : m_edges)
-            {
-                if(get_indice(m_connexe[i][j]) == elem.second.m_from)
-                {
-                    for(unsigned int k = 0 ; k < m_connexe[i].size() ; k++)
-                    {
-                        if(get_indice(m_connexe[i][k]) == elem.second.m_to)
-                        {
-                            line(buffer, m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x+50,m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y+50, m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x+50,m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y+50, NOIR);
-                            ///si a gauche top de b
-                            if(m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x < m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x && m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y < m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y )
-                            {
-                                circlefill(buffer, m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x+50, m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y+50, 10, NOIR);
-                            }
-                            ///si a gauche bas de b
-                            if(m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x < m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x && m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y > m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y)
-                            {
-                                circlefill(buffer, m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x+50, m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y+50, 10, NOIR);
-                            }
-                            ///si a droite bas de b
-                            if(m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x > m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x && m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y > m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y)
-                            {
-                                circlefill(buffer, m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x+50, m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y+50, 10, NOIR);
-                            }
-                            ///si a droit top de b
-                            if(m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x > m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x && m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y < m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y )
-                            {
-                                circlefill(buffer, m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x+50, m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y+50, 10, NOIR);
-                            }
-                        }
-                    }
-                }
-                else if(get_indice(m_connexe[i][j]) == elem.second.m_to)
-                {
-                    for(unsigned int k = 0 ; k < m_connexe[i].size() ; k++)
-                    {
-                        if(get_indice(m_connexe[i][k]) == elem.second.m_from)
-                        {
-                            line(buffer, m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x+50,m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y+50,m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x+50,m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y+50, NOIR);
-                            ///si a gauche top de b
-                            if(m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x < m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x && m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y < m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y )
-                            {
-                                circlefill(buffer, m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x+58, m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y+65, 10, NOIR);
-                            }
-                            ///si a gauche bas de b
-                            if(m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x < m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x && m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y > m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y)
-                            {
-                                circlefill(buffer, m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x+55, m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y+45, 10, NOIR);
-                            }
-                            ///si a droite bas de b
-                            if(m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x > m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x && m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y > m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y)
-                            {
-                                circlefill(buffer, m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x+40, m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y+45, 10, NOIR);
-                            }
-                            ///si a droit top de b
-                            if(m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x > m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x && m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y < m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y )
-                            {
-                                circlefill(buffer, m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x+43, m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y+55, 10, NOIR);
-                            }
-
-                            //textprintf_ex(buffer, font, ((m_connexe[i][j].m_interface->m_top_box.get_frame().pos.x+50+m_connexe[i][k].m_interface->m_top_box.get_frame().pos.x+50)/2), ((m_connexe[i][k].m_interface->m_top_box.get_frame().pos.y+50+m_connexe[i][j].m_interface->m_top_box.get_frame().pos.y+50)/2), NOIR, -1, " de %d a %d", get_indice(m_connexe[i][k]),get_indice(m_connexe[i][j]));
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    ///Affichage des sommets de fortes connexités
-    for(unsigned int k = 0 ; k < m_connexe.size() ; k++)
-    {
-        for(unsigned int m = 0 ; m < m_connexe[k].size() ; m++)
-        {
-            //Affichage du sommet
-            rectfill(buffer,m_connexe[k][m].m_interface->m_top_box.get_frame().pos.x+40, m_connexe[k][m].m_interface->m_top_box.get_frame().pos.y+40,m_connexe[k][m].m_interface->m_top_box.get_frame().pos.x+70,m_connexe[k][m].m_interface->m_top_box.get_frame().pos.y+70, BLANC );
-            rect(buffer,m_connexe[k][m].m_interface->m_top_box.get_frame().pos.x+40, m_connexe[k][m].m_interface->m_top_box.get_frame().pos.y+40,m_connexe[k][m].m_interface->m_top_box.get_frame().pos.x+70,m_connexe[k][m].m_interface->m_top_box.get_frame().pos.y+70, NOIR);
-
-            textprintf_ex(buffer, font, m_connexe[k][m].m_interface->m_top_box.get_frame().pos.x+50, m_connexe[k][m].m_interface->m_top_box.get_frame().pos.y+50, NOIR, -1, "%d", get_indice(m_connexe[k][m]));
-        }
-    }
-
-    ///Affichage du buffer
-    blit(buffer,screen,0,0, 110, 5,908,720);
-    rest(5000);
-}
-
-
-/*
-k_connexite = trouver le minimum de sommet à enlever pour déconnecter le graphe
-
+/*k_connexite = trouver le minimum de sommet à enlever pour déconnecter le graphe
+Entrée : /
+Sortie : Affichage en console des k_connexités
 */
 void Graph::k_connexite()
 {
@@ -1905,7 +2025,6 @@ void Graph::k_connexite()
     //on remet à false tout les attributs utilisé pour pouvoit les réutiliser
     reset_marquages();
 }
-
 
 /*recherche une composante*/
 /*utilisation du BFS*/
@@ -2007,4 +2126,38 @@ bool Graph::Rechercher_connexes()
     }
 }
 
+std::vector<std::vector<int>> Coeff_binomial()
+{
+    std::vector<std::vector <int>> grogro;
+    std::vector<int> lala;
+    const int n = 5;
+    const int k = 3;
+    int comb[40] = {0};
+    int i = 0;
+    while (i >= 0)
+    {
+        if (comb[i] < n + i - k + 1)
+        {
+            comb[i]++;
+            if (i == k - 1)
+            {
+                for (int j = 0; j < k; j++)
+                {
+                    lala.push_back(comb[j]-1);
+                }
+                grogro.push_back(lala);
+                lala.clear();
+
+            }
+            else
+            {
+                comb[++i] = comb[i - 1];
+            }
+        }
+        else
+            i--;
+    }
+
+    return grogro;
+}
 
