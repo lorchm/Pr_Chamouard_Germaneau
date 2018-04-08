@@ -1833,10 +1833,10 @@ bool Graph::CFC(int sommet_ancre)
     return compo_existe;
 }
 
-///JSP
-/*marquage :
-Entrée :
-Sortie :
+
+/*marquage : sert a retrouver les sommets appartenant aux comosantes fortement connexe
+Entrée : 2 vecteurs contenant les indices des sommets, on va comparer ces 2 vecteurs pour retrouver les sommets de la compo
+Sortie : retourne un booléen qui indique s'il existe bien une compo fortement connexe
 */
 bool Graph::marquage(std::vector<int> v1, std::vector<int> v2 )
 {
@@ -1966,99 +1966,6 @@ void Graph::Marquer_composantes()
     }
 }
 
-/*k_connexite = trouver le minimum de sommet à enlever pour déconnecter le graphe
-Entrée : /
-Sortie : Affichage en console des k_connexités
-*/
-void Graph::k_connexite()
-{
-    std::vector<int> v; //va contenir le nb d'arete sortantes et entrantes d'un sommet
-    std::vector<Vertex*> w;  //va contenir les sommets à déconnecter
-
-    ///On cherche le sommets qui a le plus haut degre
-    for (auto elem: m_vertices)
-    {
-        int nb_edges;      //sortants et rentrants d'un sommet
-
-        nb_edges = elem.second.m_out.size() + elem.second.m_in.size();
-
-        v.push_back(nb_edges);
-    }
-
-    //on trie ds ordre croissant les nb récupérer
-    std::sort( v.begin(), v.end() );
-
-    //On retrouve le(s) sommet(s) avec le nb d'arete max
-    for ( auto &elem : m_vertices)
-    {
-        if ( elem.second.m_out.size() + elem.second.m_in.size() == v[ v.size() -1 ] )
-        {
-            w.push_back( &elem.second ); //on stocke les sommets qui peuvent deconnecter le graph
-        }
-    }
-
-    std::cout << "taille w=" << w.size() << std::endl;
-
-    ///VERIFICATION SI LES SOMMETS TROUVES DECONNECTE LE GRAPHe
-    ///POUR TT LES SOMMETS POTENTIELS LES MARQUER AVEC UN BOOL POUR DIRE S'ILS SONT PAS PRESENT DS LE GRAPH ET VOIR SI LE GRAPH EST DECONNECTER
-    for ( unsigned int i =0 ; i < w.size() ; i ++)
-    {
-        w[i]->set_prst_graph(false);  //en le marquant il ne sera pas reelement present ds le graphe
-        //algo qui calcul cb y a de composante sans le sommet que l'on a choisit de supprimer temporairement
-        bool many_compo = Rechercher_connexes();
-
-        //si true a été retourné alors c'est que le sommet deconnecte le graph
-        if ( many_compo == true )
-        {
-            w[i]->set_deconnect(true);
-
-            //On rempli le vecteur avec les sommets qui reste apres avoir suppr le sommet qui deconnecte, c'est pour visualiser apres le graph simplifie
-            std::vector<Vertex> v_temp;
-
-            for (auto &elem: m_vertices)
-            {
-                if ( elem.second.m_prst_graph == true )
-                {
-                    v_temp.push_back( elem.second );
-                }
-            }
-            //vecteur qui servira à afficher les composantes connexes
-            m_connexe.push_back( v_temp );
-        }
-
-        //on a fait la verification donc on remet à true = prst ds le graphe
-        w[i]->set_prst_graph(true);
-    }
-
-    //CLEAR VECTEUR W
-    w.clear();
-
-    ///REMPLIR VECTEUR W AVEC LES BONS SOMMETS A ENLEVER
-    for (auto &elem: m_vertices)
-    {
-        if ( elem.second.m_deconnect == true)
-        {
-            w.push_back( &elem.second );
-        }
-    }
-
-    ///AFFICHAGE DES INDDECES DE SOMMETS A ENLEVER POUR AVOIR AVOIR GRAPHE NON CONNEXE
-    std::cout << " Il faut enlever " << m_connexe.size() << " sommet pour deconnecter le graphe"<< std::endl << "Voici le(s) sommet(s) a deconnecter : ";
-    for ( auto &elem: m_vertices)
-    {
-        if ( elem.second.m_deconnect == true )
-        {
-            std::cout << elem.first <<  " ";
-        }
-    }
-
-    std::cout << std::endl;
-    std::cout << " Il y a " << m_connexe.size() << " " << m_vertices.size() - m_connexe[0].size() << "-uplet" << std::endl;
-
-    //on remet à false tout les attributs utilisé pour pouvoit les réutiliser
-    reset_marquages();
-}
-
 ///JSP
 /*recherche une composante*/
 /*utilisation du BFS*/
@@ -2158,6 +2065,135 @@ bool Graph::Rechercher_connexes()
         std::cout << "Il y a 1 composante connexe" << std::endl;
         return false;
 
+    }
+}
+
+
+/*k_connexite = trouver le minimum de sommet à enlever pour déconnecter le graphe
+Entrée : /
+Sortie : Affichage en console des k_connexités
+*/
+void Graph::k_connexite()
+{
+    bool kmin_ok = false;
+    int kmin=0;
+
+    std::vector<std::vector<int>> combi;
+    std::vector<std::vector<int>> k_uplet;
+
+    ///  Pour chaque k de 0 à ordre et tant que kmin non trouvé
+    for (unsigned int k  = 1; k < m_vertices.size() ; k++)
+    {
+
+        if ( kmin_ok == false)
+        {
+            ///    Pour chaque k-plet de sommets
+            //calcul du coeff binomial et recup vecteur qui contient les conbinaisaons
+            combi = Coeff_binomial(k);
+            std::cout << "les combi :" << std::endl;
+
+            for (unsigned int i =0 ; i < combi.size(); i++)
+            {
+                for (unsigned int j =0 ; j < combi[i].size(); j++)
+                {
+                    std::cout << combi[i][j] << " ";
+                }
+                std::cout << std::endl;
+            }
+
+            //pour chaque combinaison on met bool prst ds graphe à false
+            for (unsigned int i =0 ; i < combi.size(); i++)
+            {
+                std::cout << "i=" <<i << std::endl;
+                for (unsigned int j =0 ; j < combi[i].size(); j++)
+                {
+                    std::cout << "j=" <<j << std::endl;
+                    m_vertices[ combi[i][j] ].set_prst_graph(false);
+
+                }
+                //calcul nb de connexite avec Rechercher_connexes
+                bool many_compo = Rechercher_connexes();
+
+                //si nb de connexite > 1
+                //true a été retourné alors c'est que k-plet deconnecte le graph
+                if ( many_compo == true )
+                {
+                    for (unsigned int j =0 ; j < combi[i].size(); j++)
+                    {
+                        m_vertices[ combi[i][j] ].set_deconnect(true);
+                        std::cout << "indice sommet a true " << combi[i][j] << std::endl;
+
+                    }
+
+                    //Enregistrer ce k-plet de sommets
+                    std::vector<int> v_temp1;
+                    for (auto &elem: m_vertices)
+                    {
+                        if ( elem.second.m_prst_graph == false )
+                        {
+                            v_temp1.push_back( elem.first );
+                            std::cout << "vtemp =" << elem.first << std::endl;
+                        }
+                    }
+                    k_uplet.push_back(v_temp1);
+
+                    v_temp1.clear();
+
+                    //mets ds un vecteur de vecteur les sommets avec bool prst ds graph à true
+                    //On rempli le vecteur avec les sommets qui reste apres avoir suppr le k-uplet qui deconnecte, c'est pour visualiser apres le graph simplifie
+                    std::vector<Vertex> v_temp2;
+                    for (auto &elem: m_vertices)
+                    {
+                        if ( elem.second.m_prst_graph == true )
+                        {
+                            v_temp2.push_back( elem.second );
+                        }
+                    }
+
+                    //vecteur qui servira à afficher les composantes connexes sans les k-uplet du coup
+                    m_connexe.push_back( v_temp2 );
+
+                    v_temp2.clear();
+
+                    for (unsigned int j =0 ; j < combi[i].size(); j++)
+                    {
+                        m_vertices[ combi[i][j] ].set_prst_graph(true);
+                    }
+
+                    for (auto &elem: m_vertices)
+                    {
+                        if ( elem.second.m_prst_graph == false )
+                        {
+                            std::cout<< "prst g = false  " << elem.first << std::endl;
+                        }
+                    }
+
+                    /// Si le fait de neutraliser ces k sommet déconnecte le graphe alors
+                    //kmin trouvé : kmin = k (mais on termine bien la boucle « Pour chaque k-plet... »)
+                    kmin = k;
+                    std::cout << "kmin ok" << std::endl;
+                    kmin_ok = true;
+                }
+                for (unsigned int j =0 ; j < combi[i].size(); j++)
+                {
+                    m_vertices[ combi[i][j] ].set_prst_graph(true);
+                }
+            }
+        }
+
+    }
+
+    std::cout << "Il y a " << k_uplet.size() << " " << kmin << "-uplet" << std::endl;
+
+    for (unsigned int i =0 ; i < k_uplet.size(); i++)
+    {
+        std::cout << i+1 << "er/eme uplet : ";
+        for (unsigned int j =0 ; j < k_uplet[i].size(); j++)
+        {
+            std::cout << k_uplet[i][j] << " ";
+        }
+
+        std::cout << std::endl;
     }
 }
 
