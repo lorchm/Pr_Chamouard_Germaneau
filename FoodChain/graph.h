@@ -121,7 +121,7 @@ public :
 
     // Le constructeur met en place les éléments de l'interface
     // voir l'implémentation dans le .cpp
-    VertexInterface(int idx, int x, int y, std::string pic_name="", int pic_idx=0);
+    VertexInterface(int idx, int x, int y, std::string pic_name, int pic_idx);
 };
 
 
@@ -135,13 +135,29 @@ class Vertex
     friend class EdgeInterface;
 
 private :
-    ///bool qui indique si le sommet est affiché ou pas
 
 
-    /// liste des indices des arcs arrivant au sommet : accès aux prédécesseurs
+    ///Attributs du style de vie
+    int m_taux_repro;
+
+    ///bool pour appartient à la connexité et appartient à la forte connexité
+    bool m_1=false;
+    bool m_2=false;
+    bool m_present_ds_compo=false;
+
+    ///utile pour la recherche de k sommets connexite
+    bool m_deconnect=false;
+    bool m_prst_graph=true;
+
+     std::vector<int> m_indice_sommet_ancre;
+
+    ///K qu'on utilise pour calculer la taille de la population
+    int m_K=1;
+
+    ///Indices arcs entrants
     std::vector<int> m_in;
 
-    /// liste des indices des arcs partant du sommet : accès aux successeurs
+    ///Indices arcs sortants
     std::vector<int> m_out;
 
     /// un exemple de donnée associée au sommet, on peut en ajouter d'autres...
@@ -158,14 +174,23 @@ public:
 
     /// Les constructeurs sont à compléter selon vos besoin...
     /// Ici on ne donne qu'un seul constructeur qui peut utiliser une interface
-    Vertex (int value=0, VertexInterface *interface=nullptr) :
-        m_value(value), m_interface(interface)  {  }
+    Vertex (int value=0, VertexInterface *interface=nullptr, int taux=0) :
+        m_value(value), m_interface(interface), m_taux_repro(taux)  {  }
 
     /// Vertex étant géré par Graph ce sera la méthode update de graph qui appellera
     /// le pre_update et post_update de Vertex (pas directement la boucle de jeu)
     /// Voir l'implémentation Graph::update dans le .cpp
     void pre_update();
     void post_update();
+
+    bool get_Bool1(){return m_1;}
+    bool get_Bool2(){return m_2;}
+
+    void set_Bool1 (bool b){ m_1 = b;}
+    void set_Bool2 (bool b){ m_2 = b;}
+    void set_present_ds_compo(bool p){ m_present_ds_compo = p;}
+    void set_deconnect( bool d){ m_deconnect = d;}
+    void set_prst_graph( bool g){ m_prst_graph = g;}
 
 };
 
@@ -280,19 +305,22 @@ private :
 
     // A compléter éventuellement par des widgets de décoration ou
     // d'édition (boutons ajouter/enlever ...)
-    ///Boutton pour accéder aux 3 réseaux
+    ///Bouton pour accéder aux 3 réseaux
     grman::WidgetButton m_buttonG1;
     grman::WidgetButton m_buttonG2;
     grman::WidgetButton m_buttonG3;
-    ///Boutton pour ajouter/enlever une espèce
+    ///Bouton pour ajouter/enlever une espèce
     grman::WidgetButton m_buttonAdd;
     grman::WidgetButton m_buttonDelete;
-    ///Boutton pour quitter les programme
+    ///Bouton pour quitter les programme
     grman::WidgetButton m_buttonExit;
 
-    ///Boutton save/lecture
+    ///Bouton save/lecture
     grman::WidgetButton m_lect;
     grman::WidgetButton m_save;
+
+    ///Bouton affichage graphe simplifié des composantes fortement connexes
+    grman::WidgetButton m_buttonAffSimp;
 
 public :
 
@@ -335,6 +363,10 @@ public :
         return m_save;
     }
 
+    grman::WidgetButton &get_buttonGr_simpl()
+    {
+        return m_buttonAffSimp;
+    }
 
 };
 
@@ -356,6 +388,17 @@ private :
     std::vector<Edge_bin> m_bin_edges;
     std::vector<Vertex_bin> m_bin_vertices;
 
+    ///vecteur qui contient les sommet ancre des compo connexe
+    std::vector<int> m_indice_sommet_ancre;
+
+    ///vecteur qui contient les composantes fort. connexes
+    std::vector<std::vector<Vertex>> m_vect_composantes;
+
+    int m_nb_comp = 0;
+
+    ///vecteur qui contient les sommets à afficher pour les différentes composantes connexes
+    std::vector<std::vector<Vertex>> m_connexe;
+
     public:
 
         /// Les constructeurs sont à compléter selon vos besoin...
@@ -363,7 +406,7 @@ private :
         Graph (GraphInterface *interface=nullptr) :
             m_interface(interface)  {  }
 
-        void add_interfaced_vertex(int idx, int value, int x, int y, std::string pic_name="", int pic_idx=0 );
+        void add_interfaced_vertex(int idx, int value, int x, int y, std::string pic_name, int pic_idx,int taux_repro);
         void add_interfaced_edge(int idx, int vert1, int vert2, int weight=0);
 
         /// Méthode spéciale qui construit un graphe arbitraire (démo)
@@ -379,13 +422,24 @@ private :
         void sauv_graphec();
 
         ///Ajouter et supprimer espèce
-
         void delete_espece();
         void add_espece1();
         void add_espece2();
         void add_espece3();
 
+        ///Recherche de composantes fortement connexe
+        bool CFC(int sommet_ancre);
+        void Marquer_composantes();
+        void reset_marquages();
+        void afficher();
+        bool marquage(std::vector<int> v1, std::vector<int> v2 );
 
+        ///Rendre le graphe non connexe
+        void k_connexite();
+
+        ///Recherche graph connexe
+        bool Rechercher_connexes();
+        void Rechercher_connexe(int sommet_ancre);
         /// La méthode update à appeler dans la boucle de jeu pour les graphes avec interface
         void update();
 
@@ -404,6 +458,15 @@ private :
         void acces_G3(int* n);
 
         void sortie();
+
+        void graph_simpl();
+        void graph_simpl_connex();
+
+        int get_indice(Vertex V);
+
+        void var_temps();
+
+        std::vector<std::vector<int>> Coeff_binomial(const int k);
 
 };
 
