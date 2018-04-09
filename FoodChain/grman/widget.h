@@ -9,14 +9,28 @@
 #include <algorithm>
 
 #include <allegro.h>
+/**
+*\file widget.h
+*\brief Contient les class gerant les configurations visuelles pour les graphes
+*\author Monsieur Fercoq
+*\date 2 Avril 2018
+*/
 
+
+/**
+* \namespace <grman>
+* \brief bibliotheque des fonctions graphique/widgets
+*/
 namespace grman
 {
 
 /***************************************************
             WIDGET CHILDREN POSITIONS
 ****************************************************/
-
+/**
+* \enum <GravityX>
+* \brief permet d'obtenir des "raccourcis" pour les coordonnees de x
+*/
 enum class GravityX {
     None,
     Center,
@@ -24,6 +38,10 @@ enum class GravityX {
     Right
 };
 
+/**
+* \enum <GravityY>
+* \brief permet d'obtenir des "raccourcis" pour les coordonnees de y
+*/
 enum class GravityY {
     None,
     Center,
@@ -36,7 +54,10 @@ enum class GravityY {
 /***************************************************
                 WIDGET BASE CLASS
 ****************************************************/
-
+/**
+*\class <Widget>
+*\brief Class mere pour les autres class du fichier, contient toutes les fonctions et attributs communs aux class filles
+*/
 /// Cette classe est trop grosse, elle fait le repassage, répare la voiture, pêche au harpon...
 /// En principe il faut revoir la conception quand une classe devient aussi grosse (refactoriser)
 /// Par exemple une classe de base Widget pour l'aspect composite et une classe dérivée WidgetDecorated pour les styles
@@ -208,7 +229,10 @@ class Widget
 /***************************************************
                     TEXT
 ****************************************************/
-
+/**
+*\class <Widget_Text>
+*\brief Class fille permettant d'afficher un texte sur la fenetre graphique
+*/
 /// Extrêmement rudimentaire : à compléter !
 class WidgetText : public Widget
 {
@@ -232,7 +256,10 @@ class WidgetText : public Widget
 /***************************************************
                     CHECKBOX
 ****************************************************/
-
+/**
+*\class <WidgetCheckBox>
+*\brief Class fille gerant les cliques sur les box
+*/
 class WidgetCheckBox : public Widget
 {
     protected :
@@ -253,7 +280,10 @@ class WidgetCheckBox : public Widget
 /***************************************************
                     BUTTON
 ****************************************************/
-
+/**
+*\class <WidgetButton>
+*\brief Class fille gerant les boutons d'intéraction
+*/
 class WidgetButton : public Widget
 {
     protected :
@@ -275,7 +305,10 @@ class WidgetButton : public Widget
 /***************************************************
                     VSLIDER
 ****************************************************/
-
+/**
+*\class <WidgetVSlider>
+*\brief Class fille gerant le curseur d'une jauge. Exemple : le curseur representant le nb de la population, poids d'une arete
+*/
 class WidgetVSlider : public Widget
 {
     protected :
@@ -318,7 +351,10 @@ class WidgetVSlider : public Widget
 /***************************************************
                     IMAGE
 ****************************************************/
-
+/**
+*\class <WidgetImage>
+*\brief Class fille gerant les images des sommets
+*/
 class WidgetImage : public Widget
 {
     protected :
@@ -348,7 +384,10 @@ class WidgetImage : public Widget
 /***************************************************
                     BOX
 ****************************************************/
-
+/**
+*\class <WidgetBox>
+*\brief class fille de Widget gerant les box des arcs et sommets
+*/
 class WidgetBox : public Widget
 {
     protected :
@@ -377,6 +416,10 @@ class WidgetBox : public Widget
 
 /// Différents éléments de décoration des flèches
 /// Ceci peut être étendu en étendant le code WidgetEdge::draw
+/**
+* \enum <ArrowItemType>
+* \brief Contient les differentes parties graphiques d'un arc
+*/
 enum class ArrowItemType
 {
     Arrow,
@@ -384,6 +427,10 @@ enum class ArrowItemType
     Bullet,
 };
 
+/**
+* \struct <ArrowItem>
+* \brief Contient les elements de creation d'un arc entre 2 sommets
+*/
 struct ArrowItem
 {
     // Type de décoration (pointe de flèche, triangle, rond...
@@ -402,6 +449,10 @@ struct ArrowItem
         m_type(type), m_position(position), m_size(size), m_proportion(proportion) {}
 };
 
+/**
+*\class <WidgetEdge>
+*\brief Class fille de Widget gerant les elements visuels d'un arc
+*/
 class WidgetEdge : public Widget
 {
     protected :

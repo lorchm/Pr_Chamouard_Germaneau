@@ -2,6 +2,18 @@
 #include <stack>
 #include <queue>
 
+
+/**
+ * \file graphe_algo.cpp
+ * \brief Programme d'ajout/suppression d'espece, recherche de composante fortement connexe, recherhce de composante connexe et deconnexion du graphe.
+ * \author Laure Chamouard et Barbara Germaneau et Monsieur Fercop (pour Remove_Edge)
+ * \version 1.0
+ * \date 8 Avril 2018
+ *
+ * Programme d'ajout et suppression d'une espece (sommet + arete), recherche de composante fortement connexe, recherhce de composante connexe et deconnexion du graphe.
+ *
+ */
+
 /*************************************************************
 AJOUTS ET SUPPRESSION
 *************************************************************/
@@ -9,6 +21,10 @@ AJOUTS ET SUPPRESSION
 Entrée : /
 Sortie : /
 */
+/**
+ * \fn void Graph::add_espece1()
+ * \brief Fonction d'ajout d'une espece pour le graphe 1.
+ */
 void Graph::add_espece1()
 {
     int add;
@@ -121,6 +137,10 @@ void Graph::add_espece1()
 Entrée : /
 Sortie : /
 */
+/**
+ * \fn void Graph::add_espece2()
+ * \brief Fonction d'ajout d'une espece pour le graphe 2.
+ */
 void Graph::add_espece2()
 {
     int add;
@@ -232,6 +252,10 @@ void Graph::add_espece2()
 Entrée : /
 Sortie : /
 */
+/**
+ * \fn void Graph::add_espece3()
+ * \brief Fonction d'ajout d'une espece pour le graphe 3.
+ */
 void Graph::add_espece3()
 {
     int add;
@@ -346,6 +370,10 @@ void Graph::add_espece3()
 Entrée : /
 Sortie : /
 */
+/**
+ * \fn void Graph::delete_espece()
+ * \brief Fonction qui supprime une espece presente sur le graphe.
+ */
 void Graph::delete_espece()
 {
     //On voit si y a un clique sur les bouttons de la barre outils
@@ -411,6 +439,12 @@ void Graph::delete_espece()
 Entrée : int eidx (indice de l'arête à retirer)
 Sortie : /
 */
+/**
+ * \fn void Graph::remove_edge(int eidx)
+ * \brief Fonction qui supprime l'arete associe au sommet voulant etre supprime.
+ * \author Monsieur Fercoq
+ * \param eidx Indice de l'arete a supprimer
+ */
 void Graph::remove_edge(int eidx)
 {
     // référence vers le Edge à enlever
@@ -453,6 +487,13 @@ ALGOS ET FONCTIONS DE RECHERCHE
 Entrée : Vertex V : Sommet
 Sortie : int : indice sommet
 */
+/**
+ * \fn int Graph::get_indice(Vertex V)
+ * \brief Fonction qui retrouve l'indice d'un sommet.
+ *
+ * \param V Sommet pour lequel on cherche l'indice.
+ * \return Retourne l'indice (int) du sommet voulu.
+ */
 int Graph::get_indice(Vertex V)
 {
     //Si le nombre d'arc entrant n'est pas égal à 0
@@ -471,6 +512,14 @@ int Graph::get_indice(Vertex V)
 /*CFC = recherche de composante(s) fortement connexe(s)
 Entrées : sommet ancre à partir duquel la recherche commencera
 Sorties : retourne un booléen indiquant s'il s'agit bien d'un composante fortement connexe (true)*/
+/**
+ * \fn bool Graph::CFC(int sommet_ancre)
+ * \brief Fonction qui va stocker dans 2 vecteurs les sommets accessible a partir des arcs entrant et sortant en fonction du sommet ancre,
+ * utilisation d'un parcours en profondeur du graphe (DFS). Puis appel la fonction marquage, a qui l'on passe les 2 vecteurs
+ *
+ * \param sommet_ancre Indice du sommet a partir duquel on commence la recherche des composantes fortement connexes
+ * \return Retourne un booléen indiquant s'il s'agit bien d'un composante fortement connexe (true)
+ */
 bool Graph::CFC(int sommet_ancre)
 {
     //piles pour traiter les arcs sortants et entrants
@@ -557,6 +606,13 @@ bool Graph::CFC(int sommet_ancre)
 Entrée : 2 vecteurs contenant les indices des sommets, on va comparer ces 2 vecteurs pour retrouver les sommets de la compo
 Sortie : retourne un booléen qui indique s'il existe bien une compo fortement connexe
 */
+/**
+ * \fn bool Graph::marquage(std::vector<int> v1, std::vector<int> v2 )
+ * \brief Cherche les indices de sommets en communs dans les vecteus et determine s'il s'agit bien d'une composante fortement connexe.
+ *
+ * \param v1 et v2, 2 vecteurs contenant des indices de sommets, l'un les indices de sommets accessible via les arcs entrants et l'autre via les arcs sortants, le tout par rapport au sommet ancre
+ * \return un booleen, true s'il existe un composante fort. connexe sinon false
+ */
 bool Graph::marquage(std::vector<int> v1, std::vector<int> v2 )
 {
     std::vector<int> v;
@@ -605,6 +661,10 @@ bool Graph::marquage(std::vector<int> v1, std::vector<int> v2 )
 Entrée : /
 Sortie : /
 */
+/**
+ * \fn void Graph::reset_marquages()
+ * \brief Remets e false les attributs m_1 et m_2 d'un sommet, donc de la classe Vertex.
+ */
 void Graph::reset_marquages()
 {
     //Pour tous les sommets
@@ -620,6 +680,10 @@ void Graph::reset_marquages()
 Entrée : /
 Sortie : /
 */
+/**
+ * \fn void Graph::Marquer_composantes()
+ * \brief Permet d'effectuer la recherche de composante fortement connexe pour chaque sommet du graphe et affiche en orange les arcs appartenant e la composante
+ */
 void Graph::Marquer_composantes()
 {
     reset_marquages();
@@ -689,6 +753,12 @@ void Graph::Marquer_composantes()
 Entree : sommet à partir duquel on va chercher les composantes
 Sortie : /
 */
+/**
+ * \fn void Graph::Rechercher_connexe(int sommet_ancre)
+ * \brief Utilisation d'un parcours en largeur (BFS) pour determiner une composante connexe a partir d'un sommet ancre
+ *
+ * \param sommet_ancre Indice du sommet a partir duquel on commmence la recherche
+ */
 void Graph::Rechercher_connexe(int sommet_ancre)
 {
     //Création variable
@@ -754,6 +824,13 @@ void Graph::Rechercher_connexe(int sommet_ancre)
 Entrée : /
 Sortie : renvoit un booléen, true si il a plus plusieurs compo connexe (ce qui signifie que le uplet de sommet deconnecte le graphe) sinon retourne false
 */
+/**
+ * \fn bool Graph::Rechercher_connexes()
+ * \brief Permet d'effectuer la recherche de composante connexe pour chaque sommet du graphe et retourne un booleen en fonction du nombre de composantes trouvees
+ *
+ * \param sommet_ancre Indice du sommet a partir duquel on commmence la recherche
+ * \return true s'il y a plus de 2 composantes, sinon false
+ */
 bool Graph::Rechercher_connexes()
 {
     //effacer marquage
@@ -794,6 +871,10 @@ bool Graph::Rechercher_connexes()
 Entrée : /
 Sortie : Affichage en console des k_connexités
 */
+/**
+ * \fn void Graph::k_connexite()
+ * \brief Recherche si le graphe se déconnecte lorsqu'on enleve un k-uplet de sommets et enregistre ces sommets
+ */
 void Graph::k_connexite()
 {
     bool kmin_ok = false;
@@ -922,6 +1003,13 @@ void Graph::k_connexite()
 Entrée : int k
 Sortie : retourne les combinaisons de k_plets dans des vecteurs d'indices
 */
+/**
+ * \fn std::vector<std::vector<int>> Graph::Coeff_binomial(const int k)
+ * \brief Calcul le coefficient binomial
+ *
+ * \param k nombre test qui va nous permettre de recuperer les differentes combinaisons de sommets
+ * \return un vecteur de vecteur contenant toutes les combinaisons de sommets possible selon k
+ */
 std::vector<std::vector<int>> Graph::Coeff_binomial(const int k)
 {
     //Initialisation des vecteurs qui vont contenir les indices

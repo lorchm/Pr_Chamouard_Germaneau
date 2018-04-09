@@ -13,8 +13,17 @@
 #include <loadpng.h>
 #include <jpgalleg.h>
 
+/**
+*\file grman.cpp
+*\brief Contient les fonctions graphique du namespace german
+*\author Monsieur Fercoq
+*\date 2 Avril 2018
+*/
 
-
+/**
+* \namespace <grman>
+* \brief bibliotheque des fonctions graphique/widgets
+*/
 namespace grman
 {
 
@@ -62,7 +71,11 @@ std::unordered_map<std::string, BITMAP *> g_pic_names;
 std::unordered_set<std::string> g_failed_pic_names;
 std::string g_pic_path;
 
-
+/**
+ *\fn unsigned get_picture_nb(std::string name)
+ *\brief retourne le nombre d'une image
+ * \param name Le nom de l'image
+ */
 unsigned get_picture_nb(std::string name)
 {
     std::string delim="xx";
@@ -77,7 +90,11 @@ unsigned get_picture_nb(std::string name)
     return 1;
 }
 
-
+/**
+ *\fn BITMAP *get_picture(std::string pic_name)
+ *\brief retourne l'image d'un sommet
+ * \param pic_name le nom de l'image
+ */
 BITMAP *get_picture(std::string pic_name)
 {
     pic_name = g_pic_path + pic_name;
@@ -109,6 +126,11 @@ BITMAP *get_picture(std::string pic_name)
     return pic;
 }
 
+/**
+ *\fn void show_picture(BITMAP *dest, std::string pic_name, int x, int y, unsigned pic_idx)
+ *\brief permet d'afficher une image sur la fenetre graphique
+ * \param dest : la ou sera afficher l'image, pic_name : nom de l'image, x et y : position à laquelle on souhaite l'afficher, pic_idx : nombre d'image de l'animation
+ */
 void show_picture(BITMAP *dest, std::string pic_name, int x, int y, unsigned pic_idx)
 {
     BITMAP *pic =get_picture(pic_name);
@@ -123,6 +145,11 @@ void show_picture(BITMAP *dest, std::string pic_name, int x, int y, unsigned pic
 
 }
 
+/**
+ *\fn void set_pictures_path(std::string path_name)
+ *\brief retrouve le chemin des images
+ * \param path_name : nom du chemin
+ */
 void set_pictures_path(std::string path_name)
 {
     if (path_name[path_name.length()-1]!='/')
@@ -131,6 +158,10 @@ void set_pictures_path(std::string path_name)
     g_pic_path = path_name;
 }
 
+/**
+ *\fn void mettre_a_jour()
+ *\brief raffraichit les images
+ */
 void mettre_a_jour()
 {
     buf_afficher_page();
@@ -155,7 +186,10 @@ void mettre_a_jour()
 }
 
 
-
+/**
+ *\fn void init()
+ *\brief initialisation des bibliothèques graphiques
+ */
 void init()
 {
     if (page) return;
@@ -200,6 +234,10 @@ void init()
     page_frame.dim.y = SCREEN_H;
 }
 
+/**
+ *\fn void fermer_allegro()
+ *\brief permet de quitter la fenetre graphique
+ */
 void fermer_allegro()
 {
     if (!page) return;
@@ -208,12 +246,20 @@ void fermer_allegro()
     allegro_exit();
 }
 
+/**
+ *\fn void buf_effacer_page()
+ *\brief efface le buffer pour eviter les problemes graphiques
+ */
 void buf_effacer_page()
 {
     if (!page) return;
     clear_to_color(page, page_color);
 }
 
+/**
+ *\fn void buf_afficher_page()
+ *\brief affiche la bitmap page, sur laquelle on affiche toute l'interface graphique
+ */
 void buf_afficher_page()
 {
     if (!page) return;
@@ -222,6 +268,10 @@ void buf_afficher_page()
     release_screen();
 }
 
+/**
+ *\fn void rafraichir_clavier_souris()
+ *\brief raffraichit la souris et le clavier pour éviter des problèmes
+ */
 void rafraichir_clavier_souris()
 {
     static int mouse_prev, mouse_now;
@@ -258,7 +308,11 @@ void rafraichir_clavier_souris()
 
 
 /// Auxiliaires : compléments aux fonctions graphiques allegro
-
+/**
+ *\fn void thick_line(BITMAP *bmp, int x1, int y1, int x2, int y2, int thickness, int color)
+ *\brief dessine une ligne
+ *\param bmp : la ou elle va etre dessiner, x1 et y1 : coordonnees d'une extremite de la ligne, x2 et y2 : coordonnees de l'autre extremite, thickness : épaisseur de la ligne, color : sa couleur
+ */
 void thick_line(BITMAP *bmp, int x1, int y1, int x2, int y2, int thickness, int color)
 {
     int dx=x2-x1;

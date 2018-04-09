@@ -3,6 +3,18 @@
 #include <string>
 using namespace std;
 
+/**
+*\file bin.h
+*\brief Contient nos classes permettant de gérer les sommets et arêtes associées supprimés du graphe mais aussi de mieux les gérer lors de l'ajout
+*\author Laure Chamouard et Barbara Germaneau
+*\date 5 Avril 2018
+*/
+
+/**
+*\class <Edge_bin>
+*
+* Cette classe nous permet de manipuler plus facilement les arêtes supprimer pour ensuite les ajouter au graphe
+*/
 class Edge_bin{
 
     public:
@@ -18,6 +30,11 @@ class Edge_bin{
         ~Edge_bin();
 };
 
+/**
+*\class <Vertex_bin>
+*
+* Cette classe nous permet de manipuler plus facilement les sommets supprimer pour ensuite les ajouter au graphe
+*/
 class Vertex_bin{
 
     public:
