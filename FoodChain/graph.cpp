@@ -1,3 +1,11 @@
+/**
+*\file graph.cpp
+*\brief principales fonctions d'initialisations + mise a jour et l'affichage des graphes
+*\author Barbara Germaneau + Laure Chamouard + Mr. Fercoq
+*\version 3.0
+*\date 2 avril 2018
+*/
+
 #include "graph.h"
 #include <fstream>
 #include <stack>
@@ -10,6 +18,11 @@ using namespace std;
                     VERTEX
 ****************************************************/
 
+/**
+* \fn VertexInterface(int idx, int x, int y, std::string pic_name, int pic_idx)
+* \brief Cree l'interface d'un sommet
+* \param idx : Indice du sommet - x : Position x - y : Position y - pic_name : nom de l'image - pic_idx : nb d'image ds l'animation
+*/
 /// Le constructeur met en place les éléments de l'interface
 VertexInterface::VertexInterface(int idx, int x, int y, std::string pic_name, int pic_idx)
 {
@@ -48,6 +61,10 @@ VertexInterface::VertexInterface(int idx, int x, int y, std::string pic_name, in
 
 }
 
+/**
+* \fn void pre_update()
+* \brief copie des valeurs locales dans les slides des sommets
+*/
 /// Gestion du Vertex avant l'appel à l'interface
 void Vertex::pre_update()
 {
@@ -61,6 +78,10 @@ void Vertex::pre_update()
     m_interface->m_label_value.set_message( std::to_string( (int)m_value) );
 }
 
+/**
+* \fn void post_update()
+* \brief reprend la valeur de m_value a partir de l'interface
+*/
 /// Gestion du Vertex après l'appel à l'interface
 void Vertex::post_update()
 {
@@ -75,6 +96,11 @@ void Vertex::post_update()
                     EDGE
 ****************************************************/
 
+/**
+* \fn EdgeInterface(Vertex& from, Vertex& to)
+* \brief cree l'interface de l'arc
+* \param Vertex& from : Sommet de départ - Vertex& to : Sommet d'arrivé
+*/
 /// Le constructeur met en place les éléments de l'interface
 EdgeInterface::EdgeInterface(Vertex& from, Vertex& to)
 {
@@ -105,6 +131,10 @@ EdgeInterface::EdgeInterface(Vertex& from, Vertex& to)
 
 }
 
+/**
+* \fn void pre_update()
+* \brief met a jour les valeurs sur le slider de l'edge
+*/
 /// Gestion du Edge avant l'appel à l'interface
 void Edge::pre_update()
 {
@@ -119,6 +149,10 @@ void Edge::pre_update()
     m_interface->m_label_weight.set_message( std::to_string( (int)m_weight ) );
 }
 
+/**
+* \fn post_update()
+* \brief recupere la valeur du slider de l'edge
+*/
 /// Gestion du Edge après l'appel à l'interface
 void Edge::post_update()
 {
@@ -130,11 +164,21 @@ void Edge::post_update()
 }
 
 ///Getters
+/**
+* \fn int getFrom()
+* \brief recupere l'indice du sommet de depart
+* \return retourne l'indice du sommet de depart
+*/
 int Edge::getFrom()
 {
     return m_from;
 }
 
+/**
+* \fn int getTo()
+* \brief recupere l'indice du sommet d'arrivee
+* \return retourne l'indice du sommet d'arrivee
+*/
 int Edge::getTo()
 {
     return m_to;
@@ -146,6 +190,11 @@ int Edge::getTo()
 
 /// Ici le constructeur se contente de préparer un cadre d'accueil des
 /// éléments qui seront ensuite ajoutés lors de la mise en place du Graphe
+/**
+* \fn GraphInterface(int x, int y, int w, int h)
+* \brief Cree l'interface graphique du graphe
+* \param int x : position x du graphe - int y : position y du graphe - int w : largeur du graphe - int h : longueur du graphe
+*/
 GraphInterface::GraphInterface(int x, int y, int w, int h)
 {
     m_top_box.set_dim(1000,740);
@@ -218,6 +267,10 @@ GraphInterface::GraphInterface(int x, int y, int w, int h)
 LECTURES ET SAUVEGARDES
 **********************************************************/
 
+/**
+* \fn void chargement_fichier_a()
+* \brief charge le fichier du graphe 1
+*/
 /* chargement_fichier_a : lecture du fichier a pour initialiser le graphe 1
 Entrée : Fichier txt
 Sortie : /
@@ -290,6 +343,10 @@ void Graph::chargement_fichier_a()
 
 }
 
+/**
+* \fn void chargement_fichier_b()
+* \brief charge le fichier du graphe 2
+*/
 /* chargement_fichier_b : lecture du fichier b pour initialiser le graphe 2
 Entrée : fichier txt
 Sortie : /
@@ -362,6 +419,10 @@ void Graph::chargement_fichier_b()
 
 }
 
+/**
+* \fn void chargement_fichier_c()
+* \brief lecture du fichier c
+*/
 /* chargement_fichier_c : lecture du fichier c pour initialiser le graphe 3
 Entrée : Lecture du fichier
 Sortie : /
@@ -434,6 +495,10 @@ void Graph::chargement_fichier_c()
 
 }
 
+/**
+* \fn void sauv_graphea()
+* \brief sauvegarde le fichier du graphe 1
+*/
 /* sauv_graphea : sauvegarde du graphe 1
 Entrée : /
 Sortie : Ecriture dans le fichier
@@ -492,6 +557,10 @@ void Graph::sauv_graphea()
 
 }
 
+/**
+* \fn void sauv_grapheb()
+* \brief sauvegarde le graphe 2
+*/
 /* sauv_grapheb : sauvegarde le graphe 2
 Entrée : /
 Sortie : Ecriture dans le fichier
@@ -550,6 +619,10 @@ void Graph::sauv_grapheb()
 
 }
 
+/**
+* \fn sauv_graphec()
+* \brief sauvegarde le graphe 3
+*/
 /* sauv_graphec : sauvegarde le graphe 3
 Entrée : /
 Sortie : Modification du fichier
@@ -612,6 +685,10 @@ void Graph::sauv_graphec()
 MISES A JOUR
 ********************************************************/
 
+/**
+* \fn void update()
+* \brief appelle les sous-programmes d'updates
+*/
 /* update : appelle les fonctions de update pour les vertex/edge/interfaces
 Entrée : /
 Sortie : /
@@ -637,6 +714,10 @@ void Graph::update()
 
 }
 
+/**
+* \fn void var_temps()
+* \brief fait varier les parametres K et N en fonction du temps
+*/
 /* var_temps : Fait varier K et N en fonction du temps
 Entrée : /
 Sortie : /
@@ -674,6 +755,12 @@ void Graph::var_temps()
 INITIALISATIONS / CONSTRUCTEURS
 ******************************************************/
 
+/**
+* \fn void add_interfaced_vertex(int idx, int value, int x, int y, std::string pic_name, int pic_idx, int taux_repro)
+* \brief ajoute un sommet et son interface pour l'afficher
+* \param int idx : indice du sommet - int value : nb population - int x : position x - int y : position y - std::string pic_name : nom de l'image
+* int pic_idx : nombre d'images dans l'animation - int taux_repro : taux de reproduction
+*/
 /*add_interface_vertex : ajout d'un sommet et son interface
 Entrée : int idx (indice du sommet), int value (nbr population), int x(pos x), int y(pos y), string pic_name (nom de l'image), int pic_idx(si image en mvmt), int taux_repro (facteur de reproduction)
 Sortie : /
@@ -694,6 +781,11 @@ void Graph::add_interfaced_vertex(int idx, int value, int x, int y, std::string 
     m_vertices[idx] = Vertex(value, vi, taux_repro);
 }
 
+/**
+* \fn void  add_interfaced_edge()
+* \brief ajoute un arc et son interface
+* \param int idx : indice - int id_vert1 : indice sommet depart - int id_vert2 : indice sommet arrivee - int weight : poids de l'arete
+*/
 /* add_interfaced_edge : ajout d'un arc avec une interface
 Entrée : int idx (son indice), int id_vert1 (indice sommet from), int id_vert2 (indice sommet to), int weight (poids de l'arête)
 Sortie : /
@@ -728,6 +820,11 @@ void Graph::add_interfaced_edge(int idx, int id_vert1, int id_vert2, int weight)
 /*****************************************************
 AFFICHAGE TOUR DE BOUCLE
 ******************************************************/
+
+/**
+* \fn void affichage_outil()
+* \brief Affiche les images de la boite a outils
+*/
 /* affichage_outil : Affichage des images de la tool bar
 Entrée : Images dans le dossier du projet
 Sortie : Afichage allegro
@@ -754,6 +851,11 @@ void Graph::affichage_outil()
 
 }
 
+/**
+* \fn void acces_G1(int* n)
+* \brief affichage et actions sur le graphe 1
+* \param int* n : pointeur sur le numero de graphe
+*/
 /* acces_G1 : Affichage et action sur le graphe 1
 Entrée : /
 Sortie : Affichage allegro + console
@@ -860,6 +962,11 @@ void Graph::acces_G1(int* n)
     //var_temps();
 }
 
+/**
+* \fn void acces_G2(int* n)
+* \brief affichage et actions sur le graphe 2
+* \param int* n : pointeur sur le numero du graphe
+*/
 /* acces_G2 : Actions et affichage du graphe 2
 Entrée : /
 Sortie : Affichage allegro et console
@@ -961,6 +1068,11 @@ void Graph::acces_G2(int* n)
 
 }
 
+/**
+* \fn void acces_G3(int* n)
+* \brief affichage et actions sur le graphe 3
+* \param int* n : pointeur sur le numero du graphe
+*/
 /* acces_G3 : Effectue toutes les actions sur le graphe 3
 Entrée : /
 Sortie : Affichage allegro et console
@@ -1067,6 +1179,10 @@ void Graph::acces_G3(int* n)
 
 }
 
+/**
+* \fn void sortie()
+* \brief quitte le programme quand on clique sur le bouton sortie
+*/
 /* sortie : sortie du programme
 Entrée : /
 Sortie : /
@@ -1085,6 +1201,10 @@ void Graph::sortie()
     }
 }
 
+/**
+* \fn void graph_simpl_connex()
+* \brief affiche les graphes simplifies de tous les k_sommets qui deconnectent le graphe
+*/
 /*graph_simpl_connex = affiche graphe simplicié avec les différentes composantes connexes (k_connexité)
 Entrée : /
 Sortie : Affichage allegro
@@ -1201,6 +1321,10 @@ void Graph::graph_simpl_connex()
     }
 }
 
+/**
+* \fn void graph_simpl()
+* \brief affiche le graphe simplifie des composantes fortement connexes
+*/
 /*graph_simpl = affiche graphe simplicié avec les différentes composantes fortement connexes
 Entrée : /
 Sortie : Affichage allegro
@@ -1318,6 +1442,10 @@ void Graph::graph_simpl()
     rest(5000);
 }
 
+/**
+* \fn void afficher()
+* \brief affiche les indices des sommets appartement a une composante fortement connexe
+*/
 /* afficher : afficher les indices des sommets appartenant à une composante fortement connexe
 Entrée : /
 Sortie : Affichage console

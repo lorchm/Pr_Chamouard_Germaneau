@@ -2,7 +2,7 @@
 
 0 100 211 8 grapheb1.jpg 1
 1 100 59 272 grapheb2.jpg 20
-2 100 17 117 grapheb3.jpg 20
+2 100 6 49 grapheb3.jpg 20
 3 100 219 598 grapheb4.jpg 100
 4 100 18 480 grapheb5.jpg 100
 5 100 296 382 grapheb6.jpg 50
@@ -12,7 +12,6 @@
 9 54 502 428 grapheb10.jpg 10
 10 100 744 31 grapheb11.jpg 3
 11 100 593 128 grapheb12.jpg 1
-
 0
 
 
@@ -35,3 +34,4 @@
 14 7 8 1
 
 0
+
