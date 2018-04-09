@@ -1,3 +1,11 @@
+/**
+*\file graph.h
+*\brief declarations des fonctions de Graph (classe de Sommets, Arcs, Graphe et leurs interfaces et utilisations)
+*\author Barbara Germaneau + Laure Chamouard
+*\version 3.0
+*\date 2 avril 2018
+*/
+
 #ifndef GRAPH_H_INCLUDED
 #define GRAPH_H_INCLUDED
 
@@ -15,6 +23,13 @@
                     VERTEX
 ****************************************************/
 
+/**
+*\class VertexInterface
+*\brief classe sur l'interface d'un sommet
+*
+* s'occupe de l'aspect visuel d'un sommet: sa boite, son image, le slider qui affiche la population
+*
+*/
 class VertexInterface
 {
     // Les (methodes des) classes amies pourront accéder
@@ -51,6 +66,13 @@ public :
 };
 
 
+/**
+*\class Vertex
+*\brief attributs et fonctions d'un sommet
+*
+* regroupe les attributs d'un sommet, le constructeur et les fonctions de mises a jour du sommet
+*
+*/
 class Vertex
 {
     // Les (methodes des) classes amies pourront accéder
@@ -63,7 +85,7 @@ class Vertex
     private :
 
         ///Attributs du style de vie
-        float m_taux_repro;
+        int m_taux_repro;
 
         ///bool pour appartient à la connexité et appartient à la forte connexité
         bool m_1=false;
@@ -94,7 +116,7 @@ class Vertex
     public:
 
         /// Constructeur de Vertex
-        Vertex (int value=0, VertexInterface *interface=nullptr, float taux=0) :
+        Vertex (int value=0, VertexInterface *interface=nullptr, int taux=0) :
             m_value(value), m_interface(interface), m_taux_repro(taux)  {  }
 
         ///Mise à jour des sommets
@@ -117,7 +139,13 @@ class Vertex
 /***************************************************
                     EDGE
 ****************************************************/
-
+/**
+*\class EdgeInterface
+*\brief classe sur l'interface d'une arête
+*
+* regroupe tout l'aspect visuel d'une arete : son slider, son affichage de son poids, et l'affichage de l'arete orientee
+*
+*/
 class EdgeInterface
 {
     // Les (methodes des) classes amies pourront accéder
@@ -148,6 +176,13 @@ class EdgeInterface
         EdgeInterface(Vertex& from, Vertex& to);
 };
 
+/**
+*\class Edge
+*\brief contient tous les attributs d'un arc
+*
+* regroupe tous les attributs comme son poids, l'origine/arrivee et les mises a jour de l'arc pour chaques tours de boucle
+*
+*/
 class Edge
 {
     // Les (methodes des) classes amies pourront accéder
@@ -186,7 +221,13 @@ class Edge
 /***************************************************
                     GRAPH
 ****************************************************/
-
+/**
+*\class GraphInterface
+*\brief contient la partie graphique du graphe
+*
+* interface du graphe avec l'ajout des interfaces des sommets et des arcs. gestion de la boite a outils avec l'initialisation de chaques boutons
+*
+*/
 class GraphInterface
 {
     friend class Graph;
@@ -273,7 +314,14 @@ public :
 
 };
 
-
+/**
+*\class Graph
+*\brief classe contenant les attributs et actions sur les graphes
+*
+* contient les aretes et les sommets d'un graphe et permet de les creer. Contient les differents algorithmes qui permettent d'etudier le graphe.
+* lectures et sauvegardes des fichiers. Affichages des differents graphes.
+*
+*/
 class Graph
 {
     private :

@@ -1,3 +1,12 @@
+/**
+*\file main.cpp
+*\brief appelles les sous programmes qui font fonctionner le programme
+*\author Barbara Germaneau + Laure Chamouard
+*\version 2.0
+*\date 2 avril 2018
+**/
+
+
 #include "grman/grman.h"
 #include <iostream>
 
@@ -6,7 +15,7 @@
 
 
 /******************************** INFOS UTILES ***********************************************************************************************
-Il faut parfois cliquer plusieurs fois pour bien faire comprendre au programme que l'on clique (et appuyer sur la partie gauche du bouton)
+Il faut parfois cliquer plusieurs fois pour bien faire comprendre au programme que l'on clique (et bien appuyer sur la partie gauche du bouton ça marche mieux)
 
 Pour voir un graphe : Cliquer sur la case (G1/G2/G3) correspondante puis appuyer sur read
 
@@ -21,7 +30,11 @@ Le code a été construit à partir du code de Mr. Fercoq.
 
 *************************************************************************************************************************************************/
 
-
+/**
+*\fn int main()
+*\brief appel des sous-programmes qui font fonctionner le projet
+*\return retourne 0 pour finir le programme
+*/
 int main()
 {
     //Initialisations

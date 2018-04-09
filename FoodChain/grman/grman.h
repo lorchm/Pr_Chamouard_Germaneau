@@ -1,3 +1,11 @@
+/**
+*\file grman.h
+*\brief declaration de la bibliotheque grman
+*\author Mr. Fercoq
+*\version 1.0
+*\date 2 avril 2018
+*/
+
 #ifndef GRMAN_H_INCLUDED
 #define GRMAN_H_INCLUDED
 
@@ -13,6 +21,10 @@
 #include "grman_couleurs.h"
 #include "coords.h"
 
+/**
+*\namespace grman
+*\brief regroupe des fonctions graphiques
+*/
 namespace grman
 {
     /// Variables globales : visibles partout où grman.h est inclus

@@ -1,9 +1,26 @@
+/**
+*\file widget.cpp
+*\brief contient tous les widgets pour gerer l'affichage
+*\author Mr.Fercoq
+*\version 1.0
+*\date 2 avril 2018
+*/
+
+
 #include "widget.h"
 
-
+/**
+*\namespace <grman>
+*\brief bibliotheque des fonctions graphiques/widgets
+*/
 namespace grman
 {
 
+/**
+*\fn void rect_around(BITMAP* bmp, int color, int thickness, int receding)
+*\brief fait un rectangle a partir des parametres qu'on lui envoie
+*\param BITMAP* bmp : image sur laquelle on fait le rectangle - int color : couleur du rectangle - int thickness : largeur des traits du rectangle
+*/
 void rect_around(BITMAP *bmp, int color, int thickness=1, int receding=0)
 {
     for (int i=0+receding; i<thickness+receding; ++i)
@@ -15,7 +32,10 @@ void rect_around(BITMAP *bmp, int color, int thickness=1, int receding=0)
                 WIDGET BASE CLASS
 ****************************************************/
 
-
+/**
+*\fn void Widget::update()
+*\brief met a jour le widget
+*/
 void Widget::update()
 {
     update_interact();
@@ -23,6 +43,10 @@ void Widget::update()
     update_draw();
 }
 
+/**
+*\fn void Widget::update_interact()
+*\brief gere les evenements
+*/
 /// Gestion des événements
 void Widget::update_interact()
 {
@@ -51,6 +75,10 @@ void Widget::update_interact()
     destroy_frame_context();
 }
 
+/**
+*\fn void Widget::update_pre_draw
+*\brief gestion des affichages
+*/
 /// Gestion des affichages, 1ère passe pour fixer les cadres
 /// (Nécessaire pour les liens : affichés au fond donc en 1er mais s'appuyant sur les positions des autres qui sont affichés après)
 void Widget::update_pre_draw()
@@ -64,7 +92,10 @@ void Widget::update_pre_draw()
     destroy_frame_context();
 }
 
-
+/**
+*\fn void Widget::update_draw()
+*\brief gestion des affichages
+*/
 /// Gestion des affichages
 void Widget::update_draw()
 {
@@ -86,7 +117,10 @@ void Widget::update_draw()
     destroy_frame_context();
 }
 
-
+/**
+*\fn void Widget::create_frame_context()
+*\brief cree frame
+*/
 void Widget::create_frame_context()
 {
     /// Calculer absolute frame à partir de relative et absolute parent ( si parent, sinon page_frame )
@@ -111,6 +145,10 @@ void Widget::create_frame_context()
     //set_clip_rect(m_view, std::max(-x, 0), std::max(-y, 0), w-1, h-1);
 }
 
+/**
+*\fn void Widget::destroy_frame_context()
+*\brief supprime frame
+*/
 void Widget::destroy_frame_context()
 {
     if (m_view)
@@ -123,12 +161,21 @@ void Widget::destroy_frame_context()
 
 }
 
+/**
+*\fn bool Widget::is_mouse_over()
+*\brief test si la souris est dans le cadre
+*\return retourne un bool pour dire si la souris est dans le cadre
+*/
 bool Widget::is_mouse_over()
 {
     return     mouse_x>=m_abs_frame.pos.x && mouse_x<=m_abs_frame.pos.x+m_abs_frame.dim.x
                &&  mouse_y>=m_abs_frame.pos.y && mouse_y<=m_abs_frame.pos.y+m_abs_frame.dim.y;
 }
 
+/**
+*\fn void Widget::reframe()
+*\brief met a jour la frame
+*/
 void Widget::reframe()
 {
     int pardimx = m_parent ? m_parent->get_dimx() : page_frame.dim.x;
@@ -149,6 +196,10 @@ void Widget::reframe()
         reset_posy( (pardimy - m_frame.dim.y)/2. );
 }
 
+/**
+*\fn void Widget::draw_border()
+*\brief dessine les lignes des bords
+*/
 void Widget::draw_border()
 {
     rect_around(m_view_wb, get_border_color(), m_border);
@@ -157,7 +208,10 @@ void Widget::draw_border()
 /***************************************************
                         TEXT
 ****************************************************/
-
+/**
+*\fn void WidgetText::draw()
+*\brief affiche texte
+*/
 /// Extrêmement rudimentaire : à compléter !
 void WidgetText::draw()
 {
@@ -168,6 +222,11 @@ void WidgetText::draw()
             textprintf_ex(m_view, font, 0, y, m_color, -1, "%c", m_message[i]);
 }
 
+/**
+*\fn void WidgetText::set_message(std::string message)
+*\brief change le texte du widget
+*\param std::string message : texte a changer
+*/
 void WidgetText::set_message(std::string message)
 {
     m_message = message;
@@ -183,7 +242,10 @@ void WidgetText::set_message(std::string message)
 /***************************************************
                     CHECKBOX
 ****************************************************/
-
+/**
+*\fn void WidgetCheckBox::draw()
+*\brief colorie le contour du bouton en vert si on clique sinon rouge
+*/
 void WidgetCheckBox::draw()
 {
     if (m_value)
@@ -199,6 +261,10 @@ void WidgetCheckBox::draw()
 
 }
 
+/**
+*\fn void WidgetCheckBox::interact_focus()
+*\brief quand on clique, ça declique (pour eviter les problemes quand on clique trop longtemps)
+*/
 void WidgetCheckBox::interact_focus()
 {
     if ( mouse_click )
@@ -212,6 +278,10 @@ void WidgetCheckBox::interact_focus()
                     BUTTON
 ****************************************************/
 
+/**
+*\fn void WidgetButton::interact_focus()
+*\brief regarde la position du clic par rapport a la position du bouton
+*/
 void WidgetButton::interact_focus()
 {
     //il faut aussi que le click soit dans la case du boutton pour ça on utilise la dimension de la frame du boutton
@@ -227,7 +297,10 @@ void WidgetButton::interact_focus()
 /***************************************************
                     VSLIDER
 ****************************************************/
-
+/**
+*\fn void WidgetVSlider::draw()
+*\brief dessine le slider
+*/
 void WidgetVSlider::draw()
 {
     int hhandle = get_hhandle();
@@ -242,6 +315,10 @@ void WidgetVSlider::draw()
     thick_line(m_view, 0, ys, m_view->w-1, ys, hhandle, m_handle_color );
 }
 
+/**
+*\fn void WidgetVSlider::interact_focus()
+*\brief test si on clique sur le slider
+*/
 void WidgetVSlider::interact_focus()
 {
     if ( mouse_b )
@@ -253,6 +330,10 @@ void WidgetVSlider::interact_focus()
     }
 }
 
+/**
+*\fn void WidgetVSlider::interact_over()
+*\brief augmente ou diminue la valeur si on appuie les touches directionnelles
+*/
 void WidgetVSlider::interact_over()
 {
     if ( key[KEY_UP] )
@@ -273,7 +354,10 @@ void WidgetVSlider::interact_over()
 /***************************************************
                     IMAGE
 ****************************************************/
-
+/**
+*\fn void WidgetImage::reframe()
+*\brief redimensionne les images en fonction du temps
+*/
 void WidgetImage::reframe()
 {
     if (m_pic_name=="")
@@ -286,6 +370,10 @@ void WidgetImage::reframe()
     set_dim( pic->w/get_picture_nb(m_pic_name), pic->h );
 }
 
+/**
+*\fn void WidgetImage::draw()
+*\brief anime un sommet si le sommet est anime
+*/
 void WidgetImage::draw()
 {
     if (m_animate)
@@ -306,6 +394,10 @@ void WidgetImage::draw()
                     BOX
 ****************************************************/
 
+/**
+*\fn void WidgetBox::interact_focus()
+*\brief deplace le widget
+*/
 void WidgetBox::interact_focus()
 {
     if (mouse_click)
@@ -345,6 +437,10 @@ void WidgetBox::interact_focus()
                     EDGE
 ****************************************************/
 
+/**
+*\fn void WidgetEdge::draw()
+*\brief dessine une arete
+*/
 void WidgetEdge::draw()
 {
     if ( !(m_attach[0] && m_attach[1] ) )

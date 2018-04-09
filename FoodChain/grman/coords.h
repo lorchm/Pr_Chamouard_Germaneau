@@ -1,8 +1,20 @@
+/**
+*\file coords.h
+*\brief structures des coordonnees et de la frame
+*\author Mr.Fercoq
+*\version 1.0
+*\date 2 avril 2018
+*/
+
 #ifndef COORDS_H
 #define COORDS_H
 
 #include <cmath>
 
+/**
+*\struct Coords
+*\brief contient deux coordonnees x et y et fait les actions liees
+*/
 struct Coords
 {
         double x;
@@ -62,6 +74,10 @@ struct Coords
 
 };
 
+/**
+*\struct Frame
+*\brief groupe de coordonnees representant la position et la dimension d'un cadre
+*/
 struct Frame
 {
         Coords pos;
